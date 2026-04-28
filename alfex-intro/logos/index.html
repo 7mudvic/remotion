@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Alfex · Logo Concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+  :root {
+    --bg: #050505;
+    --bg-card: #0d0d0e;
+    --bg-card-hover: #131316;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-hover: rgba(0, 200, 255, 0.4);
+    --text: #ffffff;
+    --muted: #777;
+    --muted-strong: #aaa;
+    --cyan: #00C8FF;
+    --purple: #A855F7;
+    --orange: #F97316;
+    --pink: #EC4899;
+    --green: #10B981;
+    --gold: #FBBF24;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body {
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 200, 255, 0.08), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 110%, rgba(168, 85, 247, 0.06), transparent 70%);
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(0, 200, 255, 0.08);
+    border: 1px solid rgba(0, 200, 255, 0.2);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--cyan);
+    margin-bottom: 24px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  h1 {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin-bottom: 18px;
+    background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitle {
+    font-family: "Cairo", sans-serif;
+    font-size: 18px;
+    color: var(--muted-strong);
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 36px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 30%, var(--accent-color, rgba(0,200,255,0.08)), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+  }
+
+  .card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8), 0 0 60px -20px var(--accent-color, rgba(0, 200, 255, 0.4));
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .logo-stage {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .logo-stage svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .meta {
+    text-align: center;
+  }
+
+  .code-name {
+    display: inline-block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    margin-bottom: 14px;
+  }
+
+  .name {
+    font-family: "Inter", sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+
+  .name-ar {
+    font-family: "Cairo", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--muted-strong);
+    margin-bottom: 12px;
+  }
+
+  .desc {
+    font-family: "Cairo", sans-serif;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  .footer-cta {
+    margin-top: 80px;
+    padding: 48px 32px;
+    text-align: center;
+    background:
+      linear-gradient(135deg, rgba(0, 200, 255, 0.06), rgba(168, 85, 247, 0.06)),
+      rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 28px;
+  }
+
+  .footer-cta h2 {
+    font-family: "Cairo", sans-serif;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+
+  .footer-cta p {
+    font-family: "Cairo", sans-serif;
+    color: var(--muted-strong);
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .codes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .code-pill {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    padding: 6px 12px;
+    background: rgba(0, 200, 255, 0.08);
+    border: 1px solid rgba(0, 200, 255, 0.2);
+    border-radius: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .container { padding: 40px 16px 60px; }
+    header { margin-bottom: 40px; }
+    .grid { grid-template-columns: 1fr; gap: 16px; }
+    .card { padding: 32px 20px 24px; }
+    .logo-stage { width: 180px; height: 180px; }
+  }
+
+  /* Specific colors per card */
+  .card[data-id="neural"]   { --accent-color: rgba(0, 200, 255, 0.18); }
+  .card[data-id="prism"]    { --accent-color: rgba(168, 85, 247, 0.18); }
+  .card[data-id="vortex"]   { --accent-color: rgba(236, 72, 153, 0.18); }
+  .card[data-id="phase"]    { --accent-color: rgba(16, 185, 129, 0.18); }
+  .card[data-id="hexcore"]  { --accent-color: rgba(251, 191, 36, 0.18); }
+  .card[data-id="shard"]    { --accent-color: rgba(249, 115, 22, 0.18); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="badge">
+      <span class="badge-dot"></span>
+      <span>ALFEX BRAND EXPLORATION</span>
+    </div>
+    <h1>6 مفاهيم لشعار Alfex</h1>
+    <p class="subtitle">شعارات تجريدية مستوحاة من فلسفة Claude · Gemini · ChatGPT — اختر اللي يعجبك وبنبنيه في الفيديو</p>
+  </header>
+
+  <div class="grid">
+
+    <!-- 01 NEURAL -->
+    <div class="card" data-id="neural">
+      <div class="logo-stage">
+        <svg viewBox="-100 -100 200 200" id="logo-neural">
+          <defs>
+            <radialGradient id="neural-orb">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="35%" stop-color="#00E0FF"/>
+              <stop offset="100%" stop-color="#0066AA"/>
+            </radialGradient>
+            <filter id="neural-glow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <circle r="78" fill="none" stroke="rgba(0,200,255,0.12)" stroke-width="0.8" class="ring-outer"/>
+          <circle r="55" fill="none" stroke="rgba(0,200,255,0.18)" stroke-width="0.8" class="ring-mid"/>
+          <g class="conns" stroke="rgba(0,200,255,0.25)" stroke-width="0.8" fill="none">
+            <line x1="0" y1="0" x2="78" y2="0"/>
+            <line x1="0" y1="0" x2="55.2" y2="55.2"/>
+            <line x1="0" y1="0" x2="0" y2="78"/>
+            <line x1="0" y1="0" x2="-55.2" y2="55.2"/>
+            <line x1="0" y1="0" x2="-78" y2="0"/>
+            <line x1="0" y1="0" x2="-55.2" y2="-55.2"/>
+            <line x1="0" y1="0" x2="0" y2="-78"/>
+            <line x1="0" y1="0" x2="55.2" y2="-55.2"/>
+          </g>
+          <g class="packets" filter="url(#neural-glow)">
+            <circle r="2.5" fill="#FFFFFF" cx="78" cy="0" class="packet" data-angle="0"/>
+            <circle r="2.5" fill="#FFFFFF" cx="55.2" cy="55.2" class="packet" data-angle="45"/>
+            <circle r="2.5" fill="#FFFFFF" cx="0" cy="78" class="packet" data-angle="90"/>
+            <circle r="2.5" fill="#FFFFFF" cx="-55.2" cy="55.2" class="packet" data-angle="135"/>
+            <circle r="2.5" fill="#FFFFFF" cx="-78" cy="0" class="packet" data-angle="180"/>
+            <circle r="2.5" fill="#FFFFFF" cx="-55.2" cy="-55.2" class="packet" data-angle="225"/>
+            <circle r="2.5" fill="#FFFFFF" cx="0" cy="-78" class="packet" data-angle="270"/>
+            <circle r="2.5" fill="#FFFFFF" cx="55.2" cy="-55.2" class="packet" data-angle="315"/>
+          </g>
+          <g class="nodes">
+            <circle cx="78" cy="0" r="3.5" fill="#00C8FF"/>
+            <circle cx="55.2" cy="55.2" r="3.5" fill="#00C8FF"/>
+            <circle cx="0" cy="78" r="3.5" fill="#00C8FF"/>
+            <circle cx="-55.2" cy="55.2" r="3.5" fill="#00C8FF"/>
+            <circle cx="-78" cy="0" r="3.5" fill="#00C8FF"/>
+            <circle cx="-55.2" cy="-55.2" r="3.5" fill="#00C8FF"/>
+            <circle cx="0" cy="-78" r="3.5" fill="#00C8FF"/>
+            <circle cx="55.2" cy="-55.2" r="3.5" fill="#00C8FF"/>
+          </g>
+          <circle r="14" fill="url(#neural-orb)" filter="url(#neural-glow)" class="orb"/>
+        </svg>
+      </div>
+      <div class="meta">
+        <div class="code-name">01 · NEURAL</div>
+        <div class="name">Neural Core</div>
+        <div class="name-ar">العقل المتصل</div>
+        <div class="desc">شبكة عصبية ذكية بنواة مضيئة، إشارات تتدفق نحو المركز — تجسيد للتحليل الفوري</div>
+      </div>
+    </div>
+
+    <!-- 02 PRISM -->
+    <div class="card" data-id="prism">
+      <div class="logo-stage">
+        <svg viewBox="-100 -100 200 200" id="logo-prism">
+          <defs>
+            <linearGradient id="beam-cyan" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#00C8FF" stop-opacity="0"/>
+              <stop offset="50%" stop-color="#00C8FF" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#00C8FF" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="beam-purple" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#A855F7" stop-opacity="0"/>
+              <stop offset="50%" stop-color="#A855F7" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="beam-pink" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#EC4899" stop-opacity="0"/>
+              <stop offset="50%" stop-color="#EC4899" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#EC4899" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="prism-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(168, 85, 247, 0.15)"/>
+              <stop offset="100%" stop-color="rgba(0, 200, 255, 0.15)"/>
+            </linearGradient>
+          </defs>
+          <!-- Incoming white beam -->
+          <line x1="-95" y1="0" x2="-30" y2="0" stroke="#FFFFFF" stroke-width="2" class="beam-in"/>
+          <!-- Outgoing 3 beams -->
+          <line x1="20" y1="-25" x2="95" y2="-50" stroke="url(#beam-cyan)" stroke-width="2.5" class="beam-out beam-1"/>
+          <line x1="20" y1="0" x2="95" y2="0" stroke="url(#beam-purple)" stroke-width="2.5" class="beam-out beam-2"/>
+          <line x1="20" y1="25" x2="95" y2="50" stroke="url(#beam-pink)" stroke-width="2.5" class="beam-out beam-3"/>
+          <!-- Triangle prism -->
+          <polygon points="-30,40 -30,-40 30,0" fill="url(#prism-fill)" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" class="prism"/>
+          <!-- Inner shimmer -->
+          <line x1="-30" y1="-40" x2="30" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="0.8" class="shimmer-1"/>
+          <line x1="-30" y1="40" x2="30" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="0.8" class="shimmer-2"/>
+        </svg>
+      </div>
+      <div class="meta">
+        <div class="code-name">02 · PRISM</div>
+        <div class="name">Prism</div>
+        <div class="name-ar">المنشور</div>
+        <div class="desc">إشارة بيضاء تدخل وتنقسم لطيف ألوان — استخراج الوضوح من تعقيد الأسواق</div>
+      </div>
+    </div>
+
+    <!-- 03 VORTEX -->
+    <div class="card" data-id="vortex">
+      <div class="logo-stage">
+        <svg viewBox="-100 -100 200 200" id="logo-vortex">
+          <defs>
+            <radialGradient id="vortex-glow">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8"/>
+              <stop offset="50%" stop-color="#EC4899" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#EC4899" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="vortex-arc" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#EC4899" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#EC4899" stop-opacity="1"/>
+            </linearGradient>
+            <linearGradient id="vortex-arc-2" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#A855F7" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#A855F7" stop-opacity="1"/>
+            </linearGradient>
+            <linearGradient id="vortex-arc-3" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#00C8FF" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#00C8FF" stop-opacity="1"/>
+            </linearGradient>
+          </defs>
+          <!-- 3 spiral arcs -->
+          <g class="arc-group arc-1">
+            <path d="M 70 0 A 70 70 0 1 0 -70 0" fill="none" stroke="url(#vortex-arc)" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <g class="arc-group arc-2">
+            <path d="M 50 0 A 50 50 0 1 0 -50 0" fill="none" stroke="url(#vortex-arc-2)" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <g class="arc-group arc-3">
+            <path d="M 30 0 A 30 30 0 1 0 -30 0" fill="none" stroke="url(#vortex-arc-3)" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <!-- Center glow -->
+          <circle r="50" fill="url(#vortex-glow)" class="glow"/>
+          <circle r="6" fill="#FFFFFF" class="core"/>
+        </svg>
+      </div>
+      <div class="meta">
+        <div class="code-name">03 · VORTEX</div>
+        <div class="name">Vortex</div>
+        <div class="name-ar">الدوامة</div>
+        <div class="desc">ثلاث أقواس متداخلة تدور بسرعات متفاوتة حول نواة بيضاء — حركة الأسواق المستمرة</div>
+      </div>
+    </div>
+
+    <!-- 04 PHASE -->
+    <div class="card" data-id="phase">
+      <div class="logo-stage">
+        <svg viewBox="-100 -100 200 200" id="logo-phase">
+          <defs>
+            <radialGradient id="phase-core">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="50%" stop-color="#10B981"/>
+              <stop offset="100%" stop-color="#047857"/>
+            </radialGradient>
+          </defs>
+          <!-- Ripple rings (animated) -->
+          <circle cx="0" cy="0" r="20" fill="none" stroke="#10B981" stroke-width="1.5" class="ripple ripple-1"/>
+          <circle cx="0" cy="0" r="20" fill="none" stroke="#10B981" stroke-width="1.5" class="ripple ripple-2"/>
+          <circle cx="0" cy="0" r="20" fill="none" stroke="#10B981" stroke-width="1.5" class="ripple ripple-3"/>
+          <circle cx="0" cy="0" r="20" fill="none" stroke="#10B981" stroke-width="1.5" class="ripple ripple-4"/>
+          <!-- Center -->
+          <circle r="14" fill="url(#phase-core)" class="phase-center"/>
+          <circle r="4" fill="#FFFFFF" class="phase-dot"/>
+        </svg>
+      </div>
+      <div class="meta">
+        <div class="code-name">04 · PHASE</div>
+        <div class="name">Phase</div>
+        <div class="name-ar">النبضة</div>
+        <div class="desc">موجات صدى تنتشر من نقطة مركزية — تتبع نبض السوق لحظة بلحظة</div>
+      </div>
+    </div>
+
+    <!-- 05 HEXCORE -->
+    <div class="card" data-id="hexcore">
+      <div class="logo-stage">
+        <svg viewBox="-100 -100 200 200" id="logo-hexcore">
+          <defs>
+            <linearGradient id="hex-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FBBF24"/>
+              <stop offset="100%" stop-color="#F59E0B"/>
+            </linearGradient>
+            <filter id="hex-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Outer hex -->
+          <polygon class="hex hex-outer" points="80,0 40,69.3 -40,69.3 -80,0 -40,-69.3 40,-69.3"
+            fill="none" stroke="rgba(251, 191, 36, 0.25)" stroke-width="1.5"/>
+          <!-- Mid hex -->
+          <polygon class="hex hex-mid" points="55,0 27.5,47.6 -27.5,47.6 -55,0 -27.5,-47.6 27.5,-47.6"
+            fill="none" stroke="rgba(251, 191, 36, 0.5)" stroke-width="1.8"/>
+          <!-- Inner hex (filled glow) -->
+          <polygon class="hex hex-inner" points="28,0 14,24.2 -14,24.2 -28,0 -14,-24.2 14,-24.2"
+            fill="url(#hex-fill)" filter="url(#hex-glow)" opacity="0.95"/>
+          <!-- Center dot -->
+          <circle r="3" fill="#FFFFFF" class="hex-dot"/>
+        </svg>
+      </div>
+      <div class="meta">
+        <div class="code-name">05 · HEXCORE</div>
+        <div class="name">Hexcore</div>
+        <div class="name-ar">النواة السداسية</div>
+        <div class="desc">ثلاث طبقات سداسية تدور بإيقاعات مختلفة — هيكلة وتنظيم البيانات المالية</div>
+      </div>
+    </div>
+
+    <!-- 06 SHARD -->
+    <div class="card" data-id="shard">
+      <div class="logo-stage">
+        <svg viewBox="-100 -100 200 200" id="logo-shard">
+          <defs>
+            <linearGradient id="shard-1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#F97316"/>
+              <stop offset="100%" stop-color="#DC2626"/>
+            </linearGradient>
+            <linearGradient id="shard-2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#FCD34D"/>
+              <stop offset="100%" stop-color="#F97316"/>
+            </linearGradient>
+            <linearGradient id="shard-3" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#F97316"/>
+              <stop offset="100%" stop-color="#FCD34D"/>
+            </linearGradient>
+            <linearGradient id="shimmer-grad" x1="-50%" y1="-50%" x2="150%" y2="150%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <clipPath id="shard-clip">
+              <polygon points="0,-65 50,0 0,65 -50,0"/>
+            </clipPath>
+          </defs>
+          <!-- Diamond facets -->
+          <polygon points="0,-65 25,-25 -25,-25" fill="url(#shard-2)" class="facet f1"/>
+          <polygon points="25,-25 50,0 0,0 -25,-25 0,-65" fill="url(#shard-3)" opacity="0.6" class="facet f2"/>
+          <polygon points="-25,-25 -50,0 -25,25 25,25 50,0 25,-25 0,0" fill="url(#shard-1)" class="facet f3"/>
+          <polygon points="-25,25 0,65 25,25" fill="url(#shard-2)" opacity="0.85" class="facet f4"/>
+          <!-- Outline -->
+          <polygon points="0,-65 50,0 0,65 -50,0" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round" class="diamond-outline"/>
+          <!-- Inner facet lines -->
+          <line x1="-25" y1="-25" x2="25" y2="-25" stroke="rgba(255,255,255,0.5)" stroke-width="0.8"/>
+          <line x1="-25" y1="-25" x2="-25" y2="25" stroke="rgba(255,255,255,0.5)" stroke-width="0.8"/>
+          <line x1="25" y1="-25" x2="25" y2="25" stroke="rgba(255,255,255,0.5)" stroke-width="0.8"/>
+          <line x1="-25" y1="25" x2="25" y2="25" stroke="rgba(255,255,255,0.5)" stroke-width="0.8"/>
+          <!-- Shimmer -->
+          <g clip-path="url(#shard-clip)">
+            <rect class="shimmer" x="-100" y="-100" width="40" height="200" fill="url(#shimmer-grad)" transform="rotate(20)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="meta">
+        <div class="code-name">06 · SHARD</div>
+        <div class="name">Shard</div>
+        <div class="name-ar">الجوهرة</div>
+        <div class="desc">جوهرة بأوجه متعددة وبريق متحرك — قيمة وفخامة سوق التداول</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-cta">
+    <h2>أي مفهوم يعجبك؟</h2>
+    <p>قول لي رقم/اسم الشعار وأنا أبنيه احترافياً في فيديو Remotion، وأستخدمه بدل أيقونة الذرة الحالية في إنترو Alfex.</p>
+    <div class="codes">
+      <span class="code-pill">01 NEURAL</span>
+      <span class="code-pill">02 PRISM</span>
+      <span class="code-pill">03 VORTEX</span>
+      <span class="code-pill">04 PHASE</span>
+      <span class="code-pill">05 HEXCORE</span>
+      <span class="code-pill">06 SHARD</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============== NEURAL: pulses traveling along lines + orb pulse ==============
+  (() => {
+    const orb = document.querySelector("#logo-neural .orb");
+    const ringOuter = document.querySelector("#logo-neural .ring-outer");
+    const ringMid = document.querySelector("#logo-neural .ring-mid");
+    const packets = document.querySelectorAll("#logo-neural .packet");
+
+    gsap.to(orb, { attr: { r: 17 }, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    gsap.to(ringOuter, { rotation: 360, duration: 60, repeat: -1, ease: "none", transformOrigin: "0 0" });
+    gsap.to(ringMid, { rotation: -360, duration: 45, repeat: -1, ease: "none", transformOrigin: "0 0" });
+
+    packets.forEach((p, i) => {
+      const angle = parseFloat(p.dataset.angle) * Math.PI / 180;
+      const x = Math.cos(angle) * 78;
+      const y = Math.sin(angle) * 78;
+      gsap.fromTo(p,
+        { attr: { cx: x, cy: y }, opacity: 0 },
+        {
+          attr: { cx: 0, cy: 0 },
+          opacity: 1,
+          duration: 1.6,
+          delay: i * 0.2,
+          repeat: -1,
+          repeatDelay: 0.4,
+          ease: "power2.in",
+          onRepeat() {
+            gsap.set(p, { opacity: 0 });
+          }
+        }
+      );
+    });
+  })();
+
+  // ============== PRISM: beam pulses + prism subtle rotation ==============
+  (() => {
+    const beamIn = document.querySelector("#logo-prism .beam-in");
+    const beamOuts = document.querySelectorAll("#logo-prism .beam-out");
+    const prism = document.querySelector("#logo-prism .prism");
+
+    gsap.set(beamOuts, { opacity: 0 });
+    gsap.set(beamIn, { opacity: 0 });
+
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.3 });
+    tl.to(beamIn, { opacity: 1, duration: 0.4, ease: "power2.out" })
+      .to(beamIn, { opacity: 1, duration: 0.3 })
+      .to(beamOuts, { opacity: 1, duration: 0.5, stagger: 0.08, ease: "power2.out" }, "-=0.1")
+      .to(beamOuts, { opacity: 0.4, duration: 0.4, ease: "sine.inOut" })
+      .to(beamOuts, { opacity: 1, duration: 0.4, ease: "sine.inOut" })
+      .to([beamIn, beamOuts], { opacity: 0, duration: 0.6, ease: "power2.in" }, "+=0.4");
+
+    gsap.to(prism, {
+      rotation: 360,
+      duration: 20,
+      repeat: -1,
+      ease: "none",
+      transformOrigin: "0 0"
+    });
+  })();
+
+  // ============== VORTEX: 3 arcs rotating at different speeds ==============
+  (() => {
+    const a1 = document.querySelector("#logo-vortex .arc-1");
+    const a2 = document.querySelector("#logo-vortex .arc-2");
+    const a3 = document.querySelector("#logo-vortex .arc-3");
+    const glow = document.querySelector("#logo-vortex .glow");
+
+    gsap.to(a1, { rotation: 360, duration: 8, repeat: -1, ease: "none", transformOrigin: "0 0" });
+    gsap.to(a2, { rotation: -360, duration: 5, repeat: -1, ease: "none", transformOrigin: "0 0" });
+    gsap.to(a3, { rotation: 360, duration: 3, repeat: -1, ease: "none", transformOrigin: "0 0" });
+
+    gsap.to(glow, { scale: 1.15, opacity: 0.6, duration: 1.6, repeat: -1, yoyo: true, ease: "sine.inOut", transformOrigin: "0 0" });
+  })();
+
+  // ============== PHASE: ripple effect ==============
+  (() => {
+    const ripples = document.querySelectorAll("#logo-phase .ripple");
+    const dot = document.querySelector("#logo-phase .phase-dot");
+
+    ripples.forEach((r, i) => {
+      gsap.fromTo(r,
+        { attr: { r: 14 }, opacity: 0.9, "stroke-width": 1.5 },
+        {
+          attr: { r: 90 },
+          opacity: 0,
+          "stroke-width": 0.5,
+          duration: 2.4,
+          delay: i * 0.6,
+          repeat: -1,
+          ease: "power2.out"
+        }
+      );
+    });
+
+    gsap.to(dot, { attr: { r: 6 }, duration: 1.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+  })();
+
+  // ============== HEXCORE: nested hexagons rotating ==============
+  (() => {
+    const outer = document.querySelector("#logo-hexcore .hex-outer");
+    const mid = document.querySelector("#logo-hexcore .hex-mid");
+    const inner = document.querySelector("#logo-hexcore .hex-inner");
+
+    gsap.to(outer, { rotation: 360, duration: 30, repeat: -1, ease: "none", transformOrigin: "0 0" });
+    gsap.to(mid, { rotation: -360, duration: 20, repeat: -1, ease: "none", transformOrigin: "0 0" });
+    gsap.to(inner, { rotation: 360, duration: 12, repeat: -1, ease: "none", transformOrigin: "0 0" });
+
+    gsap.to(inner, { scale: 1.08, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", transformOrigin: "0 0" });
+  })();
+
+  // ============== SHARD: shimmer sweep + subtle rotation ==============
+  (() => {
+    const shimmer = document.querySelector("#logo-shard .shimmer");
+    const facets = document.querySelectorAll("#logo-shard .facet");
+
+    gsap.fromTo(shimmer,
+      { x: -150 },
+      { x: 150, duration: 2.0, repeat: -1, repeatDelay: 1.5, ease: "power2.inOut" }
+    );
+
+    facets.forEach((f, i) => {
+      gsap.to(f, {
+        opacity: f.getAttribute("opacity") || 1,
+        duration: 0.6,
+        delay: i * 0.05,
+        ease: "power2.out"
+      });
+    });
+  })();
+
+  // ============== Card hover wobble ==============
+  document.querySelectorAll(".card").forEach(card => {
+    const stage = card.querySelector(".logo-stage");
+    card.addEventListener("mouseenter", () => {
+      gsap.to(stage, { scale: 1.05, duration: 0.5, ease: "power2.out" });
+    });
+    card.addEventListener("mouseleave", () => {
+      gsap.to(stage, { scale: 1, duration: 0.5, ease: "power2.out" });
+    });
+  });
+</script>
+</body>
+</html>
