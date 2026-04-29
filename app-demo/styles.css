@@ -44,39 +44,126 @@ ul,ol{list-style:none}
 .enable-btn:hover{transform:translateY(-2px);box-shadow:0 16px 48px -8px var(--green-glow)}
 
 /* ============================================================
-   STAGE + PHONE FRAME
+   STAGE + IPHONE 15 PRO FRAME (393×852pt logical, 19.5:9 aspect)
    ============================================================ */
 .stage{
   position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse 120% 80% at 50% 50%,#0A0F1A 0%,#000 70%);
   padding:32px;
 }
+
+/* Phone body — exact iPhone 15 Pro proportions
+   Logical: 393 × 852 pt → aspect 0.4613 (or 19.5:9)
+   Frame ≈ 14pt all-around (3.5% of width)
+   Screen corner radius 55pt (~14% of width or 6.5% of height)
+   Dynamic Island 125 × 37pt (~32% × 4.3% of screen)            */
 .phone{
-  position:relative;width:min(420px,calc(100vh * 0.46));aspect-ratio:9/19.5;
-  border-radius:54px;background:#1a1c20;
-  padding:14px;
+  position:relative;
+  /* keep both dimensions iPhone-true */
+  height:min(852px, 92vh);
+  aspect-ratio: 393 / 852;
+  border-radius: calc(min(852px, 92vh) * 0.0645);
+  padding: calc(min(852px, 92vh) * 0.0164);  /* ~14pt @ full size */
+  background:
+    linear-gradient(135deg, #2c3036 0%, #1c1f24 30%, #0f1115 50%, #1c1f24 70%, #2c3036 100%);
   box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.06),
-    0 60px 100px -30px rgba(0,0,0,.9),
-    0 0 0 1px rgba(255,255,255,.04),
-    0 0 120px -30px rgba(0,207,255,.2);
-}
-.phone-island{
-  position:absolute;top:18px;left:50%;transform:translateX(-50%);
-  width:32%;height:24px;background:#000;border-radius:24px;z-index:10;
-}
-.phone-screen{
-  position:relative;width:100%;height:100%;
-  background:#000;border-radius:42px;overflow:hidden;
-}
-@media(max-height:780px){
-  .stage{padding:0}
-  .phone{width:100vw;height:100vh;border-radius:0;padding:0;box-shadow:none;background:#000}
-  .phone-island{display:none}
-  .phone-screen{border-radius:0}
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    inset 0 1.5px 2px rgba(255,255,255,.18),
+    inset 0 -1.5px 2px rgba(0,0,0,.5),
+    0 60px 90px -30px rgba(0,0,0,.95),
+    0 0 0 1px rgba(255,255,255,.02),
+    0 0 120px -30px rgba(0,207,255,.18);
 }
 
-/* Status bar */
+/* Side buttons — power (right), volume (left), action (left top) */
+.phone::before{
+  /* power button */
+  content:'';position:absolute;
+  right:-2px; top:23%;
+  width:3px; height:11%;
+  background:linear-gradient(90deg,#1a1d23 0%,#0a0c0f 100%);
+  border-radius:2px 0 0 2px;
+}
+.phone::after{
+  /* volume up + down (combined visually) */
+  content:'';position:absolute;
+  left:-2px; top:18%;
+  width:3px; height:18%;
+  background:linear-gradient(90deg,#0a0c0f 0%,#1a1d23 100%);
+  border-radius:0 2px 2px 0;
+  box-shadow:
+    0 calc(min(852px, 92vh) * 0.043) 0 -2px rgba(0,0,0,0); /* placeholder for spacer between vol+/- handled visually */
+}
+
+/* Action button (above volume on iPhone 15 Pro) */
+.phone-action{
+  position:absolute;
+  left:-2px; top:13.5%;
+  width:3px; height:5%;
+  background:linear-gradient(90deg,#0a0c0f,#1a1d23);
+  border-radius:0 2px 2px 0;
+}
+
+/* Dynamic Island — 125 × 37pt */
+.phone-island{
+  position:absolute;
+  top: 1.5%;
+  left:50%; transform:translateX(-50%);
+  width: 32%;
+  height: 4.4%;
+  background:#000;
+  border-radius:100px;
+  z-index: 100;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Screen */
+.phone-screen{
+  position:relative; width:100%; height:100%;
+  background:#000;
+  border-radius: calc(min(852px, 92vh) * 0.055);
+  overflow:hidden;
+}
+
+/* Home indicator at bottom */
+.phone-home-indicator{
+  position:absolute;
+  bottom: 1.0%;
+  left:50%; transform:translateX(-50%);
+  width: 34%;
+  height: 5px;
+  background:#fff;
+  border-radius:100px;
+  opacity:.55;
+  z-index: 90;
+  pointer-events:none;
+}
+
+/* Mobile (real iPhone) — fill viewport, hide mockup chrome,
+   respect safe-area for the actual notch */
+@media (max-width: 480px), (pointer: coarse) and (max-height: 950px){
+  html,body{height:100vh;height:100dvh}
+  .stage{padding:0;background:#000;height:100vh;height:100dvh}
+  .phone{
+    width:100vw;
+    height:100vh;
+    height:100dvh;
+    aspect-ratio:auto;
+    border-radius:0; padding:0; background:#000;
+    box-shadow:none;
+  }
+  .phone::before,.phone::after,.phone-action,.phone-island,.phone-home-indicator{display:none}
+  .phone-screen{border-radius:0}
+  /* Hide our fake status bar — real iOS status bar covers this area */
+  .status-bar{display:none}
+  /* Push content below the real iOS notch */
+  .home{padding-top: calc(env(safe-area-inset-top, 54px) + 0px)}
+  .chat{padding-top: calc(env(safe-area-inset-top, 54px) + 0px)}
+  /* Ensure home indicator clearance at bottom */
+  .bottom{padding-bottom: env(safe-area-inset-bottom, 0px)}
+}
+
+/* Status bar (desktop mockup) */
 .status-bar{
   position:absolute;top:0;left:0;right:0;height:54px;z-index:5;
   display:flex;justify-content:space-between;align-items:center;
@@ -199,7 +286,6 @@ ul,ol{list-style:none}
 .chips{
   display:flex;gap:8px;overflow-x:auto;padding:4px 4px 12px;
   scrollbar-width:none;-ms-overflow-style:none;
-  flex-direction:row-reverse;
 }
 .chips::-webkit-scrollbar{display:none}
 .chip{
