@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Alfex — عرض تقديمي</title>
+<meta name="description" content="Alfex — تطبيق ذكاء اصطناعي للأسواق المالية" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- =============== SOUND ENABLE OVERLAY =============== -->
+<div class="enable" id="enable">
+  <div class="enable__atom">
+    <svg viewBox="0 0 200 200" width="120" height="120">
+      <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#00CFFF" stroke-width="2" fill="none"/>
+      <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#A855F7" stroke-width="2" fill="none" transform="rotate(60 100 100)"/>
+      <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#fff" stroke-width="2" fill="none" transform="rotate(-60 100 100)"/>
+      <circle cx="100" cy="100" r="8" fill="#fff"/>
+    </svg>
+  </div>
+  <h1 class="enable__title">Alfex</h1>
+  <p class="enable__sub">عرض تقديمي تلقائي مع صوت</p>
+  <button class="enable__btn" id="enableBtn">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <span>ابدأ العرض</span>
+  </button>
+  <div class="enable__hint">يُفضّل تشغيل الصوت</div>
+</div>
+
+<!-- =============== STAGE =============== -->
+<div class="stage" id="stage">
+
+  <!-- Three.js 3D atom canvas (used by hero only, faded) -->
+  <canvas id="atomCanvas" class="atom-canvas"></canvas>
+
+  <!-- Brand bar (always visible during reel) -->
+  <div class="brand">
+    <svg viewBox="0 0 32 32" width="22" height="22">
+      <ellipse cx="16" cy="16" rx="13" ry="5" stroke="#00CFFF" stroke-width="1.5" fill="none"/>
+      <ellipse cx="16" cy="16" rx="13" ry="5" stroke="#A855F7" stroke-width="1.5" fill="none" transform="rotate(60 16 16)"/>
+      <circle cx="16" cy="16" r="3" fill="#fff"/>
+    </svg>
+    <span>Alfex</span>
+  </div>
+
+  <!-- Progress dots -->
+  <div class="progress" id="progress"></div>
+
+  <!-- Loop counter (debug-ish, very subtle) -->
+  <div class="cycle" id="cycle">cycle 1</div>
+
+  <!-- ========== SCENE 1: HERO ========== -->
+  <section class="scene scene--hero" data-scene="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="hero-line"><span class="word">محللك</span> <span class="word">الذكي</span></span>
+        <span class="hero-line"><span class="word">لعالم</span> <span class="word accent">التداول</span></span>
+      </h1>
+      <p class="hero-sub">Alfex يحوّل آلاف الإشارات والأخبار إلى قرارات تداول واضحة — في ثوانٍ.</p>
+      <div class="hero-cta">
+        <span class="btn btn--primary">ابدأ مجاناً</span>
+        <span class="btn btn--ghost">شاهد كيف يعمل</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCENE 2: WHAT IS ALFEX ========== -->
+  <section class="scene scene--intro" data-scene="intro">
+    <div class="intro-content">
+      <div class="eyebrow">ما هو Alfex؟</div>
+      <h2 class="intro-text">
+        <span class="line">تطبيق <em>ذكاء اصطناعي</em></span>
+        <span class="line">متخصص في <em>الأسواق المالية</em></span>
+        <span class="line accent-line">يحلّل، يتنبّأ، ويُنبّه — قبل غيره.</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- ========== SCENE 3: FEATURES ========== -->
+  <section class="scene scene--features" data-scene="features">
+    <div class="features-head">
+      <div class="eyebrow">المميزات الجوهرية</div>
+      <h2 class="features-title">كل أدوات المتداول الذكي<br/>في تطبيق واحد.</h2>
+    </div>
+    <div class="features-grid">
+      <article class="feat" data-feat>
+        <div class="feat-icon" data-icon="bars">
+          <svg viewBox="0 0 48 48"><rect x="6" y="28" width="6" height="14" rx="1"/><rect x="16" y="20" width="6" height="22" rx="1"/><rect x="26" y="12" width="6" height="30" rx="1"/><rect x="36" y="22" width="6" height="20" rx="1"/></svg>
+        </div>
+        <h3>الأسواق المباشرة</h3>
+        <p>تابع الأسهم، الكريبتو، الذهب، النفط — لحظة بلحظة.</p>
+      </article>
+      <article class="feat" data-feat>
+        <div class="feat-icon" data-icon="news">
+          <svg viewBox="0 0 48 48"><rect x="6" y="10" width="36" height="28" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="12" y1="20" x2="36" y2="20" stroke="currentColor" stroke-width="2.5"/><line x1="12" y1="28" x2="28" y2="28" stroke="currentColor" stroke-width="2.5"/><circle cx="40" cy="14" r="3"/></svg>
+        </div>
+        <h3>أخبار الأسواق</h3>
+        <p>تقويم اقتصادي + سيناريوهات متوقّعة لكل حدث.</p>
+      </article>
+      <article class="feat" data-feat>
+        <div class="feat-icon" data-icon="cap">
+          <svg viewBox="0 0 48 48"><path d="M24 8 L40 16 L24 24 L8 16 Z"/><path d="M14 22 L14 30 Q14 34 24 34 Q34 34 34 30 L34 22" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="40" y1="16" x2="40" y2="34" stroke="currentColor" stroke-width="2.5"/></svg>
+        </div>
+        <h3>المدرب الشخصي</h3>
+        <p>دروس تفاعلية واستراتيجيات مخصصة لمستواك.</p>
+      </article>
+      <article class="feat" data-feat>
+        <div class="feat-icon" data-icon="chart">
+          <svg viewBox="0 0 48 48"><polyline points="6,34 18,22 26,30 42,12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="36,12 42,12 42,18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>صفقاتي</h3>
+        <p>سجل صفقاتك وحلّل أداءك بتقارير ذكية.</p>
+      </article>
+      <article class="feat" data-feat>
+        <div class="feat-icon" data-icon="game">
+          <svg viewBox="0 0 48 48"><rect x="8" y="14" width="32" height="22" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="18" cy="25" r="2"/><circle cx="30" cy="25" r="2"/><line x1="14" y1="14" x2="14" y2="10" stroke="currentColor" stroke-width="2.5"/><line x1="34" y1="14" x2="34" y2="10" stroke="currentColor" stroke-width="2.5"/></svg>
+        </div>
+        <h3>تداول افتراضي</h3>
+        <p>تدرّب بأموال وهمية على أسواق حقيقية.</p>
+      </article>
+      <article class="feat" data-feat>
+        <div class="feat-icon" data-icon="bell">
+          <svg viewBox="0 0 48 48"><path d="M24 8 Q12 8 12 22 Q12 30 8 34 L40 34 Q36 30 36 22 Q36 8 24 8 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 38 Q20 42 24 42 Q28 42 28 38" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>
+        </div>
+        <h3>التنبيهات الذكية</h3>
+        <p>إشعارات لحظية بالفرص قبل تحرّك السوق.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========== SCENE 4: AI CHAT DEMO ========== -->
+  <section class="scene scene--demo" data-scene="demo">
+    <div class="demo-grid">
+      <div class="demo-copy">
+        <div class="eyebrow">ذكاء اصطناعي حقيقي</div>
+        <h2 class="demo-title">اسأل بلغتك،<br/><span class="accent">واستلم تحليل خبير.</span></h2>
+        <ul class="demo-points">
+          <li><span class="dot"></span><div><strong>تحليل فوري</strong><p>للأسواق العالمية والمحلية.</p></div></li>
+          <li><span class="dot"></span><div><strong>سيناريوهات متوقّعة</strong><p>لكل قرار اقتصادي.</p></div></li>
+          <li><span class="dot"></span><div><strong>قراءة الشارتات</strong><p>بصور، يحلّلها بالتفصيل.</p></div></li>
+        </ul>
+      </div>
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__screen">
+          <div class="phone__bar">
+            <span>11:10</span>
+            <b>Alfex</b>
+            <span>5G</span>
+          </div>
+          <div class="chat" id="chat">
+            <div class="msg msg--user" data-msg>حلّل وضع السوق السعودي اليوم</div>
+            <div class="msg msg--ai msg--typing" data-msg><span class="typing"><i></i><i></i><i></i></span></div>
+            <div class="msg msg--ai" data-msg><strong>تاسي يفتح على ارتفاع +0.4%</strong> — قطاع البنوك يقود الصعود.</div>
+            <div class="msg msg--card" data-msg>
+              <div class="card-head"><span>مقياس الحرارة</span><span class="badge">حذِر</span></div>
+              <div class="gauge"><div class="gauge-fill"></div></div>
+              <div class="card-foot">
+                <div><b>33</b><span>خوف</span></div>
+                <div><b>+1.2%</b><span>تاسي</span></div>
+                <div><b>$2,418</b><span>الذهب</span></div>
+              </div>
+            </div>
+            <div class="msg msg--ai" data-msg><strong>توصيتي:</strong> راقب 12,400 — اختراقه يفتح 12,650.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCENE 5: HEAT GAUGE ========== -->
+  <section class="scene scene--heat" data-scene="heat">
+    <div class="heat-head">
+      <div class="eyebrow">حرارة السوق</div>
+      <h2 class="heat-title">اقرأ مزاج السوق<br/><span class="accent">قبل أي صفقة.</span></h2>
+    </div>
+    <div class="heat-card">
+      <div class="heat-bar">
+        <div class="heat-fill"></div>
+        <div class="heat-needle" id="heatNeedle"></div>
+      </div>
+      <div class="heat-labels">
+        <span>خوف شديد</span><span>خوف</span><span>محايد</span><span>جشع</span><span>جشع شديد</span>
+      </div>
+      <div class="heat-value">
+        <div class="heat-num" id="heatNum">0</div>
+        <div class="heat-state" id="heatState">جاري القراءة…</div>
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip" data-chip>₿ <b>كريبتو</b><i class="down">هابط ↓</i></div>
+      <div class="chip" data-chip>🛢 <b>النفط</b><i class="up">صاعد ↑</i></div>
+      <div class="chip" data-chip>🥇 <b>الذهب</b><i class="up">صاعد ↑</i></div>
+      <div class="chip" data-chip>📈 <b>الأسهم</b><i class="down">هابط ↓</i></div>
+    </div>
+  </section>
+
+  <!-- ========== SCENE 6: PRICING ========== -->
+  <section class="scene scene--pricing" data-scene="pricing">
+    <div class="pricing-head">
+      <div class="eyebrow">الباقات</div>
+      <h2 class="pricing-title">ابدأ مجاناً،<br/>ارتقِ متى ما أردت.</h2>
+    </div>
+    <div class="plans">
+      <article class="plan" data-plan>
+        <div class="plan-top"><h3>مجانية</h3><span>✦</span></div>
+        <div class="plan-price"><b data-count="0">0</b><span>ريال / شهرياً</span></div>
+        <ul><li>10 رسائل يومياً</li><li>تحليل أساسي</li><li>أخبار الأسواق</li></ul>
+        <div class="plan-cta plan-cta--ghost">ابدأ الآن</div>
+      </article>
+      <article class="plan plan--pro" data-plan>
+        <div class="plan-ribbon">الأكثر شعبية</div>
+        <div class="plan-top"><h3>Pro</h3><span>★</span></div>
+        <div class="plan-price"><b data-count="29">0</b><span>ريال / شهرياً</span></div>
+        <ul><li>200 رسالة يومياً</li><li>تحليل متقدم</li><li>تنبيهات الأسعار</li><li>أولوية في الردود</li></ul>
+        <div class="plan-cta plan-cta--primary">اشترك الآن</div>
+      </article>
+      <article class="plan plan--gold" data-plan>
+        <div class="plan-top"><h3>Unlimited</h3><span>♛</span></div>
+        <div class="plan-price"><b data-count="99">0</b><span>ريال / شهرياً</span></div>
+        <ul><li>رسائل غير محدودة</li><li>كل ميزات Pro</li><li>تحليل الصور والشارتات</li><li>API خاص</li></ul>
+        <div class="plan-cta plan-cta--gold">انضم الآن</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========== SCENE 7: CTA ========== -->
+  <section class="scene scene--cta" data-scene="cta">
+    <div class="cta-bg"></div>
+    <div class="cta-inner">
+      <h2 class="cta-title">
+        <span>ابدأ رحلتك في</span>
+        <span class="accent">التداول الذكي.</span>
+      </h2>
+      <p class="cta-sub">جرّب Alfex مجاناً اليوم — بدون بطاقة ائتمان.</p>
+      <div class="stores">
+        <div class="store">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          <div><span>متوفر على</span><b>App Store</b></div>
+        </div>
+        <div class="store">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.41 12l2.488-2.491z"/></svg>
+          <div><span>متوفر على</span><b>Google Play</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /stage -->
+
+<!-- ========== LIBS ========== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="script.js"></script>
+
+</body>
+</html>
