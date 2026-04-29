@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Alfex — محللك الذكي لعالم التداول</title>
+<meta name="description" content="Alfex — تطبيق ذكاء اصطناعي متخصص في الأسواق المالية. تحليل لحظي، تنبيهات ذكية، ومدرب تداول شخصي." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="loading">
+
+<!-- =============== LOADER =============== -->
+<div class="loader" id="loader">
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-text">ALFEX</div>
+</div>
+
+<!-- =============== NAV =============== -->
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top">
+    <svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true">
+      <defs>
+        <radialGradient id="navAtom" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#00CFFF" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="32" cy="32" rx="26" ry="10" stroke="#00CFFF" stroke-width="2" fill="none"/>
+      <ellipse cx="32" cy="32" rx="26" ry="10" stroke="#A855F7" stroke-width="2" fill="none" transform="rotate(60 32 32)"/>
+      <ellipse cx="32" cy="32" rx="26" ry="10" stroke="#fff" stroke-width="2" fill="none" transform="rotate(-60 32 32)"/>
+      <circle cx="32" cy="32" r="14" fill="url(#navAtom)" opacity="0.6"/>
+      <circle cx="32" cy="32" r="5" fill="#fff"/>
+    </svg>
+    <span>Alfex</span>
+  </a>
+  <nav class="nav__links">
+    <a href="#features">المميزات</a>
+    <a href="#demo">عرض حي</a>
+    <a href="#heat">حرارة السوق</a>
+    <a href="#pricing">الباقات</a>
+  </nav>
+  <a class="nav__cta" href="#download">تحميل التطبيق</a>
+</header>
+
+<!-- =============== HERO =============== -->
+<section class="hero" id="top">
+  <div class="hero__bg">
+    <div class="hero__grid"></div>
+    <div class="hero__glow"></div>
+    <div class="hero__particles" id="particles"></div>
+  </div>
+
+  <div class="hero__content">
+    <div class="hero__atom" id="heroAtom">
+      <svg viewBox="0 0 400 400" width="100%" height="100%">
+        <defs>
+          <radialGradient id="atomCore" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="40%" stop-color="#00CFFF" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="orbit1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00CFFF" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#00CFFF" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#00CFFF" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="orbit2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#A855F7" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#A855F7" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="orbit3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#ffffff" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g class="atom-orbit atom-orbit--1">
+          <ellipse cx="200" cy="200" rx="160" ry="60" stroke="url(#orbit1)" stroke-width="2.5" fill="none"/>
+        </g>
+        <g class="atom-orbit atom-orbit--2">
+          <ellipse cx="200" cy="200" rx="160" ry="60" stroke="url(#orbit2)" stroke-width="2.5" fill="none"/>
+        </g>
+        <g class="atom-orbit atom-orbit--3">
+          <ellipse cx="200" cy="200" rx="160" ry="60" stroke="url(#orbit3)" stroke-width="2.5" fill="none"/>
+        </g>
+        <circle cx="200" cy="200" r="80" fill="url(#atomCore)"/>
+        <circle cx="200" cy="200" r="14" fill="#ffffff"/>
+        <circle class="atom-electron atom-electron--1" cx="60" cy="200" r="6" fill="#00CFFF"/>
+        <circle class="atom-electron atom-electron--2" cx="340" cy="200" r="5" fill="#A855F7"/>
+        <circle class="atom-electron atom-electron--3" cx="200" cy="60" r="4" fill="#ffffff"/>
+      </svg>
+    </div>
+
+    <h1 class="hero__title">
+      <span class="hero__title-line"><span class="word">محللك</span> <span class="word">الذكي</span></span>
+      <span class="hero__title-line"><span class="word">لعالم</span> <span class="word accent">التداول</span></span>
+    </h1>
+    <p class="hero__sub">
+      Alfex يحوّل آلاف الإشارات والأخبار إلى قرارات تداول واضحة — في ثوانٍ.
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="#download">ابدأ مجاناً</a>
+      <a class="btn btn--ghost" href="#demo">شاهد كيف يعمل</a>
+    </div>
+  </div>
+
+  <!-- live ticker -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track" id="tickerTrack"></div>
+  </div>
+
+  <div class="hero__scroll">
+    <span>اسحب للأسفل</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- =============== INTRO LINE =============== -->
+<section class="intro">
+  <h2 class="intro__text" id="introText">
+    <span>تطبيق ذكاء اصطناعي</span>
+    <span>متخصص في الأسواق المالية</span>
+    <span class="intro__accent">يحلّل، يتنبّأ، ويُنبّه — قبل غيره.</span>
+  </h2>
+</section>
+
+<!-- =============== FEATURES =============== -->
+<section class="features" id="features">
+  <div class="section__head">
+    <div class="eyebrow">المميزات الجوهرية</div>
+    <h2 class="section__title">كل أدوات المتداول الذكي<br/>في تطبيق واحد.</h2>
+  </div>
+
+  <div class="features__grid">
+    <article class="feature" data-feature>
+      <div class="feature__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40">
+          <rect x="6" y="28" width="6" height="14" rx="1" fill="currentColor"/>
+          <rect x="16" y="20" width="6" height="22" rx="1" fill="currentColor"/>
+          <rect x="26" y="12" width="6" height="30" rx="1" fill="currentColor"/>
+          <rect x="36" y="22" width="6" height="20" rx="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <h3>الأسواق المباشرة</h3>
+      <p>تابع الأسهم، العملات الرقمية، الذهب، النفط — لحظة بلحظة في واجهة واحدة موحّدة.</p>
+    </article>
+
+    <article class="feature" data-feature>
+      <div class="feature__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40">
+          <rect x="6" y="10" width="36" height="28" rx="3" stroke="currentColor" stroke-width="2.5" fill="none"/>
+          <line x1="12" y1="20" x2="36" y2="20" stroke="currentColor" stroke-width="2.5"/>
+          <line x1="12" y1="28" x2="28" y2="28" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="40" cy="14" r="3" fill="currentColor"/>
+        </svg>
+      </div>
+      <h3>أخبار الأسواق</h3>
+      <p>تقويم اقتصادي شامل + تحليل مسبق لكل حدث + سيناريوهات متوقعة لتأثيره على محفظتك.</p>
+    </article>
+
+    <article class="feature" data-feature>
+      <div class="feature__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40">
+          <path d="M24 8 L40 16 L24 24 L8 16 Z" fill="currentColor"/>
+          <path d="M14 22 L14 30 Q14 34 24 34 Q34 34 34 30 L34 22" stroke="currentColor" stroke-width="2.5" fill="none"/>
+          <line x1="40" y1="16" x2="40" y2="34" stroke="currentColor" stroke-width="2.5"/>
+        </svg>
+      </div>
+      <h3>المدرب الشخصي</h3>
+      <p>دروس تفاعلية، استراتيجيات مخصصة لمستواك، وتقييم لكل صفقة — كأن لديك معلم خاص.</p>
+    </article>
+
+    <article class="feature" data-feature>
+      <div class="feature__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40">
+          <polyline points="6,34 18,22 26,30 42,12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="36,12 42,12 42,18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>صفقاتي</h3>
+      <p>سجل صفقاتك، حلّل أداءك، واكتشف أخطاءك المتكررة عبر تقارير ذكية.</p>
+    </article>
+
+    <article class="feature" data-feature>
+      <div class="feature__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40">
+          <rect x="8" y="14" width="32" height="22" rx="4" stroke="currentColor" stroke-width="2.5" fill="none"/>
+          <circle cx="18" cy="25" r="2" fill="currentColor"/>
+          <circle cx="30" cy="25" r="2" fill="currentColor"/>
+          <line x1="14" y1="14" x2="14" y2="10" stroke="currentColor" stroke-width="2.5"/>
+          <line x1="34" y1="14" x2="34" y2="10" stroke="currentColor" stroke-width="2.5"/>
+        </svg>
+      </div>
+      <h3>تداول افتراضي</h3>
+      <p>تدرّب بأموال وهمية على أسواق حقيقية — بدون أي مخاطرة على رأس مالك الفعلي.</p>
+    </article>
+
+    <article class="feature" data-feature>
+      <div class="feature__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40">
+          <path d="M24 8 Q12 8 12 22 Q12 30 8 34 L40 34 Q36 30 36 22 Q36 8 24 8 Z" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+          <path d="M20 38 Q20 42 24 42 Q28 42 28 38" stroke="currentColor" stroke-width="2.5" fill="none"/>
+        </svg>
+      </div>
+      <h3>التنبيهات الذكية</h3>
+      <p>إشعارات لحظية بالأحداث المهمة، اختراقات الأسعار، والفرص — قبل أن يتحرك السوق.</p>
+    </article>
+  </div>
+</section>
+
+<!-- =============== AI CHAT DEMO (PINNED) =============== -->
+<section class="demo" id="demo">
+  <div class="demo__inner">
+    <div class="demo__copy">
+      <div class="eyebrow">ذكاء اصطناعي حقيقي</div>
+      <h2 class="section__title">اسأل بلغتك،<br/><span class="accent">تحصل على إجابة محلّل خبير.</span></h2>
+      <ul class="demo__points">
+        <li><span class="dot"></span><div><strong>تحليل فوري</strong><p>للأسواق العالمية والمحلية بنبرة تفهمها.</p></div></li>
+        <li><span class="dot"></span><div><strong>سيناريوهات متوقّعة</strong><p>لكل قرار اقتصادي — مع إجراءات مقترحة.</p></div></li>
+        <li><span class="dot"></span><div><strong>قراءة الشارتات</strong><p>أرفع صورة شارت، يحلّلها لك Alfex بالتفصيل.</p></div></li>
+      </ul>
+    </div>
+
+    <div class="phone" id="demoPhone">
+      <div class="phone__notch"></div>
+      <div class="phone__screen">
+        <div class="phone__statusbar">
+          <span>11:10</span>
+          <div class="phone__brand">Alfex</div>
+          <span class="phone__signal">5G</span>
+        </div>
+
+        <div class="chat" id="chat">
+          <div class="chat__msg chat__msg--user" data-msg>
+            حلّل لي وضع السوق السعودي اليوم وأهم المؤشرات
+          </div>
+          <div class="chat__msg chat__msg--ai chat__msg--typing" data-msg>
+            <span class="typing"><i></i><i></i><i></i></span>
+          </div>
+          <div class="chat__msg chat__msg--ai" data-msg>
+            <strong>تاسي يفتح على ارتفاع طفيف +0.4%</strong> — قطاع البنوك يقود الصعود مع توقعات أرباح Q4 إيجابية.
+          </div>
+          <div class="chat__card" data-msg>
+            <div class="chat__card-head">
+              <span>مقياس حرارة السوق</span>
+              <span class="chat__badge chat__badge--neutral">حذِر</span>
+            </div>
+            <div class="chat__gauge">
+              <div class="chat__gauge-fill" style="width:42%"></div>
+            </div>
+            <div class="chat__card-foot">
+              <div><b>33</b><span>خوف</span></div>
+              <div><b>+1.2%</b><span>تاسي</span></div>
+              <div><b>$2,418</b><span>الذهب</span></div>
+            </div>
+          </div>
+          <div class="chat__msg chat__msg--ai" data-msg>
+            <strong>توصيتي:</strong> راقب مستوى 12,400 — اختراقه يفتح الباب لـ 12,650.
+          </div>
+          <div class="chat__msg chat__msg--user" data-msg>
+            حلّل لي هذا الحدث: تصاريح البناء الأمريكية
+          </div>
+          <div class="chat__msg chat__msg--ai" data-msg>
+            ⚡ حدث متوسط التأثير. ثلاثة سيناريوهات محتملة:
+          </div>
+          <div class="chat__scenarios" data-msg>
+            <div class="chat__scenario chat__scenario--up">
+              <div class="chat__scenario-head">📈 إيجابي</div>
+              <p>ثبات + تلميح بالخفض → الأسهم والذهب يرتفعان</p>
+            </div>
+            <div class="chat__scenario chat__scenario--down">
+              <div class="chat__scenario-head">📉 سلبي</div>
+              <p>ثبات بدون تلميح → الدولار يقوى، الأسهم تتراجع</p>
+            </div>
+            <div class="chat__scenario chat__scenario--flat">
+              <div class="chat__scenario-head">➖ محايد</div>
+              <p>تطابق التوقعات → السوق ينتظر الـ FOMC</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== MARKET HEAT =============== -->
+<section class="heat" id="heat">
+  <div class="heat__head">
+    <div class="eyebrow">مقياس حرارة السوق</div>
+    <h2 class="section__title">اِقرأ مزاج السوق<br/><span class="accent">قبل أن تدخل في صفقة.</span></h2>
+    <p class="heat__sub">من الخوف الشديد إلى الجشع الشديد — يقرأ Alfex 12 مؤشراً ويحوّلها إلى رقم واحد.</p>
+  </div>
+
+  <div class="heat__gauge" id="heatGauge">
+    <div class="heat__bar">
+      <div class="heat__bar-fill"></div>
+      <div class="heat__needle" id="heatNeedle"></div>
+    </div>
+    <div class="heat__labels">
+      <span>خوف شديد</span>
+      <span>خوف</span>
+      <span>محايد</span>
+      <span>جشع</span>
+      <span>جشع شديد</span>
+    </div>
+    <div class="heat__value">
+      <div class="heat__num" id="heatNum">0</div>
+      <div class="heat__state" id="heatState">جاري القراءة…</div>
+    </div>
+  </div>
+
+  <div class="heat__chips">
+    <div class="chip"><span class="chip__icon">₿</span><div><b>كريبتو</b><i class="down">هابط ↓</i></div></div>
+    <div class="chip"><span class="chip__icon">🛢</span><div><b>النفط</b><i class="up">صاعد ↑</i></div></div>
+    <div class="chip"><span class="chip__icon">🥇</span><div><b>الذهب</b><i class="up">صاعد ↑</i></div></div>
+    <div class="chip"><span class="chip__icon">📈</span><div><b>الأسهم</b><i class="down">هابط ↓</i></div></div>
+  </div>
+</section>
+
+<!-- =============== PRICING =============== -->
+<section class="pricing" id="pricing">
+  <div class="section__head">
+    <div class="eyebrow">الباقات</div>
+    <h2 class="section__title">ابدأ مجاناً،<br/>ارتقِ متى ما أردت.</h2>
+  </div>
+
+  <div class="plans">
+    <article class="plan" data-plan>
+      <div class="plan__top">
+        <h3>مجانية</h3>
+        <span class="plan__icon">✦</span>
+      </div>
+      <div class="plan__price"><b>0</b><span>ريال / شهرياً</span></div>
+      <ul class="plan__list">
+        <li>10 رسائل يومياً</li>
+        <li>تحليل أساسي للأسواق</li>
+        <li>أخبار الأسواق</li>
+        <li>الأسواق المباشرة</li>
+      </ul>
+      <a class="btn btn--ghost" href="#download">ابدأ الآن</a>
+    </article>
+
+    <article class="plan plan--featured" data-plan>
+      <div class="plan__ribbon">الأكثر شعبية</div>
+      <div class="plan__top">
+        <h3>Pro</h3>
+        <span class="plan__icon">★</span>
+      </div>
+      <div class="plan__price"><b>29</b><span>ريال / شهرياً</span></div>
+      <ul class="plan__list">
+        <li>200 رسالة يومياً</li>
+        <li>تحليل متقدم للأسواق</li>
+        <li>تنبيهات الأسعار</li>
+        <li>أولوية في الردود</li>
+        <li>دعم فني مميز</li>
+      </ul>
+      <a class="btn btn--primary" href="#download">اشترك الآن</a>
+    </article>
+
+    <article class="plan plan--gold" data-plan>
+      <div class="plan__top">
+        <h3>Unlimited</h3>
+        <span class="plan__icon">♛</span>
+      </div>
+      <div class="plan__price"><b>99</b><span>ريال / شهرياً</span></div>
+      <ul class="plan__list">
+        <li>رسائل غير محدودة</li>
+        <li>كل ميزات Pro</li>
+        <li>تحليل الصور والشارتات</li>
+        <li>تقارير AI مخصصة</li>
+        <li>وصول مبكر للميزات</li>
+        <li>API خاص</li>
+      </ul>
+      <a class="btn btn--gold" href="#download">انضم لـ Unlimited</a>
+    </article>
+  </div>
+</section>
+
+<!-- =============== FOOTER CTA =============== -->
+<section class="cta" id="download">
+  <div class="cta__bg"></div>
+  <div class="cta__content">
+    <h2 class="cta__title">
+      <span>ابدأ رحلتك في</span>
+      <span class="accent">التداول الذكي.</span>
+    </h2>
+    <p class="cta__sub">جرّب Alfex مجاناً اليوم — بدون بطاقة ائتمان.</p>
+    <div class="cta__stores">
+      <a class="store" href="#">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+        <div><span>متوفر على</span><b>App Store</b></div>
+      </a>
+      <a class="store" href="#">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.41 12l2.488-2.491zM5.864 2.658L16.802 8.99l-2.302 2.302-8.636-8.634z"/></svg>
+        <div><span>متوفر على</span><b>Google Play</b></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =============== FOOTER =============== -->
+<footer class="foot">
+  <div class="foot__row">
+    <span>© 2026 Alfex. جميع الحقوق محفوظة.</span>
+    <div class="foot__links">
+      <a href="#">سياسة الخصوصية</a>
+      <a href="#">الشروط</a>
+      <a href="#">تواصل معنا</a>
+    </div>
+  </div>
+</footer>
+
+<!-- =============== LIBS =============== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
