@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="t">
+<title id="t">Alfex</title>
+<rect width="100%" height="100%" fill="#0A0C12"/>
+<defs>
+  <linearGradient id="g-prism" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00CFFF"/>
+    <stop offset="50%" stop-color="#1ED38A"/>
+    <stop offset="100%" stop-color="#A855F7"/>
+  </linearGradient>
+  <radialGradient id="core-prism" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+    <stop offset="50%" stop-color="#00CFFF" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<g transform="translate(100,100)">
+  <polygon points="0,-56 48.496,28 -48.496,28" fill="none" stroke="url(#g-prism)" stroke-width="4.48" stroke-linejoin="round"/>
+  <polygon points="0,-30.800000000000004 26.656,15.400000000000002 -26.656,15.400000000000002" fill="url(#g-prism)" opacity="1"/>
+  <line x1="-58.800000000000004" y1="28" x2="-48.496" y2="28" stroke="url(#g-prism)" stroke-width="3.36" stroke-linecap="round"/>
+  <line x1="48.496" y1="28" x2="58.800000000000004" y2="28" stroke="url(#g-prism)" stroke-width="3.36" stroke-linecap="round"/>
+</g>
+</svg>

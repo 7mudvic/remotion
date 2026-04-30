@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 260" role="img" aria-labelledby="t">
+<title id="t">Alfex</title>
+<rect width="100%" height="100%" fill="#0A0C12"/>
+<defs>
+  <linearGradient id="g-pulse" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00CFFF"/>
+    <stop offset="50%" stop-color="#1ED38A"/>
+    <stop offset="100%" stop-color="#A855F7"/>
+  </linearGradient>
+  <radialGradient id="core-pulse" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+    <stop offset="50%" stop-color="#00CFFF" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<g transform="translate(85,100)">
+  <path d="M 0,0 L 23.4,0 L 33.800000000000004,-16.38 L 44.2,16.38 L 54.6,0 L 65,0 L 71.5,-45.5 L 78,36.4 L 84.5,0 L 101.4,0 L 110.5,-13.65 L 119.60000000000001,0 L 130,0"
+    fill="none" stroke="url(#g-pulse)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="74.75" cy="-45.5" r="8.450000000000001" fill="url(#g-pulse)"/>
+</g>
+<text text-anchor="middle" x="150" y="220" fill="#FFFFFF" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-weight="300" font-size="52" letter-spacing="1.04">Alfex</text>
+</svg>
