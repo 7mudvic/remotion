@@ -58,18 +58,13 @@ for (const concept of CONCEPTS) {
     for (const t of TREATMENTS) {
       const file = `concept-${concept.id}/${layout.id}/${t.id}.svg`;
       const fullPath = path.join(ROOT, file);
-      const svg = fs.readFileSync(fullPath, 'utf8')
-        .replace(/<\?xml[^>]*\?>\s*/g, '')
-        .replace(/<!--[\s\S]*?-->/g, '')
-        // make every gradient id unique per file so they don't collide
-        .replace(/id="(g-[a-z]+|core-[a-z]+)"/g, (m, id) => `id="${id}-${concept.id}-${layout.id}-${t.id}"`)
-        .replace(/url\(#(g-[a-z]+|core-[a-z]+)\)/g, (m, id) => `url(#${id}-${concept.id}-${layout.id}-${t.id})`)
-        // strip svg tag width/height so CSS controls sizing; keep viewBox
-        .replace(/<svg /, '<svg style="display:block;width:100%;height:auto;max-width:100%;max-height:140px" ');
+      const svgRaw = fs.readFileSync(fullPath, 'utf8');
+      // Encode as base64 data URI — most reliable on iOS Safari
+      const dataUri = `data:image/svg+xml;base64,${Buffer.from(svgRaw).toString('base64')}`;
       conceptsHtml += `
         <div class="cell ${t.cell}" data-path="${file}">
           <span class="cell__tag">${t.label}</span>
-          <div class="cell__svg">${svg}</div>
+          <img src="${dataUri}" alt="Alfex ${concept.name} — ${layout.name} (${t.label})" />
           <span class="cell__copy" data-path="${file}">copy path</span>
         </div>
       `;
@@ -129,8 +124,7 @@ const html = `<!doctype html>
   .cell{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);min-height:160px;display:flex;align-items:center;justify-content:center;padding:18px}
   .cell--dark{background:#0A0C12}
   .cell--light{background:#FFFFFF}
-  .cell__svg{width:100%;display:flex;align-items:center;justify-content:center}
-  .cell__svg svg{display:block !important;max-width:100% !important;height:auto !important;max-height:130px !important;width:auto !important}
+  .cell img{display:block;max-width:90%;max-height:130px;width:auto;height:auto;object-fit:contain}
   .cell__tag{position:absolute;top:8px;left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--ink-3);background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px;z-index:2}
   .cell--light .cell__tag{color:rgba(0,0,0,.5);background:rgba(255,255,255,.7)}
   .cell__copy{position:absolute;bottom:8px;right:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--ink-3);text-transform:uppercase;background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px;cursor:pointer;transition:background .2s;z-index:2}
