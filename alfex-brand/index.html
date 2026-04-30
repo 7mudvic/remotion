@@ -53,10 +53,10 @@
   .layout__label b{display:block;color:var(--ink);font-size:14px;letter-spacing:0;text-transform:none;font-family:'Inter',sans-serif;font-weight:600;margin-bottom:4px}
   .layout__label small{font-size:10px}
 
-  .cell{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);min-height:140px;display:flex;align-items:center;justify-content:center;padding:24px}
+  .cell{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);min-height:160px;display:flex;align-items:center;justify-content:center;padding:24px}
   .cell--dark{background:#0A0C12}
   .cell--light{background:#FFFFFF}
-  .cell svg{max-width:100%;max-height:100%;display:block}
+  .cell img,.cell svg{display:block;width:auto;height:auto;max-width:100%;max-height:120px;object-fit:contain}
   .cell__tag{position:absolute;top:8px;left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--ink-3);background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px}
   .cell--light .cell__tag{color:rgba(0,0,0,.5);background:rgba(255,255,255,.7)}
   .cell__copy{position:absolute;bottom:8px;right:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--ink-3);text-transform:uppercase;background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px;cursor:pointer;transition:background .2s}
@@ -169,7 +169,7 @@ CONCEPTS.forEach(concept => {
       html += `
         <div class="cell ${t.cell}" data-path="${filePath}">
           <span class="cell__tag">${t.label}</span>
-          <object data="${filePath}" type="image/svg+xml" style="max-width:100%;max-height:100%;pointer-events:none"></object>
+          <img src="${filePath}" alt="Alfex ${concept.name} — ${layout.name} (${t.label})" loading="lazy" />
           <span class="cell__copy" data-path="${filePath}">copy path</span>
         </div>`;
     });
