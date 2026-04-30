@@ -1,0 +1,204 @@
+#!/usr/bin/env node
+/* Build a self-contained gallery.html with every SVG inlined. */
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = __dirname;
+
+const CONCEPTS = [
+  { id:'atom-orbit', n:'01', name:'Atom Orbit', rationale:'Three orbiting paths around a luminous core. Each orbit reads as one model in the ensemble; together they converge on a single answer. Most direct AI metaphor — recommended primary.' },
+  { id:'prism', n:'02', name:'Prism', rationale:'A prism refracts noise into clarity. Two nested triangles plus light tracks evoke the moment market chaos becomes a clean signal.' },
+  { id:'pulse-wave', n:'03', name:'Pulse Wave', rationale:'A market heartbeat with one tall spike — the anomaly Alfex catches before the rest of the room.' },
+  { id:'aperture', n:'04', name:'Aperture', rationale:'Concentric rings with a focused core and four crosshair ticks. Reads as precision, focus, and a lens trained on the market.' },
+  { id:'helix-a', n:'05', name:'Helix A', rationale:'Two intertwined arcs forming a stylised "A" — Alfex itself, and the dual-mind ensemble that makes it work.' },
+];
+const LAYOUTS = [
+  { id:'horizontal', name:'Horizontal lockup', use:'Headers · cards · email signatures' },
+  { id:'vertical', name:'Vertical lockup', use:'Social · app store · posters' },
+  { id:'square', name:'Square / badge', use:'Avatars · in-app · thumbnails' },
+  { id:'icon-only', name:'Icon only', use:'Favicon · app icon · watermark' },
+  { id:'wordmark-only', name:'Wordmark only', use:'Editorial · minimal banners' },
+];
+const TREATMENTS = [
+  { id:'full-color', cell:'cell--dark', label:'Full colour' },
+  { id:'white-mono', cell:'cell--dark', label:'White mono' },
+  { id:'black-mono', cell:'cell--light', label:'Black mono' },
+];
+
+let conceptsHtml = '';
+let count = 0;
+for (const concept of CONCEPTS) {
+  conceptsHtml += `
+  <section class="concept">
+    <div class="concept__head">
+      <div>
+        <span class="concept__num">CONCEPT ${concept.n}</span>
+        <h2 class="concept__name">${concept.name}</h2>
+      </div>
+      <div>
+        <p class="concept__rationale">${concept.rationale}</p>
+        <div class="concept__meta">
+          <div><span>Layouts</span> <b>5</b></div>
+          <div><span>Treatments</span> <b>3</b></div>
+          <div><span>Total files</span> <b>15 SVGs</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="layouts">
+  `;
+
+  for (const layout of LAYOUTS) {
+    conceptsHtml += `
+      <div class="layout">
+        <div class="layout__label">
+          <b>${layout.name}</b>
+          <small>${layout.use}</small>
+        </div>
+    `;
+    for (const t of TREATMENTS) {
+      const file = `concept-${concept.id}/${layout.id}/${t.id}.svg`;
+      const fullPath = path.join(ROOT, file);
+      const svg = fs.readFileSync(fullPath, 'utf8')
+        .replace(/<\?xml[^>]*\?>\s*/g, '')
+        .replace(/<!--[\s\S]*?-->/g, '')
+        // make every gradient id unique per file so they don't collide
+        .replace(/id="(g-[a-z]+|core-[a-z]+)"/g, (m, id) => `id="${id}-${concept.id}-${layout.id}-${t.id}"`)
+        .replace(/url\(#(g-[a-z]+|core-[a-z]+)\)/g, (m, id) => `url(#${id}-${concept.id}-${layout.id}-${t.id})`)
+        // strip svg tag width/height so CSS controls sizing; keep viewBox
+        .replace(/<svg /, '<svg style="display:block;width:100%;height:auto;max-width:100%;max-height:140px" ');
+      conceptsHtml += `
+        <div class="cell ${t.cell}" data-path="${file}">
+          <span class="cell__tag">${t.label}</span>
+          <div class="cell__svg">${svg}</div>
+          <span class="cell__copy" data-path="${file}">copy path</span>
+        </div>
+      `;
+      count++;
+    }
+    conceptsHtml += `</div>`;
+  }
+  conceptsHtml += `</div></section>`;
+}
+
+const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Alfex — Brand System (Inline Gallery)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050609;--bg-2:#0A0C12;--ink:#fff;--ink-2:rgba(255,255,255,.62);
+    --ink-3:rgba(255,255,255,.4);--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.18);
+    --green:#1ED38A;--cyan:#00CFFF;--purple:#A855F7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--green);color:#000}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3)}
+  .hero{padding:96px 48px 48px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .hero__glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 30% 30%,rgba(0,207,255,.10),transparent 60%),radial-gradient(ellipse 80% 60% at 70% 70%,rgba(168,85,247,.08),transparent 60%);pointer-events:none}
+  .hero__inner{max-width:1280px;margin:0 auto;position:relative}
+  .hero h1{font-size:clamp(44px,7vw,104px);font-weight:200;line-height:.95;letter-spacing:-.03em;margin-top:18px}
+  .hero h1 em{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;background:linear-gradient(90deg,var(--cyan),var(--green),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{margin-top:22px;color:var(--ink-2);font-size:18px;line-height:1.6;max-width:640px}
+  .hero__meta{display:flex;gap:32px;margin-top:48px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+  .hero__meta div{display:flex;flex-direction:column;gap:4px}
+  .hero__meta b{color:var(--ink);font-weight:400;font-size:13px;letter-spacing:0;text-transform:none;font-family:'Inter',sans-serif}
+  .palette{display:flex;border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .palette > div{flex:1;padding:18px 24px;border-right:1px solid var(--line);min-height:100px}
+  .palette > div:last-child{border-right:0}
+  .palette .swatch{width:32px;height:32px;border-radius:8px;margin-bottom:10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+  .palette b{display:block;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px}
+  .palette span{display:block;font-size:11px;color:var(--ink-3);margin-top:4px}
+  .concept{padding:80px 48px;border-bottom:1px solid var(--line)}
+  .concept__head{max-width:1280px;margin:0 auto 48px;display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start}
+  .concept__num{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:3px;color:var(--green)}
+  .concept__name{margin-top:12px;font-size:clamp(40px,5vw,72px);font-weight:200;letter-spacing:-.02em;line-height:1}
+  .concept__rationale{color:var(--ink-2);font-size:17px;line-height:1.65}
+  .concept__meta{margin-top:24px;display:flex;gap:18px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3)}
+  .concept__meta b{color:var(--ink)}
+  .layouts{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:32px}
+  .layout{display:grid;grid-template-columns:160px 1fr 1fr 1fr;gap:18px;align-items:center}
+  .layout__label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);padding-right:24px;border-right:1px solid var(--line)}
+  .layout__label b{display:block;color:var(--ink);font-size:14px;letter-spacing:0;text-transform:none;font-family:'Inter',sans-serif;font-weight:600;margin-bottom:4px}
+  .layout__label small{font-size:10px}
+  .cell{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);min-height:160px;display:flex;align-items:center;justify-content:center;padding:18px}
+  .cell--dark{background:#0A0C12}
+  .cell--light{background:#FFFFFF}
+  .cell__svg{width:100%;display:flex;align-items:center;justify-content:center}
+  .cell__svg svg{display:block !important;max-width:100% !important;height:auto !important;max-height:130px !important;width:auto !important}
+  .cell__tag{position:absolute;top:8px;left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--ink-3);background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px;z-index:2}
+  .cell--light .cell__tag{color:rgba(0,0,0,.5);background:rgba(255,255,255,.7)}
+  .cell__copy{position:absolute;bottom:8px;right:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--ink-3);text-transform:uppercase;background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px;cursor:pointer;transition:background .2s;z-index:2}
+  .cell--light .cell__copy{color:rgba(0,0,0,.5);background:rgba(255,255,255,.7)}
+  .cell__copy:hover{background:var(--green);color:#000}
+  .cell--light .cell__copy:hover{background:#000;color:#fff}
+  .foot{padding:64px 48px;text-align:center;color:var(--ink-3);font-size:13px;border-top:1px solid var(--line);background:var(--bg-2)}
+  .foot a{color:var(--green);text-decoration:none}
+  @media(max-width:900px){
+    .hero{padding:64px 24px 32px}
+    .concept{padding:48px 24px}
+    .concept__head{grid-template-columns:1fr;gap:24px}
+    .layout{grid-template-columns:1fr;gap:8px}
+    .layout__label{border-right:0;padding-right:0;padding-bottom:8px;border-bottom:1px solid var(--line)}
+    .palette{flex-wrap:wrap}
+    .palette > div{flex:1 1 50%;border-bottom:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero__glow"></div>
+  <div class="hero__inner">
+    <span class="mono">Alfex / Brand System / v1.0 / inline gallery</span>
+    <h1>Five marks.<br/>One <em>autonomous mind.</em></h1>
+    <p>A complete logo system for Alfex — five distinct directions, each delivered in five layouts and three colour treatments. ${count} SVGs, all inlined here for instant rendering.</p>
+    <div class="hero__meta">
+      <div><span class="mono">Concepts</span><b>5 directions</b></div>
+      <div><span class="mono">Layouts</span><b>5 per concept</b></div>
+      <div><span class="mono">Treatments</span><b>3 per layout</b></div>
+      <div><span class="mono">Files</span><b>${count} SVGs total</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="palette">
+  <div><div class="swatch" style="background:#1ED38A"></div><b>#1ED38A</b><span>primary green</span></div>
+  <div><div class="swatch" style="background:#00CFFF"></div><b>#00CFFF</b><span>accent cyan</span></div>
+  <div><div class="swatch" style="background:#A855F7"></div><b>#A855F7</b><span>accent purple</span></div>
+  <div><div class="swatch" style="background:linear-gradient(135deg,#00CFFF 0%,#1ED38A 50%,#A855F7 100%)"></div><b>AI gradient</b><span>cinematic mode</span></div>
+  <div><div class="swatch" style="background:#0A0C12"></div><b>#0A0C12</b><span>surface dark</span></div>
+  <div><div class="swatch" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)"></div><b>#FFFFFF</b><span>ink (light bg)</span></div>
+</section>
+
+${conceptsHtml}
+
+<footer class="foot">
+  <p>Generated by the <a href="https://github.com/rknall/claude-skills" target="_blank">svg-logo-designer</a> Claude Code skill — for Alfex.<br/>
+  See <a href="README.md">README.md</a> for full usage guidelines.</p>
+</footer>
+
+<script>
+document.body.addEventListener('click', e => {
+  if (e.target.classList && e.target.classList.contains('cell__copy')) {
+    const p = e.target.dataset.path;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(p).then(()=>{
+        e.target.textContent = 'copied ✓';
+        setTimeout(()=>{ e.target.textContent = 'copy path'; }, 1500);
+      });
+    }
+  }
+});
+</script>
+</body>
+</html>
+`;
+
+fs.writeFileSync(path.join(ROOT, 'gallery.html'), html);
+console.log(`Wrote gallery.html with ${count} inlined SVGs.`);
