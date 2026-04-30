@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Alfex — Brand System (Inline Gallery)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050609;--bg-2:#0A0C12;--ink:#fff;--ink-2:rgba(255,255,255,.62);
+    --ink-3:rgba(255,255,255,.4);--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.18);
+    --green:#1ED38A;--cyan:#00CFFF;--purple:#A855F7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--green);color:#000}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3)}
+  .hero{padding:96px 48px 48px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .hero__glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 30% 30%,rgba(0,207,255,.10),transparent 60%),radial-gradient(ellipse 80% 60% at 70% 70%,rgba(168,85,247,.08),transparent 60%);pointer-events:none}
+  .hero__inner{max-width:1280px;margin:0 auto;position:relative}
+  .hero h1{font-size:clamp(44px,7vw,104px);font-weight:200;line-height:.95;letter-spacing:-.03em;margin-top:18px}
+  .hero h1 em{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;background:linear-gradient(90deg,var(--cyan),var(--green),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{margin-top:22px;color:var(--ink-2);font-size:18px;line-height:1.6;max-width:640px}
+  .hero__meta{display:flex;gap:32px;margin-top:48px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+  .hero__meta div{display:flex;flex-direction:column;gap:4px}
+  .hero__meta b{color:var(--ink);font-weight:400;font-size:13px;letter-spacing:0;text-transform:none;font-family:'Inter',sans-serif}
+  .palette{display:flex;border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .palette > div{flex:1;padding:18px 24px;border-right:1px solid var(--line);min-height:100px}
+  .palette > div:last-child{border-right:0}
+  .palette .swatch{width:32px;height:32px;border-radius:8px;margin-bottom:10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+  .palette b{display:block;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px}
+  .palette span{display:block;font-size:11px;color:var(--ink-3);margin-top:4px}
+  .concept{padding:80px 48px;border-bottom:1px solid var(--line)}
+  .concept__head{max-width:1280px;margin:0 auto 48px;display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start}
+  .concept__num{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:3px;color:var(--green)}
+  .concept__name{margin-top:12px;font-size:clamp(40px,5vw,72px);font-weight:200;letter-spacing:-.02em;line-height:1}
+  .concept__rationale{color:var(--ink-2);font-size:17px;line-height:1.65}
+  .concept__meta{margin-top:24px;display:flex;gap:18px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3)}
+  .concept__meta b{color:var(--ink)}
+  .layouts{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:32px}
+  .layout{display:grid;grid-template-columns:160px 1fr 1fr 1fr;gap:18px;align-items:center}
+  .layout__label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);padding-right:24px;border-right:1px solid var(--line)}
+  .layout__label b{display:block;color:var(--ink);font-size:14px;letter-spacing:0;text-transform:none;font-family:'Inter',sans-serif;font-weight:600;margin-bottom:4px}
+  .layout__label small{font-size:10px}
+  .cell{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);min-height:160px;display:flex;align-items:center;justify-content:center;padding:18px}
+  .cell--dark{background:#0A0C12}
+  .cell--light{background:#FFFFFF}
+  .cell img{display:block;max-width:90%;max-height:130px;width:auto;height:auto;object-fit:contain}
+  .cell__tag{position:absolute;top:8px;left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--ink-3);background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px;z-index:2}
+  .cell--light .cell__tag{color:rgba(0,0,0,.5);background:rgba(255,255,255,.7)}
+  .cell__copy{position:absolute;bottom:8px;right:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--ink-3);text-transform:uppercase;background:rgba(0,0,0,.35);padding:3px 7px;border-radius:4px;cursor:pointer;transition:background .2s;z-index:2}
+  .cell--light .cell__copy{color:rgba(0,0,0,.5);background:rgba(255,255,255,.7)}
+  .cell__copy:hover{background:var(--green);color:#000}
+  .cell--light .cell__copy:hover{background:#000;color:#fff}
+  .foot{padding:64px 48px;text-align:center;color:var(--ink-3);font-size:13px;border-top:1px solid var(--line);background:var(--bg-2)}
+  .foot a{color:var(--green);text-decoration:none}
+  @media(max-width:900px){
+    .hero{padding:64px 24px 32px}
+    .concept{padding:48px 24px}
+    .concept__head{grid-template-columns:1fr;gap:24px}
+    .layout{grid-template-columns:1fr;gap:8px}
+    .layout__label{border-right:0;padding-right:0;padding-bottom:8px;border-bottom:1px solid var(--line)}
+    .palette{flex-wrap:wrap}
+    .palette > div{flex:1 1 50%;border-bottom:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero__glow"></div>
+  <div class="hero__inner">
+    <span class="mono">Alfex / Brand System / v1.0 / inline gallery</span>
+    <h1>Five marks.<br/>One <em>autonomous mind.</em></h1>
+    <p>A complete logo system for Alfex — five distinct directions, each delivered in five layouts and three colour treatments. 75 SVGs, all inlined here for instant rendering.</p>
+    <div class="hero__meta">
+      <div><span class="mono">Concepts</span><b>5 directions</b></div>
+      <div><span class="mono">Layouts</span><b>5 per concept</b></div>
+      <div><span class="mono">Treatments</span><b>3 per layout</b></div>
+      <div><span class="mono">Files</span><b>75 SVGs total</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="palette">
+  <div><div class="swatch" style="background:#1ED38A"></div><b>#1ED38A</b><span>primary green</span></div>
+  <div><div class="swatch" style="background:#00CFFF"></div><b>#00CFFF</b><span>accent cyan</span></div>
+  <div><div class="swatch" style="background:#A855F7"></div><b>#A855F7</b><span>accent purple</span></div>
+  <div><div class="swatch" style="background:linear-gradient(135deg,#00CFFF 0%,#1ED38A 50%,#A855F7 100%)"></div><b>AI gradient</b><span>cinematic mode</span></div>
+  <div><div class="swatch" style="background:#0A0C12"></div><b>#0A0C12</b><span>surface dark</span></div>
+  <div><div class="swatch" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)"></div><b>#FFFFFF</b><span>ink (light bg)</span></div>
+</section>
+
+
+  <section class="concept">
+    <div class="concept__head">
+      <div>
+        <span class="concept__num">CONCEPT 01</span>
+        <h2 class="concept__name">Atom Orbit</h2>
+      </div>
+      <div>
+        <p class="concept__rationale">Three orbiting paths around a luminous core. Each orbit reads as one model in the ensemble; together they converge on a single answer. Most direct AI metaphor — recommended primary.</p>
+        <div class="concept__meta">
+          <div><span>Layouts</span> <b>5</b></div>
+          <div><span>Treatments</span> <b>3</b></div>
+          <div><span>Total files</span> <b>15 SVGs</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="layouts">
+  
+      <div class="layout">
+        <div class="layout__label">
+          <b>Horizontal lockup</b>
+          <small>Headers · cards · email signatures</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-atom-orbit/horizontal/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMENGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMUVEMzhBIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iY29yZS1hdG9tIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzAwQ0ZGRiIgc3RvcC1vcGFjaXR5PSIwLjQiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0E4NTVGNyIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgPC9yYWRpYWxHcmFkaWVudD4KPC9kZWZzPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3MCw3MCkiPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjUwIiByeT0iMTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWF0b20pIiBzdHJva2Utd2lkdGg9IjIuMjUiIG9wYWNpdHk9IjAuOTUiLz4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI1MCIgcnk9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hdG9tKSIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI1MCIgcnk9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hdG9tKSIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjApIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIxIiBmaWxsPSJ1cmwoI2NvcmUtYXRvbSkiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNC4yNSIgZmlsbD0iI0ZGRkZGRiIvPgo8L2c+Cjx0ZXh0IHg9IjE0NSIgeT0iODgiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSI1NiIgbGV0dGVyLXNwYWNpbmc9Ii0xLjEyIj5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Atom Orbit — Horizontal lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/horizontal/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-atom-orbit/horizontal/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0ibW9uby1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzAsNzApIj4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI1MCIgcnk9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi4yNSIgb3BhY2l0eT0iMC45NSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjUwIiByeT0iMTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI1MCIgcnk9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi4yNSIgb3BhY2l0eT0iMC45NSIgdHJhbnNmb3JtPSJyb3RhdGUoLTYwKSIvPgogIAogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSI0LjI1IiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPHRleHQgeD0iMTQ1IiB5PSI4OCIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IidJbnRlcicsICdIZWx2ZXRpY2EgTmV1ZScsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iODAwIiBmb250LXNpemU9IjU2IiBsZXR0ZXItc3BhY2luZz0iLTEuMTIiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Atom Orbit — Horizontal lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/horizontal/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-atom-orbit/horizontal/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJtb25vLWF0b20iIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3MCw3MCkiPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjUwIiByeT0iMTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBvcGFjaXR5PSIwLjk1Ii8+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iNTAiIHJ5PSIxOSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMjUiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjUwIiByeT0iMTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjApIi8+CiAgCiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjQuMjUiIGZpbGw9IiMwMDAwMDAiLz4KPC9nPgo8dGV4dCB4PSIxNDUiIHk9Ijg4IiBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iJ0ludGVyJywgJ0hlbHZldGljYSBOZXVlJywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZvbnQtc2l6ZT0iNTYiIGxldHRlci1zcGFjaW5nPSItMS4xMiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Atom Orbit — Horizontal lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/horizontal/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Vertical lockup</b>
+          <small>Social · app store · posters</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-atom-orbit/vertical/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMENGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMUVEMzhBIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iY29yZS1hdG9tIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzAwQ0ZGRiIgc3RvcC1vcGFjaXR5PSIwLjQiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0E4NTVGNyIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgPC9yYWRpYWxHcmFkaWVudD4KPC9kZWZzPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNTAsMTAwKSI+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iNjUiIHJ5PSIyNC43IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hdG9tKSIgc3Ryb2tlLXdpZHRoPSIyLjkyNSIgb3BhY2l0eT0iMC45NSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjY1IiByeT0iMjQuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctYXRvbSkiIHN0cm9rZS13aWR0aD0iMi45MjUiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjY1IiByeT0iMjQuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctYXRvbSkiIHN0cm9rZS13aWR0aD0iMi45MjUiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKC02MCkiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMjcuMyIgZmlsbD0idXJsKCNjb3JlLWF0b20pIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjUuNTI1IiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9Ii0xLjA0Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Atom Orbit — Vertical lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/vertical/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-atom-orbit/vertical/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUwLDEwMCkiPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjY1IiByeT0iMjQuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuOTI1IiBvcGFjaXR5PSIwLjk1Ii8+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iNjUiIHJ5PSIyNC43IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi45MjUiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjY1IiByeT0iMjQuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuOTI1IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjApIi8+CiAgCiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjUuNTI1IiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9Ii0xLjA0Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Atom Orbit — Vertical lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/vertical/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-atom-orbit/vertical/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUwLDEwMCkiPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjY1IiByeT0iMjQuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuOTI1IiBvcGFjaXR5PSIwLjk1Ii8+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iNjUiIHJ5PSIyNC43IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi45MjUiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjY1IiByeT0iMjQuNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuOTI1IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjApIi8+CiAgCiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjUuNTI1IiBmaWxsPSIjMDAwMDAwIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9Ii0xLjA0Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Atom Orbit — Vertical lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/vertical/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Square / badge</b>
+          <small>Avatars · in-app · thumbnails</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-atom-orbit/square/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMENGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMUVEMzhBIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iY29yZS1hdG9tIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzAwQ0ZGRiIgc3RvcC1vcGFjaXR5PSIwLjQiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0E4NTVGNyIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgPC9yYWRpYWxHcmFkaWVudD4KPC9kZWZzPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDAsMTAwKSI+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iNTYiIHJ5PSIyMS4yOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctYXRvbSkiIHN0cm9rZS13aWR0aD0iMi41MiIgb3BhY2l0eT0iMC45NSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjU2IiByeT0iMjEuMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWF0b20pIiBzdHJva2Utd2lkdGg9IjIuNTIiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjU2IiByeT0iMjEuMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWF0b20pIiBzdHJva2Utd2lkdGg9IjIuNTIiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKC02MCkiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMjMuNTIiIGZpbGw9InVybCgjY29yZS1hdG9tKSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSI0Ljc2MDAwMDAwMDAwMDAwMSIgZmlsbD0iI0ZGRkZGRiIvPgo8L2c+Cjwvc3ZnPgo=" alt="Alfex Atom Orbit — Square / badge (Full colour)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/square/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-atom-orbit/square/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjU2IiByeT0iMjEuMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjUyIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iNTYiIHJ5PSIyMS4yOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNTIiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjU2IiByeT0iMjEuMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjUyIiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjApIi8+CiAgCiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjQuNzYwMDAwMDAwMDAwMDAxIiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Atom Orbit — Square / badge (White mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/square/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-atom-orbit/square/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hdG9tIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjU2IiByeT0iMjEuMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjUyIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iNTYiIHJ5PSIyMS4yOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuNTIiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjU2IiByeT0iMjEuMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjUyIiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjApIi8+CiAgCiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjQuNzYwMDAwMDAwMDAwMDAxIiBmaWxsPSIjMDAwMDAwIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Atom Orbit — Square / badge (Black mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/square/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Icon only</b>
+          <small>Favicon · app icon · watermark</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-atom-orbit/icon-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWF0b20iIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwQ0ZGRiIvPgogICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiMxRUQzOEEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0E4NTVGNyIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJjb3JlLWF0b20iIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI4MCIgcnk9IjMwLjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWF0b20pIiBzdHJva2Utd2lkdGg9IjMuNTk5OTk5OTk5OTk5OTk5NiIgb3BhY2l0eT0iMC45NSIvPgogIDxlbGxpcHNlIGN4PSIwIiBjeT0iMCIgcng9IjgwIiByeT0iMzAuNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctYXRvbSkiIHN0cm9rZS13aWR0aD0iMy41OTk5OTk5OTk5OTk5OTk2IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI4MCIgcnk9IjMwLjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWF0b20pIiBzdHJva2Utd2lkdGg9IjMuNTk5OTk5OTk5OTk5OTk5NiIgb3BhY2l0eT0iMC45NSIgdHJhbnNmb3JtPSJyb3RhdGUoLTYwKSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIzMy42IiBmaWxsPSJ1cmwoI2NvcmUtYXRvbSkiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNi44MDAwMDAwMDAwMDAwMDEiIGZpbGw9IiNGRkZGRkYiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Atom Orbit — Icon only (Full colour)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/icon-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-atom-orbit/icon-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWF0b20iIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDAsMTAwKSI+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iODAiIHJ5PSIzMC40IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy41OTk5OTk5OTk5OTk5OTk2IiBvcGFjaXR5PSIwLjk1Ii8+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iODAiIHJ5PSIzMC40IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy41OTk5OTk5OTk5OTk5OTk2IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI4MCIgcnk9IjMwLjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjU5OTk5OTk5OTk5OTk5OTYiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKC02MCkiLz4KICAKICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNi44MDAwMDAwMDAwMDAwMDEiIGZpbGw9IiNGRkZGRkYiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Atom Orbit — Icon only (White mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/icon-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-atom-orbit/icon-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWF0b20iIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDAsMTAwKSI+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iODAiIHJ5PSIzMC40IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMy41OTk5OTk5OTk5OTk5OTk2IiBvcGFjaXR5PSIwLjk1Ii8+CiAgPGVsbGlwc2UgY3g9IjAiIGN5PSIwIiByeD0iODAiIHJ5PSIzMC40IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMy41OTk5OTk5OTk5OTk5OTk2IiBvcGFjaXR5PSIwLjk1IiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz4KICA8ZWxsaXBzZSBjeD0iMCIgY3k9IjAiIHJ4PSI4MCIgcnk9IjMwLjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjU5OTk5OTk5OTk5OTk5OTYiIG9wYWNpdHk9IjAuOTUiIHRyYW5zZm9ybT0icm90YXRlKC02MCkiLz4KICAKICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNi44MDAwMDAwMDAwMDAwMDEiIGZpbGw9IiMwMDAwMDAiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Atom Orbit — Icon only (Black mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/icon-only/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Wordmark only</b>
+          <small>Editorial · minimal banners</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-atom-orbit/wordmark-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9Ii0xLjYiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Atom Orbit — Wordmark only (Full colour)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/wordmark-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-atom-orbit/wordmark-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9Ii0xLjYiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Atom Orbit — Wordmark only (White mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/wordmark-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-atom-orbit/wordmark-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9Ii0xLjYiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Atom Orbit — Wordmark only (Black mono)" />
+          <span class="cell__copy" data-path="concept-atom-orbit/wordmark-only/black-mono.svg">copy path</span>
+        </div>
+      </div></div></section>
+  <section class="concept">
+    <div class="concept__head">
+      <div>
+        <span class="concept__num">CONCEPT 02</span>
+        <h2 class="concept__name">Prism</h2>
+      </div>
+      <div>
+        <p class="concept__rationale">A prism refracts noise into clarity. Two nested triangles plus light tracks evoke the moment market chaos becomes a clean signal.</p>
+        <div class="concept__meta">
+          <div><span>Layouts</span> <b>5</b></div>
+          <div><span>Treatments</span> <b>3</b></div>
+          <div><span>Total files</span> <b>15 SVGs</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="layouts">
+  
+      <div class="layout">
+        <div class="layout__label">
+          <b>Horizontal lockup</b>
+          <small>Headers · cards · email signatures</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-prism/horizontal/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtcHJpc20iIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcwLDcwKSI+CiAgPHBvbHlnb24gcG9pbnRzPSIwLC01MCA0My4zLDI1IC00My4zLDI1IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1wcmlzbSkiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtMjcuNTAwMDAwMDAwMDAwMDA0IDIzLjc5OTk5OTk5OTk5OTk5NywxMy43NTAwMDAwMDAwMDAwMDIgLTIzLjc5OTk5OTk5OTk5OTk5NywxMy43NTAwMDAwMDAwMDAwMDIiIGZpbGw9InVybCgjZy1wcmlzbSkiIG9wYWNpdHk9IjEiLz4KICA8bGluZSB4MT0iLTUyLjUiIHkxPSIyNSIgeDI9Ii00My4zIiB5Mj0iMjUiIHN0cm9rZT0idXJsKCNnLXByaXNtKSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iNDMuMyIgeTE9IjI1IiB4Mj0iNTIuNSIgeTI9IjI1IiBzdHJva2U9InVybCgjZy1wcmlzbSkiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgeD0iMTQ1IiB5PSI4OCIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IidJbnRlcicsICdIZWx2ZXRpY2EgTmV1ZScsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXNpemU9IjU2IiBsZXR0ZXItc3BhY2luZz0iMCI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Prism — Horizontal lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-prism/horizontal/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-prism/horizontal/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0ibW9uby1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcwLDcwKSI+CiAgPHBvbHlnb24gcG9pbnRzPSIwLC01MCA0My4zLDI1IC00My4zLDI1IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtMjcuNTAwMDAwMDAwMDAwMDA0IDIzLjc5OTk5OTk5OTk5OTk5NywxMy43NTAwMDAwMDAwMDAwMDIgLTIzLjc5OTk5OTk5OTk5OTk5NywxMy43NTAwMDAwMDAwMDAwMDIiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuODUiLz4KICA8bGluZSB4MT0iLTUyLjUiIHkxPSIyNSIgeDI9Ii00My4zIiB5Mj0iMjUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iNDMuMyIgeTE9IjI1IiB4Mj0iNTIuNSIgeTI9IjI1IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgeD0iMTQ1IiB5PSI4OCIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IidJbnRlcicsICdIZWx2ZXRpY2EgTmV1ZScsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXNpemU9IjU2IiBsZXR0ZXItc3BhY2luZz0iMCI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Prism — Horizontal lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-prism/horizontal/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-prism/horizontal/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJtb25vLXByaXNtIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzAsNzApIj4KICA8cG9seWdvbiBwb2ludHM9IjAsLTUwIDQzLjMsMjUgLTQzLjMsMjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBvbHlnb24gcG9pbnRzPSIwLC0yNy41MDAwMDAwMDAwMDAwMDQgMjMuNzk5OTk5OTk5OTk5OTk3LDEzLjc1MDAwMDAwMDAwMDAwMiAtMjMuNzk5OTk5OTk5OTk5OTk3LDEzLjc1MDAwMDAwMDAwMDAwMiIgZmlsbD0iIzAwMDAwMCIgb3BhY2l0eT0iMC44NSIvPgogIDxsaW5lIHgxPSItNTIuNSIgeTE9IjI1IiB4Mj0iLTQzLjMiIHkyPSIyNSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI0My4zIiB5MT0iMjUiIHgyPSI1Mi41IiB5Mj0iMjUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8dGV4dCB4PSIxNDUiIHk9Ijg4IiBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iJ0ludGVyJywgJ0hlbHZldGljYSBOZXVlJywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtc2l6ZT0iNTYiIGxldHRlci1zcGFjaW5nPSIwIj5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Prism — Horizontal lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-prism/horizontal/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Vertical lockup</b>
+          <small>Social · app store · posters</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-prism/vertical/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtcHJpc20iIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8cG9seWdvbiBwb2ludHM9IjAsLTY1IDU2LjI5LDMyLjUgLTU2LjI5LDMyLjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLXByaXNtKSIgc3Ryb2tlLXdpZHRoPSI1LjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cG9seWdvbiBwb2ludHM9IjAsLTM1Ljc1IDMwLjkzOTk5OTk5OTk5OTk5OCwxNy44NzUgLTMwLjkzOTk5OTk5OTk5OTk5OCwxNy44NzUiIGZpbGw9InVybCgjZy1wcmlzbSkiIG9wYWNpdHk9IjEiLz4KICA8bGluZSB4MT0iLTY4LjI1IiB5MT0iMzIuNSIgeDI9Ii01Ni4yOSIgeTI9IjMyLjUiIHN0cm9rZT0idXJsKCNnLXByaXNtKSIgc3Ryb2tlLXdpZHRoPSIzLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI1Ni4yOSIgeTE9IjMyLjUiIHgyPSI2OC4yNSIgeTI9IjMyLjUiIHN0cm9rZT0idXJsKCNnLXByaXNtKSIgc3Ryb2tlLXdpZHRoPSIzLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMjIwIiBmaWxsPSIjRkZGRkZGIiBmb250LWZhbWlseT0iJ0ludGVyJywgJ0hlbHZldGljYSBOZXVlJywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtc2l6ZT0iNTIiIGxldHRlci1zcGFjaW5nPSIwIj5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Prism — Vertical lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-prism/vertical/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-prism/vertical/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8cG9seWdvbiBwb2ludHM9IjAsLTY1IDU2LjI5LDMyLjUgLTU2LjI5LDMyLjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI1LjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cG9seWdvbiBwb2ludHM9IjAsLTM1Ljc1IDMwLjkzOTk5OTk5OTk5OTk5OCwxNy44NzUgLTMwLjkzOTk5OTk5OTk5OTk5OCwxNy44NzUiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuODUiLz4KICA8bGluZSB4MT0iLTY4LjI1IiB5MT0iMzIuNSIgeDI9Ii01Ni4yOSIgeTI9IjMyLjUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI1Ni4yOSIgeTE9IjMyLjUiIHgyPSI2OC4yNSIgeTI9IjMyLjUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMjIwIiBmaWxsPSIjRkZGRkZGIiBmb250LWZhbWlseT0iJ0ludGVyJywgJ0hlbHZldGljYSBOZXVlJywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtc2l6ZT0iNTIiIGxldHRlci1zcGFjaW5nPSIwIj5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Prism — Vertical lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-prism/vertical/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-prism/vertical/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8cG9seWdvbiBwb2ludHM9IjAsLTY1IDU2LjI5LDMyLjUgLTU2LjI5LDMyLjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI1LjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cG9seWdvbiBwb2ludHM9IjAsLTM1Ljc1IDMwLjkzOTk5OTk5OTk5OTk5OCwxNy44NzUgLTMwLjkzOTk5OTk5OTk5OTk5OCwxNy44NzUiIGZpbGw9IiMwMDAwMDAiIG9wYWNpdHk9IjAuODUiLz4KICA8bGluZSB4MT0iLTY4LjI1IiB5MT0iMzIuNSIgeDI9Ii01Ni4yOSIgeTI9IjMyLjUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI1Ni4yOSIgeTE9IjMyLjUiIHgyPSI2OC4yNSIgeTI9IjMyLjUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMjIwIiBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iJ0ludGVyJywgJ0hlbHZldGljYSBOZXVlJywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtc2l6ZT0iNTIiIGxldHRlci1zcGFjaW5nPSIwIj5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Prism — Vertical lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-prism/vertical/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Square / badge</b>
+          <small>Avatars · in-app · thumbnails</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-prism/square/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtcHJpc20iIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8cG9seWdvbiBwb2ludHM9IjAsLTU2IDQ4LjQ5NiwyOCAtNDguNDk2LDI4IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1wcmlzbSkiIHN0cm9rZS13aWR0aD0iNC40OCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtMzAuODAwMDAwMDAwMDAwMDA0IDI2LjY1NiwxNS40MDAwMDAwMDAwMDAwMDIgLTI2LjY1NiwxNS40MDAwMDAwMDAwMDAwMDIiIGZpbGw9InVybCgjZy1wcmlzbSkiIG9wYWNpdHk9IjEiLz4KICA8bGluZSB4MT0iLTU4LjgwMDAwMDAwMDAwMDAwNCIgeTE9IjI4IiB4Mj0iLTQ4LjQ5NiIgeTI9IjI4IiBzdHJva2U9InVybCgjZy1wcmlzbSkiIHN0cm9rZS13aWR0aD0iMy4zNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjQ4LjQ5NiIgeTE9IjI4IiB4Mj0iNTguODAwMDAwMDAwMDAwMDA0IiB5Mj0iMjgiIHN0cm9rZT0idXJsKCNnLXByaXNtKSIgc3Ryb2tlLXdpZHRoPSIzLjM2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Prism — Square / badge (Full colour)" />
+          <span class="cell__copy" data-path="concept-prism/square/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-prism/square/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8cG9seWdvbiBwb2ludHM9IjAsLTU2IDQ4LjQ5NiwyOCAtNDguNDk2LDI4IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNC40OCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtMzAuODAwMDAwMDAwMDAwMDA0IDI2LjY1NiwxNS40MDAwMDAwMDAwMDAwMDIgLTI2LjY1NiwxNS40MDAwMDAwMDAwMDAwMDIiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuODUiLz4KICA8bGluZSB4MT0iLTU4LjgwMDAwMDAwMDAwMDAwNCIgeTE9IjI4IiB4Mj0iLTQ4LjQ5NiIgeTI9IjI4IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy4zNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjQ4LjQ5NiIgeTE9IjI4IiB4Mj0iNTguODAwMDAwMDAwMDAwMDA0IiB5Mj0iMjgiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjM2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Prism — Square / badge (White mono)" />
+          <span class="cell__copy" data-path="concept-prism/square/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-prism/square/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wcmlzbSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8cG9seWdvbiBwb2ludHM9IjAsLTU2IDQ4LjQ5NiwyOCAtNDguNDk2LDI4IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNC40OCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtMzAuODAwMDAwMDAwMDAwMDA0IDI2LjY1NiwxNS40MDAwMDAwMDAwMDAwMDIgLTI2LjY1NiwxNS40MDAwMDAwMDAwMDAwMDIiIGZpbGw9IiMwMDAwMDAiIG9wYWNpdHk9IjAuODUiLz4KICA8bGluZSB4MT0iLTU4LjgwMDAwMDAwMDAwMDAwNCIgeTE9IjI4IiB4Mj0iLTQ4LjQ5NiIgeTI9IjI4IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMy4zNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjQ4LjQ5NiIgeTE9IjI4IiB4Mj0iNTguODAwMDAwMDAwMDAwMDA0IiB5Mj0iMjgiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjM2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Prism — Square / badge (Black mono)" />
+          <span class="cell__copy" data-path="concept-prism/square/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Icon only</b>
+          <small>Favicon · app icon · watermark</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-prism/icon-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLXByaXNtIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMENGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMUVEMzhBIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iY29yZS1wcmlzbSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNTAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiMwMENGRkYiIHN0b3Atb3BhY2l0eT0iMC40Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtODAgNjkuMjgsNDAgLTY5LjI4LDQwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1wcmlzbSkiIHN0cm9rZS13aWR0aD0iNi40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBvbHlnb24gcG9pbnRzPSIwLC00NCAzOC4wOCwyMiAtMzguMDgsMjIiIGZpbGw9InVybCgjZy1wcmlzbSkiIG9wYWNpdHk9IjEiLz4KICA8bGluZSB4MT0iLTg0IiB5MT0iNDAiIHgyPSItNjkuMjgiIHkyPSI0MCIgc3Ryb2tlPSJ1cmwoI2ctcHJpc20pIiBzdHJva2Utd2lkdGg9IjQuOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjY5LjI4IiB5MT0iNDAiIHgyPSI4NCIgeTI9IjQwIiBzdHJva2U9InVybCgjZy1wcmlzbSkiIHN0cm9rZS13aWR0aD0iNC44IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Prism — Icon only (Full colour)" />
+          <span class="cell__copy" data-path="concept-prism/icon-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-prism/icon-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLXByaXNtIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtODAgNjkuMjgsNDAgLTY5LjI4LDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNi40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBvbHlnb24gcG9pbnRzPSIwLC00NCAzOC4wOCwyMiAtMzguMDgsMjIiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuODUiLz4KICA8bGluZSB4MT0iLTg0IiB5MT0iNDAiIHgyPSItNjkuMjgiIHkyPSI0MCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQuOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjY5LjI4IiB5MT0iNDAiIHgyPSI4NCIgeTI9IjQwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNC44IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Prism — Icon only (White mono)" />
+          <span class="cell__copy" data-path="concept-prism/icon-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-prism/icon-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLXByaXNtIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxwb2x5Z29uIHBvaW50cz0iMCwtODAgNjkuMjgsNDAgLTY5LjI4LDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNi40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBvbHlnb24gcG9pbnRzPSIwLC00NCAzOC4wOCwyMiAtMzguMDgsMjIiIGZpbGw9IiMwMDAwMDAiIG9wYWNpdHk9IjAuODUiLz4KICA8bGluZSB4MT0iLTg0IiB5MT0iNDAiIHgyPSItNjkuMjgiIHkyPSI0MCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQuOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjY5LjI4IiB5MT0iNDAiIHgyPSI4NCIgeTI9IjQwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNC44IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Prism — Icon only (Black mono)" />
+          <span class="cell__copy" data-path="concept-prism/icon-only/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Wordmark only</b>
+          <small>Editorial · minimal banners</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-prism/wordmark-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9IjAiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Prism — Wordmark only (Full colour)" />
+          <span class="cell__copy" data-path="concept-prism/wordmark-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-prism/wordmark-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9IjAiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Prism — Wordmark only (White mono)" />
+          <span class="cell__copy" data-path="concept-prism/wordmark-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-prism/wordmark-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9IjAiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Prism — Wordmark only (Black mono)" />
+          <span class="cell__copy" data-path="concept-prism/wordmark-only/black-mono.svg">copy path</span>
+        </div>
+      </div></div></section>
+  <section class="concept">
+    <div class="concept__head">
+      <div>
+        <span class="concept__num">CONCEPT 03</span>
+        <h2 class="concept__name">Pulse Wave</h2>
+      </div>
+      <div>
+        <p class="concept__rationale">A market heartbeat with one tall spike — the anomaly Alfex catches before the rest of the room.</p>
+        <div class="concept__meta">
+          <div><span>Layouts</span> <b>5</b></div>
+          <div><span>Treatments</span> <b>3</b></div>
+          <div><span>Total files</span> <b>15 SVGs</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="layouts">
+  
+      <div class="layout">
+        <div class="layout__label">
+          <b>Horizontal lockup</b>
+          <small>Headers · cards · email signatures</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-pulse-wave/horizontal/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtcHVsc2UiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwLDcwKSI+CiAgPHBhdGggZD0iTSAwLDAgTCAxOCwwIEwgMjYsLTEyLjYgTCAzNCwxMi42IEwgNDIsMCBMIDUwLDAgTCA1NS4wMDAwMDAwMDAwMDAwMSwtMzUgTCA2MCwyOCBMIDY1LDAgTCA3OCwwIEwgODUsLTEwLjUgTCA5MiwwIEwgMTAwLDAiCiAgICBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1wdWxzZSkiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iNTcuNDk5OTk5OTk5OTk5OTkiIGN5PSItMzUiIHI9IjYuNSIgZmlsbD0idXJsKCNnLXB1bHNlKSIvPgo8L2c+Cjx0ZXh0IHg9IjE0NSIgeT0iODgiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI1NiIgbGV0dGVyLXNwYWNpbmc9IjEuMTIiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Pulse Wave — Horizontal lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/horizontal/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-pulse-wave/horizontal/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0ibW9uby1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwLDcwKSI+CiAgPHBhdGggZD0iTSAwLDAgTCAxOCwwIEwgMjYsLTEyLjYgTCAzNCwxMi42IEwgNDIsMCBMIDUwLDAgTCA1NS4wMDAwMDAwMDAwMDAwMSwtMzUgTCA2MCwyOCBMIDY1LDAgTCA3OCwwIEwgODUsLTEwLjUgTCA5MiwwIEwgMTAwLDAiCiAgICBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iNTcuNDk5OTk5OTk5OTk5OTkiIGN5PSItMzUiIHI9IjYuNSIgZmlsbD0iI0ZGRkZGRiIvPgo8L2c+Cjx0ZXh0IHg9IjE0NSIgeT0iODgiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI1NiIgbGV0dGVyLXNwYWNpbmc9IjEuMTIiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Pulse Wave — Horizontal lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/horizontal/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-pulse-wave/horizontal/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJtb25vLXB1bHNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAsNzApIj4KICA8cGF0aCBkPSJNIDAsMCBMIDE4LDAgTCAyNiwtMTIuNiBMIDM0LDEyLjYgTCA0MiwwIEwgNTAsMCBMIDU1LjAwMDAwMDAwMDAwMDAxLC0zNSBMIDYwLDI4IEwgNjUsMCBMIDc4LDAgTCA4NSwtMTAuNSBMIDkyLDAgTCAxMDAsMCIKICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSI1Ny40OTk5OTk5OTk5OTk5OSIgY3k9Ii0zNSIgcj0iNi41IiBmaWxsPSIjMDAwMDAwIi8+CjwvZz4KPHRleHQgeD0iMTQ1IiB5PSI4OCIgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IidJbnRlcicsICdIZWx2ZXRpY2EgTmV1ZScsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iMzAwIiBmb250LXNpemU9IjU2IiBsZXR0ZXItc3BhY2luZz0iMS4xMiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Pulse Wave — Horizontal lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/horizontal/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Vertical lockup</b>
+          <small>Social · app store · posters</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-pulse-wave/vertical/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtcHVsc2UiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg1LDEwMCkiPgogIDxwYXRoIGQ9Ik0gMCwwIEwgMjMuNCwwIEwgMzMuODAwMDAwMDAwMDAwMDA0LC0xNi4zOCBMIDQ0LjIsMTYuMzggTCA1NC42LDAgTCA2NSwwIEwgNzEuNSwtNDUuNSBMIDc4LDM2LjQgTCA4NC41LDAgTCAxMDEuNCwwIEwgMTEwLjUsLTEzLjY1IEwgMTE5LjYwMDAwMDAwMDAwMDAxLDAgTCAxMzAsMCIKICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLXB1bHNlKSIgc3Ryb2tlLXdpZHRoPSI1LjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9Ijc0Ljc1IiBjeT0iLTQ1LjUiIHI9IjguNDUwMDAwMDAwMDAwMDAxIiBmaWxsPSJ1cmwoI2ctcHVsc2UpIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9IjEuMDQiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Pulse Wave — Vertical lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/vertical/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-pulse-wave/vertical/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg1LDEwMCkiPgogIDxwYXRoIGQ9Ik0gMCwwIEwgMjMuNCwwIEwgMzMuODAwMDAwMDAwMDAwMDA0LC0xNi4zOCBMIDQ0LjIsMTYuMzggTCA1NC42LDAgTCA2NSwwIEwgNzEuNSwtNDUuNSBMIDc4LDM2LjQgTCA4NC41LDAgTCAxMDEuNCwwIEwgMTEwLjUsLTEzLjY1IEwgMTE5LjYwMDAwMDAwMDAwMDAxLDAgTCAxMzAsMCIKICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI1LjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9Ijc0Ljc1IiBjeT0iLTQ1LjUiIHI9IjguNDUwMDAwMDAwMDAwMDAxIiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9IjEuMDQiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Pulse Wave — Vertical lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/vertical/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-pulse-wave/vertical/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg1LDEwMCkiPgogIDxwYXRoIGQ9Ik0gMCwwIEwgMjMuNCwwIEwgMzMuODAwMDAwMDAwMDAwMDA0LC0xNi4zOCBMIDQ0LjIsMTYuMzggTCA1NC42LDAgTCA2NSwwIEwgNzEuNSwtNDUuNSBMIDc4LDM2LjQgTCA4NC41LDAgTCAxMDEuNCwwIEwgMTEwLjUsLTEzLjY1IEwgMTE5LjYwMDAwMDAwMDAwMDAxLDAgTCAxMzAsMCIKICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI1LjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9Ijc0Ljc1IiBjeT0iLTQ1LjUiIHI9IjguNDUwMDAwMDAwMDAwMDAxIiBmaWxsPSIjMDAwMDAwIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9IjEuMDQiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Pulse Wave — Vertical lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/vertical/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Square / badge</b>
+          <small>Avatars · in-app · thumbnails</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-pulse-wave/square/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtcHVsc2UiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQ0LDEwMCkiPgogIDxwYXRoIGQ9Ik0gMCwwIEwgMjAuMTYsMCBMIDI5LjEyLC0xNC4xMTE5OTk5OTk5OTk5OTggTCAzOC4wODAwMDAwMDAwMDAwMDUsMTQuMTExOTk5OTk5OTk5OTk4IEwgNDcuMDQsMCBMIDU2LDAgTCA2MS42MDAwMDAwMDAwMDAwMSwtMzkuMTk5OTk5OTk5OTk5OTk2IEwgNjcuMiwzMS4zNiBMIDcyLjgsMCBMIDg3LjM2LDAgTCA5NS4yLC0xMS43NTk5OTk5OTk5OTk5OTggTCAxMDMuMDQsMCBMIDExMiwwIgogICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctcHVsc2UpIiBzdHJva2Utd2lkdGg9IjQuNDgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9IjY0LjM5OTk5OTk5OTk5OTk5IiBjeT0iLTM5LjE5OTk5OTk5OTk5OTk5NiIgcj0iNy4yOCIgZmlsbD0idXJsKCNnLXB1bHNlKSIvPgo8L2c+Cjwvc3ZnPgo=" alt="Alfex Pulse Wave — Square / badge (Full colour)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/square/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-pulse-wave/square/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQ0LDEwMCkiPgogIDxwYXRoIGQ9Ik0gMCwwIEwgMjAuMTYsMCBMIDI5LjEyLC0xNC4xMTE5OTk5OTk5OTk5OTggTCAzOC4wODAwMDAwMDAwMDAwMDUsMTQuMTExOTk5OTk5OTk5OTk4IEwgNDcuMDQsMCBMIDU2LDAgTCA2MS42MDAwMDAwMDAwMDAwMSwtMzkuMTk5OTk5OTk5OTk5OTk2IEwgNjcuMiwzMS4zNiBMIDcyLjgsMCBMIDg3LjM2LDAgTCA5NS4yLC0xMS43NTk5OTk5OTk5OTk5OTggTCAxMDMuMDQsMCBMIDExMiwwIgogICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQuNDgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9IjY0LjM5OTk5OTk5OTk5OTk5IiBjeT0iLTM5LjE5OTk5OTk5OTk5OTk5NiIgcj0iNy4yOCIgZmlsbD0iI0ZGRkZGRiIvPgo8L2c+Cjwvc3ZnPgo=" alt="Alfex Pulse Wave — Square / badge (White mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/square/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-pulse-wave/square/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1wdWxzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQ0LDEwMCkiPgogIDxwYXRoIGQ9Ik0gMCwwIEwgMjAuMTYsMCBMIDI5LjEyLC0xNC4xMTE5OTk5OTk5OTk5OTggTCAzOC4wODAwMDAwMDAwMDAwMDUsMTQuMTExOTk5OTk5OTk5OTk4IEwgNDcuMDQsMCBMIDU2LDAgTCA2MS42MDAwMDAwMDAwMDAwMSwtMzkuMTk5OTk5OTk5OTk5OTk2IEwgNjcuMiwzMS4zNiBMIDcyLjgsMCBMIDg3LjM2LDAgTCA5NS4yLC0xMS43NTk5OTk5OTk5OTk5OTggTCAxMDMuMDQsMCBMIDExMiwwIgogICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQuNDgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9IjY0LjM5OTk5OTk5OTk5OTk5IiBjeT0iLTM5LjE5OTk5OTk5OTk5OTk5NiIgcj0iNy4yOCIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+Cjwvc3ZnPgo=" alt="Alfex Pulse Wave — Square / badge (Black mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/square/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Icon only</b>
+          <small>Favicon · app icon · watermark</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-pulse-wave/icon-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLXB1bHNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMENGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMUVEMzhBIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iY29yZS1wdWxzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNTAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiMwMENGRkYiIHN0b3Atb3BhY2l0eT0iMC40Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAsMTAwKSI+CiAgPHBhdGggZD0iTSAwLDAgTCAyOC43OTk5OTk5OTk5OTk5OTcsMCBMIDQxLjYsLTIwLjE2IEwgNTQuNDAwMDAwMDAwMDAwMDA2LDIwLjE2IEwgNjcuMiwwIEwgODAsMCBMIDg4LC01NiBMIDk2LDQ0LjgwMDAwMDAwMDAwMDAwNCBMIDEwNCwwIEwgMTI0LjgwMDAwMDAwMDAwMDAxLDAgTCAxMzYsLTE2LjggTCAxNDcuMjAwMDAwMDAwMDAwMDIsMCBMIDE2MCwwIgogICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctcHVsc2UpIiBzdHJva2Utd2lkdGg9IjYuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iOTIiIGN5PSItNTYiIHI9IjEwLjQiIGZpbGw9InVybCgjZy1wdWxzZSkiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Pulse Wave — Icon only (Full colour)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/icon-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-pulse-wave/icon-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLXB1bHNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAsMTAwKSI+CiAgPHBhdGggZD0iTSAwLDAgTCAyOC43OTk5OTk5OTk5OTk5OTcsMCBMIDQxLjYsLTIwLjE2IEwgNTQuNDAwMDAwMDAwMDAwMDA2LDIwLjE2IEwgNjcuMiwwIEwgODAsMCBMIDg4LC01NiBMIDk2LDQ0LjgwMDAwMDAwMDAwMDAwNCBMIDEwNCwwIEwgMTI0LjgwMDAwMDAwMDAwMDAxLDAgTCAxMzYsLTE2LjggTCAxNDcuMjAwMDAwMDAwMDAwMDIsMCBMIDE2MCwwIgogICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjYuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iOTIiIGN5PSItNTYiIHI9IjEwLjQiIGZpbGw9IiNGRkZGRkYiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Pulse Wave — Icon only (White mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/icon-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-pulse-wave/icon-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLXB1bHNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjAsMTAwKSI+CiAgPHBhdGggZD0iTSAwLDAgTCAyOC43OTk5OTk5OTk5OTk5OTcsMCBMIDQxLjYsLTIwLjE2IEwgNTQuNDAwMDAwMDAwMDAwMDA2LDIwLjE2IEwgNjcuMiwwIEwgODAsMCBMIDg4LC01NiBMIDk2LDQ0LjgwMDAwMDAwMDAwMDAwNCBMIDEwNCwwIEwgMTI0LjgwMDAwMDAwMDAwMDAxLDAgTCAxMzYsLTE2LjggTCAxNDcuMjAwMDAwMDAwMDAwMDIsMCBMIDE2MCwwIgogICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjYuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iOTIiIGN5PSItNTYiIHI9IjEwLjQiIGZpbGw9IiMwMDAwMDAiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Pulse Wave — Icon only (Black mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/icon-only/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Wordmark only</b>
+          <small>Editorial · minimal banners</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-pulse-wave/wordmark-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9IjEuNiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Pulse Wave — Wordmark only (Full colour)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/wordmark-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-pulse-wave/wordmark-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9IjEuNiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Pulse Wave — Wordmark only (White mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/wordmark-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-pulse-wave/wordmark-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInSW50ZXInLCAnSGVsdmV0aWNhIE5ldWUnLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjMwMCIgZm9udC1zaXplPSI4MCIgbGV0dGVyLXNwYWNpbmc9IjEuNiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Pulse Wave — Wordmark only (Black mono)" />
+          <span class="cell__copy" data-path="concept-pulse-wave/wordmark-only/black-mono.svg">copy path</span>
+        </div>
+      </div></div></section>
+  <section class="concept">
+    <div class="concept__head">
+      <div>
+        <span class="concept__num">CONCEPT 04</span>
+        <h2 class="concept__name">Aperture</h2>
+      </div>
+      <div>
+        <p class="concept__rationale">Concentric rings with a focused core and four crosshair ticks. Reads as precision, focus, and a lens trained on the market.</p>
+        <div class="concept__meta">
+          <div><span>Layouts</span> <b>5</b></div>
+          <div><span>Treatments</span> <b>3</b></div>
+          <div><span>Total files</span> <b>15 SVGs</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="layouts">
+  
+      <div class="layout">
+        <div class="layout__label">
+          <b>Horizontal lockup</b>
+          <small>Headers · cards · email signatures</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-aperture/horizontal/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtYXBlcnR1cmUiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcwLDcwKSI+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjUwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iMi4yNSIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjM1IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iMi41IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iMyIgb3BhY2l0eT0iMSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSI5IiBmaWxsPSJ1cmwoI2ctYXBlcnR1cmUpIi8+CiAgPGxpbmUgeDE9Ii01Ny40OTk5OTk5OTk5OTk5OSIgeTE9IjAiIHgyPSItNTIuNSIgeTI9IjAiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIyLjc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iNTIuNSIgeTE9IjAiIHgyPSI1Ny40OTk5OTk5OTk5OTk5OSIgeTI9IjAiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIyLjc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii01Ny40OTk5OTk5OTk5OTk5OSIgeDI9IjAiIHkyPSItNTIuNSIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjIuNzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iNTIuNSIgeDI9IjAiIHkyPSI1Ny40OTk5OTk5OTk5OTk5OSIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjIuNzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjx0ZXh0IHg9IjE0NSIgeT0iODgiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSmV0QnJhaW5zIE1vbm8nLCBtb25vc3BhY2UiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iNTYiIGxldHRlci1zcGFjaW5nPSIzLjM2Ij5BTEZFWDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Aperture — Horizontal lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-aperture/horizontal/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-aperture/horizontal/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0ibW9uby1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcwLDcwKSI+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjUwIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi4yNSIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjM1IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi41IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIgb3BhY2l0eT0iMSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSI5IiBmaWxsPSIjRkZGRkZGIi8+CiAgPGxpbmUgeDE9Ii01Ny40OTk5OTk5OTk5OTk5OSIgeTE9IjAiIHgyPSItNTIuNSIgeTI9IjAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iNTIuNSIgeTE9IjAiIHgyPSI1Ny40OTk5OTk5OTk5OTk5OSIgeTI9IjAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii01Ny40OTk5OTk5OTk5OTk5OSIgeDI9IjAiIHkyPSItNTIuNSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iNTIuNSIgeDI9IjAiIHkyPSI1Ny40OTk5OTk5OTk5OTk5OSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjx0ZXh0IHg9IjE0NSIgeT0iODgiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSmV0QnJhaW5zIE1vbm8nLCBtb25vc3BhY2UiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iNTYiIGxldHRlci1zcGFjaW5nPSIzLjM2Ij5BTEZFWDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Aperture — Horizontal lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-aperture/horizontal/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-aperture/horizontal/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJtb25vLWFwZXJ0dXJlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzAsNzApIj4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBvcGFjaXR5PSIwLjYiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMzUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIG9wYWNpdHk9IjAuODUiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBvcGFjaXR5PSIxIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjkiIGZpbGw9IiMwMDAwMDAiLz4KICA8bGluZSB4MT0iLTU3LjQ5OTk5OTk5OTk5OTk5IiB5MT0iMCIgeDI9Ii01Mi41IiB5Mj0iMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuNzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI1Mi41IiB5MT0iMCIgeDI9IjU3LjQ5OTk5OTk5OTk5OTk5IiB5Mj0iMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuNzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iLTU3LjQ5OTk5OTk5OTk5OTk5IiB4Mj0iMCIgeTI9Ii01Mi41IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI1Mi41IiB4Mj0iMCIgeTI9IjU3LjQ5OTk5OTk5OTk5OTk5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi43NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgeD0iMTQ1IiB5PSI4OCIgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IidKZXRCcmFpbnMgTW9ubycsIG1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9IjYwMCIgZm9udC1zaXplPSI1NiIgbGV0dGVyLXNwYWNpbmc9IjMuMzYiPkFMRkVYPC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Aperture — Horizontal lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-aperture/horizontal/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Vertical lockup</b>
+          <small>Social · app store · posters</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-aperture/vertical/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtYXBlcnR1cmUiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIyLjkyNSIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjQ1LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIzLjI1IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iMy45IiBvcGFjaXR5PSIxIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjExLjciIGZpbGw9InVybCgjZy1hcGVydHVyZSkiLz4KICA8bGluZSB4MT0iLTc0Ljc1IiB5MT0iMCIgeDI9Ii02OC4yNSIgeTI9IjAiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIzLjU3NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjY4LjI1IiB5MT0iMCIgeDI9Ijc0Ljc1IiB5Mj0iMCIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjMuNTc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii03NC43NSIgeDI9IjAiIHkyPSItNjguMjUiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIzLjU3NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI2OC4yNSIgeDI9IjAiIHkyPSI3NC43NSIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjMuNTc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxNTAiIHk9IjIyMCIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IidKZXRCcmFpbnMgTW9ubycsIG1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9IjYwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9IjMuMTIiPkFMRkVYPC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Aperture — Vertical lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-aperture/vertical/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-aperture/vertical/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjkyNSIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjQ1LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjI1IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy45IiBvcGFjaXR5PSIxIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjExLjciIGZpbGw9IiNGRkZGRkYiLz4KICA8bGluZSB4MT0iLTc0Ljc1IiB5MT0iMCIgeDI9Ii02OC4yNSIgeTI9IjAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjU3NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjY4LjI1IiB5MT0iMCIgeDI9Ijc0Ljc1IiB5Mj0iMCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNTc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii03NC43NSIgeDI9IjAiIHkyPSItNjguMjUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjU3NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI2OC4yNSIgeDI9IjAiIHkyPSI3NC43NSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNTc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxNTAiIHk9IjIyMCIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IidKZXRCcmFpbnMgTW9ubycsIG1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9IjYwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9IjMuMTIiPkFMRkVYPC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Aperture — Vertical lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-aperture/vertical/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-aperture/vertical/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjkyNSIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjQ1LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjI1IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMy45IiBvcGFjaXR5PSIxIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjExLjciIGZpbGw9IiMwMDAwMDAiLz4KICA8bGluZSB4MT0iLTc0Ljc1IiB5MT0iMCIgeDI9Ii02OC4yNSIgeTI9IjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjU3NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjY4LjI1IiB5MT0iMCIgeDI9Ijc0Ljc1IiB5Mj0iMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMuNTc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii03NC43NSIgeDI9IjAiIHkyPSItNjguMjUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjU3NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI2OC4yNSIgeDI9IjAiIHkyPSI3NC43NSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMuNTc1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxNTAiIHk9IjIyMCIgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IidKZXRCcmFpbnMgTW9ubycsIG1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9IjYwMCIgZm9udC1zaXplPSI1MiIgbGV0dGVyLXNwYWNpbmc9IjMuMTIiPkFMRkVYPC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Aperture — Vertical lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-aperture/vertical/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Square / badge</b>
+          <small>Avatars · in-app · thumbnails</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-aperture/square/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtYXBlcnR1cmUiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIyLjUyIiBvcGFjaXR5PSIwLjYiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMzkuMTk5OTk5OTk5OTk5OTk2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iMi44MDAwMDAwMDAwMDAwMDAzIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIyLjQwMDAwMDAwMDAwMDAwMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjMuMzYiIG9wYWNpdHk9IjEiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMTAuMDgiIGZpbGw9InVybCgjZy1hcGVydHVyZSkiLz4KICA8bGluZSB4MT0iLTY0LjM5OTk5OTk5OTk5OTk5IiB5MT0iMCIgeDI9Ii01OC44MDAwMDAwMDAwMDAwMDQiIHkyPSIwIiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iMy4wOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjU4LjgwMDAwMDAwMDAwMDAwNCIgeTE9IjAiIHgyPSI2NC4zOTk5OTk5OTk5OTk5OSIgeTI9IjAiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIzLjA4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii02NC4zOTk5OTk5OTk5OTk5OSIgeDI9IjAiIHkyPSItNTguODAwMDAwMDAwMDAwMDA0IiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iMy4wOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI1OC44MDAwMDAwMDAwMDAwMDQiIHgyPSIwIiB5Mj0iNjQuMzk5OTk5OTk5OTk5OTkiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSIzLjA4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Aperture — Square / badge (Full colour)" />
+          <span class="cell__copy" data-path="concept-aperture/square/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-aperture/square/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyLjUyIiBvcGFjaXR5PSIwLjYiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMzkuMTk5OTk5OTk5OTk5OTk2IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMi44MDAwMDAwMDAwMDAwMDAzIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIyLjQwMDAwMDAwMDAwMDAwMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuMzYiIG9wYWNpdHk9IjEiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMTAuMDgiIGZpbGw9IiNGRkZGRkYiLz4KICA8bGluZSB4MT0iLTY0LjM5OTk5OTk5OTk5OTk5IiB5MT0iMCIgeDI9Ii01OC44MDAwMDAwMDAwMDAwMDQiIHkyPSIwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy4wOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjU4LjgwMDAwMDAwMDAwMDAwNCIgeTE9IjAiIHgyPSI2NC4zOTk5OTk5OTk5OTk5OSIgeTI9IjAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjA4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii02NC4zOTk5OTk5OTk5OTk5OSIgeDI9IjAiIHkyPSItNTguODAwMDAwMDAwMDAwMDA0IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy4wOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI1OC44MDAwMDAwMDAwMDAwMDQiIHgyPSIwIiB5Mj0iNjQuMzk5OTk5OTk5OTk5OTkiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjA4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Aperture — Square / badge (White mono)" />
+          <span class="cell__copy" data-path="concept-aperture/square/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-aperture/square/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1hcGVydHVyZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjUyIiBvcGFjaXR5PSIwLjYiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMzkuMTk5OTk5OTk5OTk5OTk2IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi44MDAwMDAwMDAwMDAwMDAzIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIyLjQwMDAwMDAwMDAwMDAwMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMuMzYiIG9wYWNpdHk9IjEiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iMTAuMDgiIGZpbGw9IiMwMDAwMDAiLz4KICA8bGluZSB4MT0iLTY0LjM5OTk5OTk5OTk5OTk5IiB5MT0iMCIgeDI9Ii01OC44MDAwMDAwMDAwMDAwMDQiIHkyPSIwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMy4wOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjU4LjgwMDAwMDAwMDAwMDAwNCIgeTE9IjAiIHgyPSI2NC4zOTk5OTk5OTk5OTk5OSIgeTI9IjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjA4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iMCIgeTE9Ii02NC4zOTk5OTk5OTk5OTk5OSIgeDI9IjAiIHkyPSItNTguODAwMDAwMDAwMDAwMDA0IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMy4wOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI1OC44MDAwMDAwMDAwMDAwMDQiIHgyPSIwIiB5Mj0iNjQuMzk5OTk5OTk5OTk5OTkiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjA4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="Alfex Aperture — Square / badge (Black mono)" />
+          <span class="cell__copy" data-path="concept-aperture/square/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Icon only</b>
+          <small>Favicon · app icon · watermark</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-aperture/icon-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWFwZXJ0dXJlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMENGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMUVEMzhBIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iY29yZS1hcGVydHVyZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNTAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiMwMENGRkYiIHN0b3Atb3BhY2l0eT0iMC40Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSI4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjMuNTk5OTk5OTk5OTk5OTk5NiIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjU2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1hcGVydHVyZSkiIHN0cm9rZS13aWR0aD0iNCIgb3BhY2l0eT0iMC44NSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjQuOCIgb3BhY2l0eT0iMSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIxNC4zOTk5OTk5OTk5OTk5OTkiIGZpbGw9InVybCgjZy1hcGVydHVyZSkiLz4KICA8bGluZSB4MT0iLTkyIiB5MT0iMCIgeDI9Ii04NCIgeTI9IjAiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI4NCIgeTE9IjAiIHgyPSI5MiIgeTI9IjAiIHN0cm9rZT0idXJsKCNnLWFwZXJ0dXJlKSIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iLTkyIiB4Mj0iMCIgeTI9Ii04NCIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjQuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI4NCIgeDI9IjAiIHkyPSI5MiIgc3Ryb2tlPSJ1cmwoI2ctYXBlcnR1cmUpIiBzdHJva2Utd2lkdGg9IjQuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Aperture — Icon only (Full colour)" />
+          <span class="cell__copy" data-path="concept-aperture/icon-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-aperture/icon-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWFwZXJ0dXJlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSI4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNTk5OTk5OTk5OTk5OTk5NiIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjU2IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNCIgb3BhY2l0eT0iMC44NSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQuOCIgb3BhY2l0eT0iMSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIxNC4zOTk5OTk5OTk5OTk5OTkiIGZpbGw9IiNGRkZGRkYiLz4KICA8bGluZSB4MT0iLTkyIiB5MT0iMCIgeDI9Ii04NCIgeTI9IjAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI4NCIgeTE9IjAiIHgyPSI5MiIgeTI9IjAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iLTkyIiB4Mj0iMCIgeTI9Ii04NCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI4NCIgeDI9IjAiIHkyPSI5MiIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Aperture — Icon only (White mono)" />
+          <span class="cell__copy" data-path="concept-aperture/icon-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-aperture/icon-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWFwZXJ0dXJlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSI4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMuNTk5OTk5OTk5OTk5OTk5NiIgb3BhY2l0eT0iMC42Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjU2IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgb3BhY2l0eT0iMC44NSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQuOCIgb3BhY2l0eT0iMSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIxNC4zOTk5OTk5OTk5OTk5OTkiIGZpbGw9IiMwMDAwMDAiLz4KICA8bGluZSB4MT0iLTkyIiB5MT0iMCIgeDI9Ii04NCIgeTI9IjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI4NCIgeTE9IjAiIHgyPSI5MiIgeTI9IjAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0LjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iLTkyIiB4Mj0iMCIgeTI9Ii04NCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSI4NCIgeDI9IjAiIHkyPSI5MiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Aperture — Icon only (Black mono)" />
+          <span class="cell__copy" data-path="concept-aperture/icon-only/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Wordmark only</b>
+          <small>Editorial · minimal banners</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-aperture/wordmark-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSmV0QnJhaW5zIE1vbm8nLCBtb25vc3BhY2UiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iODAiIGxldHRlci1zcGFjaW5nPSI0LjgiPkFMRkVYPC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Aperture — Wordmark only (Full colour)" />
+          <span class="cell__copy" data-path="concept-aperture/wordmark-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-aperture/wordmark-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInSmV0QnJhaW5zIE1vbm8nLCBtb25vc3BhY2UiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iODAiIGxldHRlci1zcGFjaW5nPSI0LjgiPkFMRkVYPC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Aperture — Wordmark only (White mono)" />
+          <span class="cell__copy" data-path="concept-aperture/wordmark-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-aperture/wordmark-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInSmV0QnJhaW5zIE1vbm8nLCBtb25vc3BhY2UiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iODAiIGxldHRlci1zcGFjaW5nPSI0LjgiPkFMRkVYPC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Aperture — Wordmark only (Black mono)" />
+          <span class="cell__copy" data-path="concept-aperture/wordmark-only/black-mono.svg">copy path</span>
+        </div>
+      </div></div></section>
+  <section class="concept">
+    <div class="concept__head">
+      <div>
+        <span class="concept__num">CONCEPT 05</span>
+        <h2 class="concept__name">Helix A</h2>
+      </div>
+      <div>
+        <p class="concept__rationale">Two intertwined arcs forming a stylised "A" — Alfex itself, and the dual-mind ensemble that makes it work.</p>
+        <div class="concept__meta">
+          <div><span>Layouts</span> <b>5</b></div>
+          <div><span>Treatments</span> <b>3</b></div>
+          <div><span>Total files</span> <b>15 SVGs</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="layouts">
+  
+      <div class="layout">
+        <div class="layout__label">
+          <b>Horizontal lockup</b>
+          <small>Headers · cards · email signatures</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-helix-a/horizontal/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtaGVsaXgiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcwLDcwKSI+CiAgPHBhdGggZD0iTSAtMzUsNTAgUSAwLC02Mi41IDM1LDUwIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWhlbGl4KSIgc3Ryb2tlLXdpZHRoPSI2LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTM1LDUwIFEgMCwzMCAzNSw1MCIKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1oZWxpeCkiIHN0cm9rZS13aWR0aD0iMy41NzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC41NSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSItMjYiIHI9IjYuNSIgZmlsbD0idXJsKCNnLWhlbGl4KSIvPgogIDxsaW5lIHgxPSItMTYiIHkxPSI5IiB4Mj0iMTYiIHkyPSI5IiBzdHJva2U9InVybCgjZy1oZWxpeCkiIHN0cm9rZS13aWR0aD0iNC41NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgeD0iMTQ1IiB5PSI4OCIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IidQbGF5ZmFpciBEaXNwbGF5JywgR2VvcmdpYSwgc2VyaWYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZm9udC1zaXplPSI1NiIgbGV0dGVyLXNwYWNpbmc9Ii0wLjI4Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Helix A — Horizontal lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-helix-a/horizontal/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-helix-a/horizontal/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0ibW9uby1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDcwLDcwKSI+CiAgPHBhdGggZD0iTSAtMzUsNTAgUSAwLC02Mi41IDM1LDUwIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI2LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTM1LDUwIFEgMCwzMCAzNSw1MCIKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy41NzUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC41NSIvPgogIDxjaXJjbGUgY3g9IjAiIGN5PSItMjYiIHI9IjYuNSIgZmlsbD0iI0ZGRkZGRiIvPgogIDxsaW5lIHgxPSItMTYiIHkxPSI5IiB4Mj0iMTYiIHkyPSI5IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNC41NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgeD0iMTQ1IiB5PSI4OCIgZmlsbD0iI0ZGRkZGRiIgZm9udC1mYW1pbHk9IidQbGF5ZmFpciBEaXNwbGF5JywgR2VvcmdpYSwgc2VyaWYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZm9udC1zaXplPSI1NiIgbGV0dGVyLXNwYWNpbmc9Ii0wLjI4Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Helix A — Horizontal lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/horizontal/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-helix-a/horizontal/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJtb25vLWhlbGl4IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzAsNzApIj4KICA8cGF0aCBkPSJNIC0zNSw1MCBRIDAsLTYyLjUgMzUsNTAiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjYuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTSAtMzUsNTAgUSAwLDMwIDM1LDUwIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIzLjU3NSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjU1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9Ii0yNiIgcj0iNi41IiBmaWxsPSIjMDAwMDAwIi8+CiAgPGxpbmUgeDE9Ii0xNiIgeTE9IjkiIHgyPSIxNiIgeTI9IjkiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI0LjU1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8dGV4dCB4PSIxNDUiIHk9Ijg4IiBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iJ1BsYXlmYWlyIERpc3BsYXknLCBHZW9yZ2lhLCBzZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCIgZm9udC1zdHlsZT0iaXRhbGljIiBmb250LXNpemU9IjU2IiBsZXR0ZXItc3BhY2luZz0iLTAuMjgiPkFsZmV4PC90ZXh0Pgo8L3N2Zz4K" alt="Alfex Helix A — Horizontal lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/horizontal/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Vertical lockup</b>
+          <small>Social · app store · posters</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-helix-a/vertical/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtaGVsaXgiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8cGF0aCBkPSJNIC00NS41LDY1IFEgMCwtODEuMjUgNDUuNSw2NSIKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZy1oZWxpeCkiIHN0cm9rZS13aWR0aD0iOC40NTAwMDAwMDAwMDAwMDEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTQ1LjUsNjUgUSAwLDM5IDQ1LjUsNjUiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctaGVsaXgpIiBzdHJva2Utd2lkdGg9IjQuNjQ3NTAwMDAwMDAwMDAxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iLTMzLjgwMDAwMDAwMDAwMDAwNCIgcj0iOC40NTAwMDAwMDAwMDAwMDEiIGZpbGw9InVybCgjZy1oZWxpeCkiLz4KICA8bGluZSB4MT0iLTIwLjgiIHkxPSIxMS43IiB4Mj0iMjAuOCIgeTI9IjExLjciIHN0cm9rZT0idXJsKCNnLWhlbGl4KSIgc3Ryb2tlLXdpZHRoPSI1LjkxNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInUGxheWZhaXIgRGlzcGxheScsIEdlb3JnaWEsIHNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtc2l6ZT0iNTIiIGxldHRlci1zcGFjaW5nPSItMC4yNiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Helix A — Vertical lockup (Full colour)" />
+          <span class="cell__copy" data-path="concept-helix-a/vertical/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-helix-a/vertical/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8cGF0aCBkPSJNIC00NS41LDY1IFEgMCwtODEuMjUgNDUuNSw2NSIKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iOC40NTAwMDAwMDAwMDAwMDEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTQ1LjUsNjUgUSAwLDM5IDQ1LjUsNjUiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQuNjQ3NTAwMDAwMDAwMDAxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iLTMzLjgwMDAwMDAwMDAwMDAwNCIgcj0iOC40NTAwMDAwMDAwMDAwMDEiIGZpbGw9IiNGRkZGRkYiLz4KICA8bGluZSB4MT0iLTIwLjgiIHkxPSIxMS43IiB4Mj0iMjAuOCIgeTI9IjExLjciIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI1LjkxNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInUGxheWZhaXIgRGlzcGxheScsIEdlb3JnaWEsIHNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtc2l6ZT0iNTIiIGxldHRlci1zcGFjaW5nPSItMC4yNiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Helix A — Vertical lockup (White mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/vertical/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-helix-a/vertical/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjYwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwxMDApIj4KICA8cGF0aCBkPSJNIC00NS41LDY1IFEgMCwtODEuMjUgNDUuNSw2NSIKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iOC40NTAwMDAwMDAwMDAwMDEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTQ1LjUsNjUgUSAwLDM5IDQ1LjUsNjUiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQuNjQ3NTAwMDAwMDAwMDAxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iLTMzLjgwMDAwMDAwMDAwMDAwNCIgcj0iOC40NTAwMDAwMDAwMDAwMDEiIGZpbGw9IiMwMDAwMDAiLz4KICA8bGluZSB4MT0iLTIwLjgiIHkxPSIxMS43IiB4Mj0iMjAuOCIgeTI9IjExLjciIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI1LjkxNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTUwIiB5PSIyMjAiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInUGxheWZhaXIgRGlzcGxheScsIEdlb3JnaWEsIHNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtc2l6ZT0iNTIiIGxldHRlci1zcGFjaW5nPSItMC4yNiI+QWxmZXg8L3RleHQ+Cjwvc3ZnPgo=" alt="Alfex Helix A — Vertical lockup (Black mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/vertical/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Square / badge</b>
+          <small>Avatars · in-app · thumbnails</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-helix-a/square/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzFFRDM4QSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImNvcmUtaGVsaXgiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBDRkZGIiBzdG9wLW9wYWNpdHk9IjAuNCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjQTg1NUY3IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8cGF0aCBkPSJNIC0zOS4xOTk5OTk5OTk5OTk5OTYsNTYgUSAwLC03MCAzOS4xOTk5OTk5OTk5OTk5OTYsNTYiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctaGVsaXgpIiBzdHJva2Utd2lkdGg9IjcuMjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTM5LjE5OTk5OTk5OTk5OTk5Niw1NiBRIDAsMzMuNiAzOS4xOTk5OTk5OTk5OTk5OTYsNTYiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctaGVsaXgpIiBzdHJva2Utd2lkdGg9IjQuMDA0MDAwMDAwMDAwMDAwNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjU1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9Ii0yOS4xMiIgcj0iNy4yOCIgZmlsbD0idXJsKCNnLWhlbGl4KSIvPgogIDxsaW5lIHgxPSItMTcuOTIiIHkxPSIxMC4wOCIgeDI9IjE3LjkyIiB5Mj0iMTAuMDgiIHN0cm9rZT0idXJsKCNnLWhlbGl4KSIgc3Ryb2tlLXdpZHRoPSI1LjA5NiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Helix A — Square / badge (Full colour)" />
+          <span class="cell__copy" data-path="concept-helix-a/square/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-helix-a/square/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZGRkZGIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8cGF0aCBkPSJNIC0zOS4xOTk5OTk5OTk5OTk5OTYsNTYgUSAwLC03MCAzOS4xOTk5OTk5OTk5OTk5OTYsNTYiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjcuMjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTM5LjE5OTk5OTk5OTk5OTk5Niw1NiBRIDAsMzMuNiAzOS4xOTk5OTk5OTk5OTk5OTYsNTYiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQuMDA0MDAwMDAwMDAwMDAwNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjU1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9Ii0yOS4xMiIgcj0iNy4yOCIgZmlsbD0iI0ZGRkZGRiIvPgogIDxsaW5lIHgxPSItMTcuOTIiIHkxPSIxMC4wOCIgeDI9IjE3LjkyIiB5Mj0iMTAuMDgiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI1LjA5NiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Helix A — Square / badge (White mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/square/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-helix-a/square/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+CjxkZWZzPgogIDxsaW5lYXJHcmFkaWVudCBpZD0iZy1oZWxpeCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICA8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwxMDApIj4KICA8cGF0aCBkPSJNIC0zOS4xOTk5OTk5OTk5OTk5OTYsNTYgUSAwLC03MCAzOS4xOTk5OTk5OTk5OTk5OTYsNTYiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjcuMjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gLTM5LjE5OTk5OTk5OTk5OTk5Niw1NiBRIDAsMzMuNiAzOS4xOTk5OTk5OTk5OTk5OTYsNTYiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjQuMDA0MDAwMDAwMDAwMDAwNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjU1Ii8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9Ii0yOS4xMiIgcj0iNy4yOCIgZmlsbD0iIzAwMDAwMCIvPgogIDxsaW5lIHgxPSItMTcuOTIiIHkxPSIxMC4wOCIgeDI9IjE3LjkyIiB5Mj0iMTAuMDgiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSI1LjA5NiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==" alt="Alfex Helix A — Square / badge (Black mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/square/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Icon only</b>
+          <small>Favicon · app icon · watermark</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-helix-a/icon-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWhlbGl4IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMENGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMUVEMzhBIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iY29yZS1oZWxpeCIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNTAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiMwMENGRkYiIHN0b3Atb3BhY2l0eT0iMC40Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNBODU1RjciIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxwYXRoIGQ9Ik0gLTU2LDgwIFEgMCwtMTAwIDU2LDgwIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnLWhlbGl4KSIgc3Ryb2tlLXdpZHRoPSIxMC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNIC01Niw4MCBRIDAsNDggNTYsODAiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2ctaGVsaXgpIiBzdHJva2Utd2lkdGg9IjUuNzIwMDAwMDAwMDAwMDAxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iLTQxLjYiIHI9IjEwLjQiIGZpbGw9InVybCgjZy1oZWxpeCkiLz4KICA8bGluZSB4MT0iLTI1LjYiIHkxPSIxNC4zOTk5OTk5OTk5OTk5OTkiIHgyPSIyNS42IiB5Mj0iMTQuMzk5OTk5OTk5OTk5OTk5IiBzdHJva2U9InVybCgjZy1oZWxpeCkiIHN0cm9rZS13aWR0aD0iNy4yNzk5OTk5OTk5OTk5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjwvc3ZnPgo=" alt="Alfex Helix A — Icon only (Full colour)" />
+          <span class="cell__copy" data-path="concept-helix-a/icon-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-helix-a/icon-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWhlbGl4IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGRkZGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxwYXRoIGQ9Ik0gLTU2LDgwIFEgMCwtMTAwIDU2LDgwIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIxMC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNIC01Niw4MCBRIDAsNDggNTYsODAiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjUuNzIwMDAwMDAwMDAwMDAxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iLTQxLjYiIHI9IjEwLjQiIGZpbGw9IiNGRkZGRkYiLz4KICA8bGluZSB4MT0iLTI1LjYiIHkxPSIxNC4zOTk5OTk5OTk5OTk5OTkiIHgyPSIyNS42IiB5Mj0iMTQuMzk5OTk5OTk5OTk5OTk5IiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNy4yNzk5OTk5OTk5OTk5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjwvc3ZnPgo=" alt="Alfex Helix A — Icon only (White mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/icon-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-helix-a/icon-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgoKPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJnLWhlbGl4IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwLDEwMCkiPgogIDxwYXRoIGQ9Ik0gLTU2LDgwIFEgMCwtMTAwIDU2LDgwIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxMC40IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNIC01Niw4MCBRIDAsNDggNTYsODAiCiAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjUuNzIwMDAwMDAwMDAwMDAxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8Y2lyY2xlIGN4PSIwIiBjeT0iLTQxLjYiIHI9IjEwLjQiIGZpbGw9IiMwMDAwMDAiLz4KICA8bGluZSB4MT0iLTI1LjYiIHkxPSIxNC4zOTk5OTk5OTk5OTk5OTkiIHgyPSIyNS42IiB5Mj0iMTQuMzk5OTk5OTk5OTk5OTk5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNy4yNzk5OTk5OTk5OTk5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L2c+Cjwvc3ZnPgo=" alt="Alfex Helix A — Icon only (Black mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/icon-only/black-mono.svg">copy path</span>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="layout__label">
+          <b>Wordmark only</b>
+          <small>Editorial · minimal banners</small>
+        </div>
+    
+        <div class="cell cell--dark" data-path="concept-helix-a/wordmark-only/full-color.svg">
+          <span class="cell__tag">Full colour</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInUGxheWZhaXIgRGlzcGxheScsIEdlb3JnaWEsIHNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtc2l6ZT0iODAiIGxldHRlci1zcGFjaW5nPSItMC40Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Helix A — Wordmark only (Full colour)" />
+          <span class="cell__copy" data-path="concept-helix-a/wordmark-only/full-color.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--dark" data-path="concept-helix-a/wordmark-only/white-mono.svg">
+          <span class="cell__tag">White mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMEEwQzEyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiNGRkZGRkYiIGZvbnQtZmFtaWx5PSInUGxheWZhaXIgRGlzcGxheScsIEdlb3JnaWEsIHNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtc2l6ZT0iODAiIGxldHRlci1zcGFjaW5nPSItMC40Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Helix A — Wordmark only (White mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/wordmark-only/white-mono.svg">copy path</span>
+        </div>
+      
+        <div class="cell cell--light" data-path="concept-helix-a/wordmark-only/black-mono.svg">
+          <span class="cell__tag">Black mono</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMTQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCI+Cjx0aXRsZSBpZD0idCI+QWxmZXg8L3RpdGxlPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGRkZGIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iOTUiIGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSInUGxheWZhaXIgRGlzcGxheScsIEdlb3JnaWEsIHNlcmlmIiBmb250LXdlaWdodD0iNTAwIiBmb250LXN0eWxlPSJpdGFsaWMiIGZvbnQtc2l6ZT0iODAiIGxldHRlci1zcGFjaW5nPSItMC40Ij5BbGZleDwvdGV4dD4KPC9zdmc+Cg==" alt="Alfex Helix A — Wordmark only (Black mono)" />
+          <span class="cell__copy" data-path="concept-helix-a/wordmark-only/black-mono.svg">copy path</span>
+        </div>
+      </div></div></section>
+
+<footer class="foot">
+  <p>Generated by the <a href="https://github.com/rknall/claude-skills" target="_blank">svg-logo-designer</a> Claude Code skill — for Alfex.<br/>
+  See <a href="README.md">README.md</a> for full usage guidelines.</p>
+</footer>
+
+<script>
+document.body.addEventListener('click', e => {
+  if (e.target.classList && e.target.classList.contains('cell__copy')) {
+    const p = e.target.dataset.path;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(p).then(()=>{
+        e.target.textContent = 'copied ✓';
+        setTimeout(()=>{ e.target.textContent = 'copy path'; }, 1500);
+      });
+    }
+  }
+});
+</script>
+</body>
+</html>

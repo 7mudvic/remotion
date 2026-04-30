@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 140" role="img" aria-labelledby="t">
+<title id="t">Alfex</title>
+
+<defs>
+  <linearGradient id="mono-atom" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#000000"/>
+    <stop offset="100%" stop-color="#000000"/>
+  </linearGradient>
+</defs>
+<g transform="translate(70,70)">
+  <ellipse cx="0" cy="0" rx="50" ry="19" fill="none" stroke="#000000" stroke-width="2.25" opacity="0.95"/>
+  <ellipse cx="0" cy="0" rx="50" ry="19" fill="none" stroke="#000000" stroke-width="2.25" opacity="0.95" transform="rotate(60)"/>
+  <ellipse cx="0" cy="0" rx="50" ry="19" fill="none" stroke="#000000" stroke-width="2.25" opacity="0.95" transform="rotate(-60)"/>
+  
+  <circle cx="0" cy="0" r="4.25" fill="#000000"/>
+</g>
+<text x="145" y="88" fill="#000000" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="56" letter-spacing="-1.12">Alfex</text>
+</svg>

@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>HYPERION — Intelligence Beyond the Chart</title>
+<meta name="description" content="HYPERION is the autonomous AI trading mind. 12.4 billion parameters. 50 years of market memory. Zero hesitation." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,300;1,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ================== CUSTOM CURSOR ================== -->
+<div class="cursor" id="cursor">
+  <div class="cursor__outer"></div>
+  <div class="cursor__dot"></div>
+  <div class="cursor__label" id="cursorLabel"></div>
+</div>
+
+<!-- ================== NOISE OVERLAY ================== -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ================== SCANLINES ================== -->
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- ================== AUDIO TOGGLE ================== -->
+<button class="audio-toggle" id="audioToggle" data-magnetic>
+  <span class="audio-toggle__bars">
+    <i></i><i></i><i></i><i></i><i></i>
+  </span>
+  <span class="audio-toggle__label">SOUND</span>
+</button>
+
+<!-- ================== SCROLL PROGRESS ================== -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ================== AI STATUS PILL ================== -->
+<div class="ai-status">
+  <span class="ai-status__pulse"></span>
+  <span class="ai-status__label">HYPERION · ONLINE</span>
+  <span class="ai-status__metric" id="aiStatusMetric">0.42 ms</span>
+</div>
+
+<!-- ================== TOP NAV ================== -->
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top" data-magnetic>
+    <span class="nav__mark">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12 L22 12 M12 2 L12 22 M5 5 L19 19 M19 5 L5 19"/>
+      </svg>
+    </span>
+    <span class="nav__name">HYPERION</span>
+  </a>
+  <nav class="nav__links">
+    <a href="#dashboard" data-magnetic>PLATFORM</a>
+    <a href="#engine" data-magnetic>ENGINE</a>
+    <a href="#access" data-magnetic>ACCESS</a>
+  </nav>
+  <a class="nav__cta" href="#access" data-magnetic data-cursor="ENTER">
+    <span>REQUEST INVITE</span>
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </a>
+</header>
+
+<!-- ================== LOADER ================== -->
+<div class="loader" id="loader">
+  <div class="loader__bg"></div>
+  <div class="loader__frame">
+    <div class="loader__row loader__row--1">
+      <span class="mono">// HYPERION OS · v3.14.7</span>
+      <span class="mono dim" id="loaderTime">00:00:00.000</span>
+    </div>
+    <div class="loader__center">
+      <div class="loader__ring">
+        <svg viewBox="0 0 200 200" width="200" height="200">
+          <circle cx="100" cy="100" r="80" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+          <circle id="loaderArc" cx="100" cy="100" r="80" stroke="#00FFB2" stroke-width="2" fill="none"
+                  stroke-dasharray="502.65" stroke-dashoffset="502.65"
+                  transform="rotate(-90 100 100)" stroke-linecap="round"/>
+          <circle cx="100" cy="100" r="50" stroke="rgba(255,255,255,.04)" stroke-width="1" fill="none"/>
+          <line x1="100" y1="20" x2="100" y2="35" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
+          <line x1="100" y1="180" x2="100" y2="165" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
+          <line x1="20" y1="100" x2="35" y2="100" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
+          <line x1="180" y1="100" x2="165" y2="100" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="loader__num" id="loaderPct">000</div>
+      <div class="loader__label">INITIALIZING NEURAL CORE</div>
+    </div>
+    <div class="loader__row loader__row--2">
+      <span class="mono dim">EAST · NYSE · NASDAQ · LSE · TADAWUL · TOKYO</span>
+    </div>
+    <div class="loader__rows" id="loaderRows"></div>
+  </div>
+</div>
+
+<!-- ================== HERO ================== -->
+<section class="hero" id="top">
+  <canvas class="hero__canvas" id="heroCanvas"></canvas>
+
+  <!-- price ribbon -->
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon__track" id="ribbonTrack"></div>
+  </div>
+
+  <div class="hero__inner">
+    <div class="hero__meta">
+      <span class="hero__meta-line"></span>
+      <span class="mono">[01 / 06]</span>
+      <span class="mono dim">— THE TRADING MIND, AWAKE —</span>
+    </div>
+
+    <h1 class="hero__title" id="heroTitle">
+      <span class="line"><span class="word" data-letters="HYPERION"></span></span>
+      <span class="line line--accent"><span class="word italic">intelligence</span> <span class="word">beyond</span> <span class="word">the</span> <span class="word">chart</span></span>
+    </h1>
+
+    <p class="hero__lede" id="heroLede">
+      An autonomous market mind. <strong>12.4 billion</strong> parameters trained on
+      <strong>50 years</strong> of every tick, every headline, every shock —
+      reasoning in <strong>0.42 ms</strong>.
+    </p>
+
+    <div class="hero__cta" id="heroCta">
+      <a class="btn btn--primary" href="#access" data-magnetic data-cursor="ACCESS">
+        <span>REQUEST ACCESS</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a class="btn btn--ghost" href="#dashboard" data-magnetic data-cursor="WATCH">
+        <span>WATCH IT TRADE</span>
+      </a>
+    </div>
+
+    <div class="hero__stats">
+      <div class="stat" data-stat>
+        <span class="mono dim">accuracy</span>
+        <b><span data-count="94.7">0</span><i>%</i></b>
+      </div>
+      <div class="stat" data-stat>
+        <span class="mono dim">latency</span>
+        <b><span data-count="0.42">0</span><i>ms</i></b>
+      </div>
+      <div class="stat" data-stat>
+        <span class="mono dim">signals/day</span>
+        <b><span data-count="2.3">0</span><i>M</i></b>
+      </div>
+      <div class="stat" data-stat>
+        <span class="mono dim">aum</span>
+        <b><i>$</i><span data-count="1.2">0</span><i>B</i></b>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__scroll">
+    <span class="mono dim">SCROLL</span>
+    <span class="hero__scroll-line"></span>
+  </div>
+</section>
+
+<!-- ================== MARQUEE ================== -->
+<section class="marquee">
+  <div class="marquee__row marquee__row--right">
+    <div class="marquee__track">
+      <span>WE PREDICT THE MARKET</span><span class="dot">·</span>
+      <span>SO YOU DON'T HAVE TO</span><span class="dot">·</span>
+      <span>WE PREDICT THE MARKET</span><span class="dot">·</span>
+      <span>SO YOU DON'T HAVE TO</span><span class="dot">·</span>
+      <span>WE PREDICT THE MARKET</span><span class="dot">·</span>
+      <span>SO YOU DON'T HAVE TO</span><span class="dot">·</span>
+    </div>
+  </div>
+  <div class="marquee__row marquee__row--left">
+    <div class="marquee__track">
+      <span class="italic">an autonomous mind</span><span class="dot">·</span>
+      <span class="italic">trained on every shock</span><span class="dot">·</span>
+      <span class="italic">an autonomous mind</span><span class="dot">·</span>
+      <span class="italic">trained on every shock</span><span class="dot">·</span>
+      <span class="italic">an autonomous mind</span><span class="dot">·</span>
+      <span class="italic">trained on every shock</span><span class="dot">·</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================== MANIFESTO ================== -->
+<section class="manifesto" id="manifesto">
+  <div class="manifesto__inner">
+    <div class="meta">
+      <span class="mono dim">[02 / 06]</span>
+      <span class="meta__line"></span>
+      <span class="mono">MANIFESTO</span>
+    </div>
+    <h2 class="manifesto__text" id="manifestoText">
+      <span>The market is not a graph.</span>
+      <span>It is a <em>mood</em>, an <em>echo</em>, a <em>nervous system</em>.</span>
+      <span>HYPERION listens to all of it.</span>
+      <span class="accent">And it never sleeps.</span>
+    </h2>
+  </div>
+</section>
+
+<!-- ================== LIVE DASHBOARD (PINNED) ================== -->
+<section class="dashboard" id="dashboard">
+  <div class="dashboard__inner">
+    <div class="dashboard__copy">
+      <div class="meta">
+        <span class="mono dim">[03 / 06]</span>
+        <span class="meta__line"></span>
+        <span class="mono">PLATFORM</span>
+      </div>
+      <h2 class="section-title">A live cockpit<br/><span class="italic accent-2">for the autonomous trader.</span></h2>
+      <p class="lede">
+        Real-time signals, predictive overlays, and one-click execution —
+        all wired into a single neural surface.
+      </p>
+      <ul class="features">
+        <li><span class="mono mono-num">01</span><div><b>Predictive overlay</b><p>Forward-looking shadow shows the next 4 candles before they form.</p></div></li>
+        <li><span class="mono mono-num">02</span><div><b>Signal certainty</b><p>Every trade carries a confidence score from the ensemble.</p></div></li>
+        <li><span class="mono mono-num">03</span><div><b>Anomaly memory</b><p>HYPERION recognizes patterns it traded 17 years ago.</p></div></li>
+      </ul>
+    </div>
+
+    <div class="dashboard__panel" id="dashboardPanel">
+      <div class="panel__head">
+        <div class="panel__title">
+          <span class="panel__dot"></span>
+          <span>BTC / USD · 1H</span>
+        </div>
+        <div class="panel__chips">
+          <span class="chip mono">SPOT</span>
+          <span class="chip mono active">PERP</span>
+          <span class="chip mono">OPTIONS</span>
+        </div>
+      </div>
+
+      <div class="panel__price">
+        <div class="panel__quote">
+          <span class="mono dim">last</span>
+          <b id="livePrice">67,234.18</b>
+          <span class="up mono" id="livePct">+2.45%</span>
+        </div>
+        <div class="panel__quote panel__quote--right">
+          <span class="mono dim">predicted h+1</span>
+          <b id="predPrice">67,894.10</b>
+          <span class="up mono">↗ +0.98%</span>
+        </div>
+      </div>
+
+      <div class="panel__chart">
+        <svg id="chartSvg" viewBox="0 0 600 280" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#00FFB2" stop-opacity=".25"/>
+              <stop offset="100%" stop-color="#00FFB2" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="predGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#FF00CC" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#FF00CC" stop-opacity="1"/>
+            </linearGradient>
+          </defs>
+          <!-- grid -->
+          <g class="grid" stroke="rgba(255,255,255,.04)" stroke-width="1">
+            <line x1="0" y1="56" x2="600" y2="56"/>
+            <line x1="0" y1="112" x2="600" y2="112"/>
+            <line x1="0" y1="168" x2="600" y2="168"/>
+            <line x1="0" y1="224" x2="600" y2="224"/>
+          </g>
+          <g id="chartCandles"></g>
+          <path id="chartLine" fill="none" stroke="#FFFFFF" stroke-width="1.5" />
+          <path id="chartArea" fill="url(#chartGrad)" />
+          <path id="chartPred" fill="none" stroke="url(#predGrad)" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <circle id="chartCursor" r="5" fill="#fff" stroke="rgba(255,255,255,.4)" stroke-width="6"/>
+        </svg>
+      </div>
+
+      <div class="panel__signals">
+        <div class="signal" data-signal>
+          <span class="signal__tag mono up">LONG</span>
+          <div>
+            <b>Open BTC long @ 67,234</b>
+            <span class="mono dim">conf · 0.92</span>
+          </div>
+        </div>
+        <div class="signal" data-signal>
+          <span class="signal__tag mono dim">WATCH</span>
+          <div>
+            <b>ETH breakout setup forming</b>
+            <span class="mono dim">conf · 0.81</span>
+          </div>
+        </div>
+        <div class="signal" data-signal>
+          <span class="signal__tag mono down">CLOSE</span>
+          <div>
+            <b>Close XAU short, target hit</b>
+            <span class="mono dim">conf · 0.96</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================== ENGINE / NEURAL NET ================== -->
+<section class="engine" id="engine">
+  <canvas class="engine__canvas" id="engineCanvas"></canvas>
+  <div class="engine__inner">
+    <div class="engine__head">
+      <div class="meta">
+        <span class="mono dim">[04 / 06]</span>
+        <span class="meta__line"></span>
+        <span class="mono">ENGINE</span>
+      </div>
+      <h2 class="section-title">Twelve point four billion<br/>tiny <em>opinions.</em></h2>
+      <p class="lede">
+        HYPERION is an ensemble of seven specialist models —
+        each trained on a different slice of market reality —
+        coordinated by a meta-reasoner that watches them argue.
+      </p>
+    </div>
+
+    <div class="engine__grid">
+      <div class="engine__cell">
+        <span class="mono dim">// model · 01</span>
+        <h4>Sentiment</h4>
+        <p>Reads 8M headlines, posts and filings per hour.</p>
+      </div>
+      <div class="engine__cell">
+        <span class="mono dim">// model · 02</span>
+        <h4>Macro</h4>
+        <p>Tracks 4,200 economic indicators across 41 economies.</p>
+      </div>
+      <div class="engine__cell">
+        <span class="mono dim">// model · 03</span>
+        <h4>Microstructure</h4>
+        <p>Order-book physics, every level, every venue.</p>
+      </div>
+      <div class="engine__cell">
+        <span class="mono dim">// model · 04</span>
+        <h4>Cross-asset</h4>
+        <p>Correlations no human spreadsheet can hold.</p>
+      </div>
+      <div class="engine__cell">
+        <span class="mono dim">// model · 05</span>
+        <h4>Volatility</h4>
+        <p>Term structure, surface dynamics, regime detection.</p>
+      </div>
+      <div class="engine__cell">
+        <span class="mono dim">// model · 06</span>
+        <h4>Anomaly</h4>
+        <p>Pattern memory of every black-swan since 1974.</p>
+      </div>
+      <div class="engine__cell engine__cell--meta">
+        <span class="mono dim">// meta · 07</span>
+        <h4>The Arbiter</h4>
+        <p>The model that judges the other six. Trained on its own mistakes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================== STATS BLOCK ================== -->
+<section class="stats">
+  <div class="stats__inner">
+    <div class="meta center">
+      <span class="meta__line"></span>
+      <span class="mono dim">[05 / 06]</span>
+      <span class="meta__line"></span>
+    </div>
+    <div class="stats__grid">
+      <div class="stats__cell" data-big-stat>
+        <b><span data-count="2,347,002">0</span></b>
+        <span>signals analyzed in the last hour</span>
+      </div>
+      <div class="stats__cell" data-big-stat>
+        <b><span data-count="94.7">0</span><i>%</i></b>
+        <span>directional accuracy on backtests</span>
+      </div>
+      <div class="stats__cell" data-big-stat>
+        <b><span data-count="50">0</span><i>YR</i></b>
+        <span>of market memory, second by second</span>
+      </div>
+      <div class="stats__cell" data-big-stat>
+        <b><span data-count="0.42">0</span><i>ms</i></b>
+        <span>from observation to decision</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================== ACCESS / CTA ================== -->
+<section class="access" id="access">
+  <div class="access__bg" id="accessBg"></div>
+  <div class="access__inner">
+    <div class="meta">
+      <span class="mono dim">[06 / 06]</span>
+      <span class="meta__line"></span>
+      <span class="mono">ACCESS</span>
+    </div>
+    <h2 class="access__title">
+      <span>Trade with</span>
+      <span class="italic accent-2">a mind</span>
+      <span>that doesn't <em>flinch.</em></span>
+    </h2>
+    <p class="access__sub">
+      HYPERION is invitation-only. Leave your address and our concierge
+      will reach out within 12 hours.
+    </p>
+    <form class="access__form" onsubmit="return false;">
+      <input type="email" placeholder="you@institutionalcapital.com" id="accessEmail">
+      <button class="btn btn--primary" id="accessSubmit" data-magnetic data-cursor="SEND">
+        <span>REQUEST INVITE</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </form>
+    <div class="access__small mono dim">By requesting, you agree to be contacted by HYPERION concierge. No spam. Ever.</div>
+  </div>
+</section>
+
+<!-- ================== FOOTER ================== -->
+<footer class="foot">
+  <div class="foot__row foot__row--top">
+    <div class="foot__brand">
+      <span class="nav__mark">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12 L22 12 M12 2 L12 22 M5 5 L19 19 M19 5 L5 19"/>
+        </svg>
+      </span>
+      <span>HYPERION</span>
+    </div>
+    <div class="foot__cols">
+      <div>
+        <span class="mono dim">Platform</span>
+        <a href="#">Engine</a>
+        <a href="#">Signals</a>
+        <a href="#">API</a>
+      </div>
+      <div>
+        <span class="mono dim">Company</span>
+        <a href="#">About</a>
+        <a href="#">Research</a>
+        <a href="#">Careers</a>
+      </div>
+      <div>
+        <span class="mono dim">Legal</span>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Risk</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot__brandbig">HYPERION</div>
+  <div class="foot__row foot__row--bottom">
+    <span class="mono dim">© 2026 HYPERION RESEARCH · ALL RIGHTS RESERVED</span>
+    <span class="mono dim">v3.14.7 · NEURAL CORE STABLE</span>
+  </div>
+</footer>
+
+<!-- ================== LIBS ================== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="script.js"></script>
+
+</body>
+</html>

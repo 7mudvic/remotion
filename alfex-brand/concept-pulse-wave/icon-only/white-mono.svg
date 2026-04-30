@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="t">
+<title id="t">Alfex</title>
+
+<defs>
+  <linearGradient id="g-pulse" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#FFFFFF"/>
+    <stop offset="100%" stop-color="#FFFFFF"/>
+  </linearGradient>
+</defs>
+<g transform="translate(20,100)">
+  <path d="M 0,0 L 28.799999999999997,0 L 41.6,-20.16 L 54.400000000000006,20.16 L 67.2,0 L 80,0 L 88,-56 L 96,44.800000000000004 L 104,0 L 124.80000000000001,0 L 136,-16.8 L 147.20000000000002,0 L 160,0"
+    fill="none" stroke="#FFFFFF" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="92" cy="-56" r="10.4" fill="#FFFFFF"/>
+</g>
+</svg>
