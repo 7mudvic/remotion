@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="bg3" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#2a1810"/>
+      <stop offset="100%" stop-color="#070403"/>
+    </radialGradient>
+    <radialGradient id="plate3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3a2820"/>
+      <stop offset="100%" stop-color="#0a0605"/>
+    </radialGradient>
+    <linearGradient id="meat3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9a4a26"/>
+      <stop offset="100%" stop-color="#3d180a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg3)"/>
+  <ellipse cx="600" cy="510" rx="420" ry="270" fill="url(#plate3)"/>
+  <ellipse cx="600" cy="510" rx="380" ry="240" fill="none" stroke="#d4a85a" stroke-width="2" opacity="0.4"/>
+  <ellipse cx="540" cy="470" rx="120" ry="70" fill="url(#meat3)"/>
+  <ellipse cx="680" cy="490" rx="110" ry="65" fill="url(#meat3)"/>
+  <ellipse cx="610" cy="540" rx="100" ry="60" fill="url(#meat3)"/>
+  <circle cx="500" cy="430" r="14" fill="#3a7a2c"/>
+  <circle cx="720" cy="450" r="14" fill="#3a7a2c"/>
+  <circle cx="600" cy="600" r="10" fill="#f6d98a"/>
+  <text x="600" y="820" text-anchor="middle" font-family="serif" font-size="22" letter-spacing="6" fill="#d4a85a" opacity="0.55">DISH 3 · PLACEHOLDER</text>
+</svg>

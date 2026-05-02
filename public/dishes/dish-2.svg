@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="bg2" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#2a1410"/>
+      <stop offset="100%" stop-color="#080202"/>
+    </radialGradient>
+    <radialGradient id="bowl2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2c1a18"/>
+      <stop offset="100%" stop-color="#080403"/>
+    </radialGradient>
+    <radialGradient id="soup2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e2754c"/>
+      <stop offset="60%" stop-color="#a93820"/>
+      <stop offset="100%" stop-color="#3d1208"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg2)"/>
+  <ellipse cx="600" cy="480" rx="360" ry="240" fill="url(#bowl2)"/>
+  <ellipse cx="600" cy="480" rx="320" ry="210" fill="none" stroke="#d4a85a" stroke-width="2" opacity="0.5"/>
+  <ellipse cx="600" cy="470" rx="280" ry="180" fill="url(#soup2)"/>
+  <ellipse cx="540" cy="440" rx="50" ry="14" fill="#f6d98a" opacity="0.35"/>
+  <ellipse cx="660" cy="460" rx="40" ry="12" fill="#f6d98a" opacity="0.25"/>
+  <circle cx="600" cy="460" r="14" fill="#1a4a2a"/>
+  <circle cx="565" cy="490" r="10" fill="#1a4a2a"/>
+  <circle cx="640" cy="490" r="12" fill="#1a4a2a"/>
+  <text x="600" y="820" text-anchor="middle" font-family="serif" font-size="22" letter-spacing="6" fill="#d4a85a" opacity="0.55">DISH 2 · PLACEHOLDER</text>
+</svg>
