@@ -3,16 +3,11 @@ import type {Dish} from './scenes/DishShowcase';
 /**
  * Brand: عَريكة البلدة
  *
- * 1) Drop your real assets into the public/ folder:
- *      public/logo.png             ← yellow-oval logo
- *      public/dishes/dish-1.jpg    ← مطبّق جبن مالح
- *      public/dishes/dish-2.jpg    ← مطبّق تونة
- *      public/dishes/dish-3.jpg    ← مطبّق تونة وجبن
- *
- * 2) Then change the file extensions below from .svg → .png / .jpg.
- *
- * Until you do that, the included blue/yellow .svg placeholders render so
- * the studio is never empty.
+ * Asset paths (relative to /public):
+ *   logo.png            ← yellow-oval logo (transparent background)
+ *   dishes/dish-1.jpg   ← مطبّق جبن مالح
+ *   dishes/dish-2.jpg   ← مطبّق تونة
+ *   dishes/dish-3.jpg   ← مطبّق تونة وجبن
  */
 export const BRAND = {
   nameAr: 'عَريكة البلدة',
@@ -20,13 +15,12 @@ export const BRAND = {
   taglineEn: 'Authentic Hejazi Areeka',
   taglineAr: 'نكهة أصيلة من قلب البلد',
   callToActionAr: 'تفضّلوا بزيارتنا · شهيّتكم',
-  // Change to 'logo.png' once you've copied the real logo into /public.
-  logoSrc: 'logo.svg' as string | undefined,
+  logoSrc: 'logo.png' as string | undefined,
 };
 
 export const DISHES: Dish[] = [
   {
-    image: 'dishes/dish-1.svg',
+    image: 'dishes/dish-1.jpg',
     nameAr: 'مطبّق جبن مالح',
     nameEn: 'Salty Cheese Mutabbaq',
     descriptionAr:
@@ -36,7 +30,7 @@ export const DISHES: Dish[] = [
     panDirection: 'in',
   },
   {
-    image: 'dishes/dish-2.svg',
+    image: 'dishes/dish-2.jpg',
     nameAr: 'مطبّق تونة',
     nameEn: 'Tuna Mutabbaq',
     descriptionAr:
@@ -46,7 +40,7 @@ export const DISHES: Dish[] = [
     panDirection: 'diagonal',
   },
   {
-    image: 'dishes/dish-3.svg',
+    image: 'dishes/dish-3.jpg',
     nameAr: 'مطبّق تونة وجبن',
     nameEn: 'Tuna & Cheese Mutabbaq',
     descriptionAr:

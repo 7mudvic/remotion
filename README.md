@@ -57,34 +57,24 @@ npx remotion render MenuShowVertical out/menu-show-vertical.mp4
 
 ---
 
-## 🖼️ ارفع صورك الحقيقية / Drop in the real photos
+## 🖼️ الأصول الحالية / Current assets
 
-ضع الملفات بهالأسماء بالضبط داخل مجلد `public/`:
+الصور الحقيقية مربوطة بالفعل:
 
 | الملف | المحتوى |
 |---|---|
-| `public/logo.png`            | الشعار (الأصفر/أزرق - عَريكة البلدة) |
+| `public/logo.png`            | الشعار (تمت إزالة الخلفية الزرقاء، أصبح شفّافاً) |
 | `public/dishes/dish-1.jpg`   | مطبّق جبن مالح |
 | `public/dishes/dish-2.jpg`   | مطبّق تونة |
 | `public/dishes/dish-3.jpg`   | مطبّق تونة وجبن |
 
-ثم افتح `src/data.ts` وغيّر امتدادات الملفات من `.svg` إلى `.png` / `.jpg`:
+النصوص والأسعار والأوصاف موجودة في `src/data.ts`، عدّلها متى ما تبي. لو
+ضفت أصناف أكثر من 3، طول الفيديو يتعدّل تلقائياً.
 
-```ts
-export const BRAND = {
-  // ...
-  logoSrc: 'logo.png',                    // ← was 'logo.svg'
-};
+### استبدال صورة لاحقاً
 
-export const DISHES = [
-  { image: 'dishes/dish-1.jpg', /* ... */ },  // ← was .svg
-  { image: 'dishes/dish-2.jpg', /* ... */ },
-  { image: 'dishes/dish-3.jpg', /* ... */ },
-];
-```
-
-النصوص والأسعار والأوصاف موجودة في نفس الملف، عدّلها متى ما تبي. لو ضفت
-أصناف أكثر من 3، طول الفيديو يتعدّل تلقائياً.
+استبدل أي ملف JPG في `public/dishes/` بنفس الاسم تماماً، أو ضِف صورة جديدة
+وغيّر مسارها في `src/data.ts`.
 
 ---
 
