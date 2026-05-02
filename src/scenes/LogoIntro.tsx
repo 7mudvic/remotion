@@ -67,7 +67,7 @@ export const LogoIntro: React.FC<{
 
   return (
     <AbsoluteFill style={{opacity: sceneOpacity, background: THEME.bgBottom}}>
-      <CinematicBackground hue="gold" intensity={0.95} />
+      <CinematicBackground hue="royal" intensity={0.95} />
       <Particles count={70} />
       <LightLeak delay={20} duration={70} />
       <LightLeak delay={75} duration={50} angle={14} hue="rgba(255, 200, 130, 0.45)" />

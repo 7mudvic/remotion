@@ -1,11 +1,13 @@
-# Restaurant Menu Slideshow · عرض المنيو
+# عَريكة البلدة · Menu Slideshow
 
 نموذج أولي سينمائي فخم مبني على [Remotion](https://www.remotion.dev) لعرض
-أصناف المطعم على شاشة تلفيزيون داخل المحل. جاهز للتشغيل بمعاينة فورية.
+أصناف عَريكة البلدة على شاشة تلفيزيون داخل المحل. هوية أزرق ملكي + أصفر
+ذهبي، جاهز للتشغيل بمعاينة فورية.
 
-A cinematic, premium restaurant menu slideshow built with Remotion for
-in-store TV display. Runs out-of-the-box with built-in placeholder art so
-you can preview the motion immediately.
+A cinematic, premium menu slideshow for **Areekat Al-Balad**, built with
+Remotion for in-store TV display. Royal-blue + golden-yellow brand identity.
+Runs out-of-the-box with built-in placeholder art so you can preview the
+motion immediately.
 
 ---
 
@@ -55,37 +57,34 @@ npx remotion render MenuShowVertical out/menu-show-vertical.mp4
 
 ---
 
-## 🖼️ كيف تستبدل الصور / Swap in your own assets
+## 🖼️ ارفع صورك الحقيقية / Drop in the real photos
 
-1. حُط ملفاتك في:
-   - `public/logo.png` (أو `.svg` / `.webp`)
-   - `public/dishes/<أي اسم>.jpg`
-2. افتح `src/data.ts` وعدّل أسماء الملفات والنصوص:
+ضع الملفات بهالأسماء بالضبط داخل مجلد `public/`:
 
-   ```ts
-   export const BRAND = {
-     nameAr: 'مطعمي',
-     nameEn: 'MATAAMI',
-     taglineEn: 'A Taste of Tradition',
-     callToActionAr: 'تفضّلوا بزيارتنا · شهيّتكم',
-     logoSrc: 'logo.png',          // ← اسم ملف الشعار
-   };
+| الملف | المحتوى |
+|---|---|
+| `public/logo.png`            | الشعار (الأصفر/أزرق - عَريكة البلدة) |
+| `public/dishes/dish-1.jpg`   | مطبّق جبن مالح |
+| `public/dishes/dish-2.jpg`   | مطبّق تونة |
+| `public/dishes/dish-3.jpg`   | مطبّق تونة وجبن |
 
-   export const DISHES = [
-     {
-       image: 'dishes/burger.jpg', // ← مسار الصورة داخل /public
-       nameAr: 'برجر الشيف',
-       nameEn: 'Chef Burger',
-       descriptionAr: 'لحم بقري مشوي مع جبنة شيدر وصوص الشيف الخاص.',
-       price: '45 ر.س',
-       badge: "CHEF'S SELECTION",
-       panDirection: 'in',         // in | out | left | right | diagonal
-     },
-     // ... add as many dishes as you want
-   ];
-   ```
+ثم افتح `src/data.ts` وغيّر امتدادات الملفات من `.svg` إلى `.png` / `.jpg`:
 
-3. لو ضفت أصناف أكثر من 3، الكود يضبط وقت الفيديو تلقائياً.
+```ts
+export const BRAND = {
+  // ...
+  logoSrc: 'logo.png',                    // ← was 'logo.svg'
+};
+
+export const DISHES = [
+  { image: 'dishes/dish-1.jpg', /* ... */ },  // ← was .svg
+  { image: 'dishes/dish-2.jpg', /* ... */ },
+  { image: 'dishes/dish-3.jpg', /* ... */ },
+];
+```
+
+النصوص والأسعار والأوصاف موجودة في نفس الملف، عدّلها متى ما تبي. لو ضفت
+أصناف أكثر من 3، طول الفيديو يتعدّل تلقائياً.
 
 ---
 

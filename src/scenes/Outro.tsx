@@ -54,7 +54,7 @@ export const Outro: React.FC<{
 
   return (
     <AbsoluteFill style={{background: THEME.bgBottom, opacity: fadeOut}}>
-      <CinematicBackground hue="gold" intensity={1} />
+      <CinematicBackground hue="royal" intensity={1} />
       <Particles count={80} />
       <LightLeak delay={10} duration={70} />
 

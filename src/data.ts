@@ -1,53 +1,58 @@
 import type {Dish} from './scenes/DishShowcase';
 
 /**
- * Edit this object to rebrand the slideshow without touching component code.
- * `logoSrc` and every `dish.image` are paths relative to /public.
+ * Brand: عَريكة البلدة
  *
- * Drop your own files into:
- *   public/logo.png        (or .svg / .webp - any path works)
- *   public/dishes/*.jpg
- * then update the strings below.
+ * 1) Drop your real assets into the public/ folder:
+ *      public/logo.png             ← yellow-oval logo
+ *      public/dishes/dish-1.jpg    ← مطبّق جبن مالح
+ *      public/dishes/dish-2.jpg    ← مطبّق تونة
+ *      public/dishes/dish-3.jpg    ← مطبّق تونة وجبن
+ *
+ * 2) Then change the file extensions below from .svg → .png / .jpg.
+ *
+ * Until you do that, the included blue/yellow .svg placeholders render so
+ * the studio is never empty.
  */
 export const BRAND = {
-  nameAr: 'مطعمي',
-  nameEn: 'MATAAMI',
-  taglineEn: 'A Taste of Tradition',
+  nameAr: 'عَريكة البلدة',
+  nameEn: 'AREEKAT AL-BALAD',
+  taglineEn: 'Authentic Hejazi Areeka',
+  taglineAr: 'نكهة أصيلة من قلب البلد',
   callToActionAr: 'تفضّلوا بزيارتنا · شهيّتكم',
-  // Optional - will use a built-in placeholder if undefined.
-  // Drop your real file (PNG/SVG/WEBP) into /public and update the name.
+  // Change to 'logo.png' once you've copied the real logo into /public.
   logoSrc: 'logo.svg' as string | undefined,
 };
 
 export const DISHES: Dish[] = [
   {
     image: 'dishes/dish-1.svg',
-    nameAr: 'الطبق الأول',
-    nameEn: 'Signature Dish I',
+    nameAr: 'مطبّق جبن مالح',
+    nameEn: 'Salty Cheese Mutabbaq',
     descriptionAr:
-      'نكهة شرقية أصيلة بلمسة الشيف، تُقدَّم طازجة بأجود المكونات المختارة بعناية.',
-    price: '45 ر.س',
-    badge: 'CHEF’S SELECTION',
+      'عريكة طازجة محشوّة بالجبن المالح الأصيل، مخبوزة على الصاج بنكهة بيتية لا تُقاوم.',
+    price: '20 ر.س',
+    badge: 'الأكثر طلباً · BEST SELLER',
     panDirection: 'in',
   },
   {
     image: 'dishes/dish-2.svg',
-    nameAr: 'الطبق الثاني',
-    nameEn: 'Signature Dish II',
+    nameAr: 'مطبّق تونة',
+    nameEn: 'Tuna Mutabbaq',
     descriptionAr:
-      'مزيج متناغم من البهارات والروائح، يأخذك في رحلة ذوقية لا تُنسى.',
-    price: '55 ر.س',
-    badge: 'HOUSE FAVORITE',
+      'قطع تونة فاخرة فوق طبقات العريكة الذهبية، نكهة بحرية غنية بطعم البلد.',
+    price: '25 ر.س',
+    badge: "اختيار الشيف · CHEF'S PICK",
     panDirection: 'diagonal',
   },
   {
     image: 'dishes/dish-3.svg',
-    nameAr: 'الطبق الثالث',
-    nameEn: 'Signature Dish III',
+    nameAr: 'مطبّق تونة وجبن',
+    nameEn: 'Tuna & Cheese Mutabbaq',
     descriptionAr:
-      'إبداع جديد من مطبخنا، يجمع بين الأصالة والحداثة في طبقٍ واحد.',
-    price: '60 ر.س',
-    badge: 'NEW · جديد',
+      'تزاوج مثالي بين التونة والجبن المالح فوق عريكة مقرمشة، تجربة لا تُنسى.',
+    price: '22 ر.س',
+    badge: 'مزيج العريكة · SIGNATURE BLEND',
     panDirection: 'left',
   },
 ];

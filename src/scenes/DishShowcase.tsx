@@ -109,7 +109,7 @@ export const DishShowcase: React.FC<{
 
       {/* Cinematic backdrop fills the panel side */}
       <AbsoluteFill style={{right: '58%'}}>
-        <CinematicBackground hue="amber" intensity={0.85} />
+        <CinematicBackground hue="midnight" intensity={0.9} />
       </AbsoluteFill>
 
       <Particles count={40} blur={4} />
