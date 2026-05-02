@@ -90,10 +90,11 @@ export const DishShowcase: React.FC<{
   const descColor = onYellow ? THEME.blueLo : THEME.cream;
   const badgeTextColor = onYellow ? THEME.blue : THEME.yellow;
 
-  // Zone heights (px @ 1080)
-  const TOP_H = Math.round(height * 0.10);
-  const TITLE_H = Math.round(height * 0.18);
-  const HERO_H = Math.round(height * 0.50);
+  // Zone heights (px @ 1080) — hero gets the most room, title and footer
+  // are tightened so the dish photo can render larger.
+  const TOP_H = Math.round(height * 0.09);
+  const TITLE_H = Math.round(height * 0.16);
+  const HERO_H = Math.round(height * 0.58);
   const FOOTER_H = height - TOP_H - TITLE_H - HERO_H;
 
   return (
@@ -212,8 +213,8 @@ export const DishShowcase: React.FC<{
         <ProductCard
           src={staticFile(dish.image)}
           delay={4}
-          width={Math.min(width - 240, 1280)}
-          height={HERO_H - 30}
+          width={Math.min(width - 120, 1500)}
+          height={HERO_H - 10}
         />
       </div>
 
