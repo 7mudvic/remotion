@@ -5,9 +5,9 @@ import type {Dish} from './scenes/DishShowcase';
  *
  * Asset paths (relative to /public):
  *   logo.png            ← الشعار (خلفية شفافة)
- *   dishes/dish-1.jpg   ← مطبّق جبن مالح
- *   dishes/dish-2.jpg   ← مطبّق تونة
- *   dishes/dish-3.jpg   ← مطبّق تونة وجبن
+ *   dishes/dish-1.png   ← مطبّق جبن مالح   (خلفية شفافة)
+ *   dishes/dish-2.png   ← مطبّق تونة       (خلفية شفافة)
+ *   dishes/dish-3.png   ← مطبّق تونة وجبن  (خلفية شفافة)
  */
 export const BRAND = {
   nameAr: 'عَريكة البلدة',
@@ -19,7 +19,7 @@ export const BRAND = {
 
 export const DISHES: Dish[] = [
   {
-    image: 'dishes/dish-1.jpg',
+    image: 'dishes/dish-1.png',
     nameAr: 'مطبّق جبن مالح',
     nameEn: 'Cheese Mutabbaq',
     descriptionAr: 'عريكة طازجة بحشوة الجبن المالح الأصيل.',
@@ -27,7 +27,7 @@ export const DISHES: Dish[] = [
     badge: 'الأكثر طلباً',
   },
   {
-    image: 'dishes/dish-2.jpg',
+    image: 'dishes/dish-2.png',
     nameAr: 'مطبّق تونة',
     nameEn: 'Tuna Mutabbaq',
     descriptionAr: 'قطع تونة فاخرة فوق طبقات العريكة الذهبية.',
@@ -35,7 +35,7 @@ export const DISHES: Dish[] = [
     badge: 'اختيار الشيف',
   },
   {
-    image: 'dishes/dish-3.jpg',
+    image: 'dishes/dish-3.png',
     nameAr: 'مطبّق تونة وجبن',
     nameEn: 'Tuna & Cheese Mutabbaq',
     descriptionAr: 'تزاوج مثالي بين التونة والجبن فوق عريكة مقرمشة.',

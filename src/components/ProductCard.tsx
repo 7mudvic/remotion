@@ -3,9 +3,11 @@ import {Img, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotio
 import {THEME} from '../theme';
 
 /**
- * Hero product photo, displayed without crop and at a comfortable size.
- * Springs in, drifts slowly, and casts a soft drop-shadow against the
- * brand background.
+ * Hero product photo (PNG with transparent background).
+ *
+ * Springs in, breathes gently, and casts a soft blue shadow that follows
+ * the alpha channel — so the shadow hugs the platter rather than a
+ * rectangle.
  */
 export const ProductCard: React.FC<{
   src: string;
@@ -23,14 +25,14 @@ export const ProductCard: React.FC<{
     config: {damping: 14, stiffness: 90, mass: 1},
   });
 
-  // gentle drift over the scene's lifetime
   const t = frame / durationInFrames;
-  const drift = Math.sin(t * Math.PI * 2) * 6;
-  const breath = 1 + Math.sin(local / 28) * 0.012;
+  const drift = Math.sin(t * Math.PI * 2) * 8;
+  const breath = 1 + Math.sin(local / 28) * 0.014;
+  const wobble = Math.sin(local / 60) * 0.6;
 
   const scale = (0.86 + pop * 0.14) * breath;
-  const translateY = interpolate(pop, [0, 1], [40, 0]) + drift;
-  const opacity = interpolate(local, [0, 12], [0, 1], {
+  const translateY = interpolate(pop, [0, 1], [50, 0]) + drift;
+  const opacity = interpolate(local, [0, 14], [0, 1], {
     extrapolateRight: 'clamp',
   });
 
@@ -42,9 +44,14 @@ export const ProductCard: React.FC<{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: `translateY(${translateY}px) scale(${scale})`,
+        transform: `translateY(${translateY}px) scale(${scale}) rotate(${wobble}deg)`,
         opacity,
-        filter: `drop-shadow(0 30px 60px ${THEME.shadowBlue})`,
+        // Stacked drop-shadows: the deeper one anchors the dish to the
+        // background, the tighter one adds crispness near the rim.
+        filter: `
+          drop-shadow(0 36px 50px ${THEME.shadowBlue})
+          drop-shadow(0 8px 14px rgba(9, 18, 54, 0.35))
+        `,
       }}
     >
       <Img
@@ -55,7 +62,6 @@ export const ProductCard: React.FC<{
           width: 'auto',
           height: 'auto',
           objectFit: 'contain',
-          borderRadius: 24,
         }}
       />
     </div>
