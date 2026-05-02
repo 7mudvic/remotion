@@ -1,0 +1,28 @@
+{
+  "name": "areekat-menu",
+  "version": "0.1.0",
+  "description": "Areekat Al Balad - Restaurant Menu TV Display",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@remotion/cli": "4.0.454",
+    "@remotion/fonts": "^4.0.454",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.454"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.454",
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "eslint": "9.19.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion render AreekatMenu out/menu.mp4",
+    "still": "remotion still AreekatMenu out/preview.png",
+    "lint": "eslint src && tsc"
+  }
+}
