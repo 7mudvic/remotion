@@ -8,264 +8,261 @@ import {
   useVideoConfig,
 } from 'remotion';
 import {FONT_FAMILY} from '../fonts';
-import {KenBurnsImage} from '../components/KenBurnsImage';
-import {CinematicBackground} from '../components/CinematicBackground';
-import {Vignette} from '../components/Vignette';
-import {FilmGrain} from '../components/FilmGrain';
-import {Particles} from '../components/Particles';
-import {LightLeak} from '../components/LightLeak';
-import {GoldFrame} from '../components/GoldFrame';
-import {AnimatedDivider} from '../components/AnimatedDivider';
+import {SunburstBackground} from '../components/SunburstBackground';
+import {DecorPattern} from '../components/DecorPattern';
+import {ProductCard} from '../components/ProductCard';
+import {PriceBadge} from '../components/PriceBadge';
 import {THEME} from '../theme';
 
-const cormorant = FONT_FAMILY.cormorant;
-const elMessiri = FONT_FAMILY.elMessiri;
-const playfair = FONT_FAMILY.playfair;
-
 export type Dish = {
-  /** path inside public/, e.g. "dishes/burger.jpg" */
+  /** path inside public/, e.g. "dishes/dish-1.jpg" */
   image: string;
   nameAr: string;
   nameEn: string;
   descriptionAr: string;
-  /** e.g. "45 SAR" */
+  /** e.g. "20 ر.س" */
   price: string;
   badge?: string;
-  panDirection?: 'in' | 'out' | 'left' | 'right' | 'diagonal';
 };
 
 /**
- * The hero scene for each dish: full-bleed Ken Burns photo on the right
- * with a glass / gold-bordered text panel sliding in from the left.
+ * RTL dish hero scene laid out as a strict vertical column so nothing
+ * overlaps:
+ *
+ *   ┌───────────────────────────────┐
+ *   │ TOP STRIP (index + badge)     │  10%
+ *   ├───────────────────────────────┤
+ *   │ TITLE (Arabic + EN subtitle)  │  18%
+ *   ├───────────────────────────────┤
+ *   │ HERO IMAGE                    │  50%
+ *   ├───────────────────────────────┤
+ *   │ FOOTER (price + description)  │  22%
+ *   └───────────────────────────────┘
  */
 export const DishShowcase: React.FC<{
   dish: Dish;
   index: number;
 }> = ({dish, index}) => {
   const frame = useCurrentFrame();
-  const {fps, durationInFrames} = useVideoConfig();
+  const {fps, durationInFrames, width, height} = useVideoConfig();
 
-  // Panel slides in
-  const panelSpring = spring({
-    frame: frame - 8,
+  // Title slides down from top
+  const titleSpring = spring({
+    frame: frame - 6,
     fps,
-    config: {damping: 200, stiffness: 90, mass: 0.8},
+    config: {damping: 14, stiffness: 110, mass: 0.7},
   });
-  const panelX = interpolate(panelSpring, [0, 1], [-120, 0]);
-  const panelOpacity = interpolate(frame, [8, 28], [0, 1], {
+  const titleY = interpolate(titleSpring, [0, 1], [-40, 0]);
+  const titleOpacity = interpolate(frame, [6, 22], [0, 1], {
     extrapolateRight: 'clamp',
   });
 
-  // Text reveals
-  const dishOpacityAr = interpolate(frame, [22, 42], [0, 1], {
+  const subOpacity = interpolate(frame, [18, 36], [0, 1], {
     extrapolateRight: 'clamp',
   });
-  const dishYAr = interpolate(frame, [22, 42], [16, 0], {
-    extrapolateRight: 'clamp',
-  });
-  const dishOpacityEn = interpolate(frame, [30, 50], [0, 1], {
-    extrapolateRight: 'clamp',
-  });
-  const descOpacity = interpolate(frame, [50, 75], [0, 1], {
-    extrapolateRight: 'clamp',
-  });
-  const priceSpring = spring({
-    frame: frame - 70,
+
+  // Description slides up from bottom
+  const descSpring = spring({
+    frame: frame - 30,
     fps,
-    config: {damping: 200, stiffness: 110, mass: 0.6},
+    config: {damping: 18, stiffness: 110, mass: 0.7},
   });
-  const priceScale = 0.7 + priceSpring * 0.3;
-
-  // Index badge
-  const indexOpacity = interpolate(frame, [4, 24], [0, 1], {
+  const descY = interpolate(descSpring, [0, 1], [30, 0]);
+  const descOpacity = interpolate(frame, [30, 50], [0, 1], {
     extrapolateRight: 'clamp',
   });
 
-  // Outgoing slide
-  const outAt = durationInFrames - 24;
-  const outProgress = interpolate(frame, [outAt, durationInFrames], [0, 1], {
+  const pillOpacity = interpolate(frame, [3, 18], [0, 1], {
+    extrapolateRight: 'clamp',
+  });
+
+  // Outgoing fade
+  const outAt = durationInFrames - 18;
+  const sceneOpacity = interpolate(frame, [outAt, durationInFrames], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const sceneOpacity = 1 - outProgress;
+
+  const variant = index % 2 === 1 ? 'blueTop' : 'yellowTop';
+  const onYellow = variant === 'yellowTop';
+  const titleColor = onYellow ? THEME.blue : THEME.cream;
+  const subColor = onYellow ? THEME.blueLo : THEME.yellowHi;
+  const descColor = onYellow ? THEME.blueLo : THEME.cream;
+  const badgeTextColor = onYellow ? THEME.blue : THEME.yellow;
+
+  // Zone heights (px @ 1080)
+  const TOP_H = Math.round(height * 0.10);
+  const TITLE_H = Math.round(height * 0.18);
+  const HERO_H = Math.round(height * 0.50);
+  const FOOTER_H = height - TOP_H - TITLE_H - HERO_H;
 
   return (
-    <AbsoluteFill style={{background: THEME.bgBottom, opacity: sceneOpacity}}>
-      {/* Background image with Ken Burns - takes the right 58% of the frame */}
-      <AbsoluteFill style={{left: '42%'}}>
-        <KenBurnsImage
-          src={staticFile(dish.image)}
-          pan={dish.panDirection ?? 'in'}
-          fadeIn={10}
-          fadeOut={20}
-        />
-        {/* Gradient mask blending image into the panel */}
-        <AbsoluteFill
-          style={{
-            background: `linear-gradient(90deg, ${THEME.bgBottom} 0%, transparent 22%, transparent 100%)`,
-          }}
-        />
-      </AbsoluteFill>
+    <AbsoluteFill
+      style={{
+        opacity: sceneOpacity,
+        direction: 'rtl',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <SunburstBackground variant={variant} />
+      <DecorPattern color={onYellow ? THEME.blue : THEME.ink} opacity={0.40} delay={2} />
 
-      {/* Cinematic backdrop fills the panel side */}
-      <AbsoluteFill style={{right: '58%'}}>
-        <CinematicBackground hue="midnight" intensity={0.9} />
-      </AbsoluteFill>
-
-      <Particles count={40} blur={4} />
-      <LightLeak delay={4} duration={50} />
-
-      {/* Text panel */}
-      <AbsoluteFill
+      {/* TOP STRIP — index pill (right in RTL) + badge label (left in RTL) */}
+      <div
         style={{
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          padding: '0 88px',
-          opacity: panelOpacity,
-          transform: `translateX(${panelX}px)`,
+          height: TOP_H,
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 80px',
+          opacity: pillOpacity,
+          zIndex: 4,
         }}
       >
-        <div style={{maxWidth: 720, width: '100%'}}>
-          {/* Index pill */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              opacity: indexOpacity,
-              marginBottom: 24,
-            }}
-          >
-            <div
-              style={{
-                width: 46,
-                height: 46,
-                borderRadius: '50%',
-                border: `1px solid ${THEME.gold}`,
-                color: THEME.goldHi,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: playfair,
-                fontStyle: 'italic',
-                fontSize: 22,
-                background: 'rgba(212,168,90,0.07)',
-              }}
-            >
-              {String(index).padStart(2, '0')}
-            </div>
-            <div
-              style={{
-                fontFamily: cormorant,
-                color: THEME.creamDim,
-                letterSpacing: 8,
-                fontSize: 14,
-                textTransform: 'uppercase',
-              }}
-            >
-              {dish.badge ?? "Chef's Selection"}
-            </div>
-          </div>
+        <div
+          style={{
+            padding: '8px 22px',
+            borderRadius: 999,
+            background: THEME.yellow,
+            color: THEME.blue,
+            fontFamily: FONT_FAMILY.cairo,
+            fontWeight: 900,
+            fontSize: 26,
+            boxShadow: `0 8px 18px ${THEME.shadowBlue}`,
+            border: `3px solid ${THEME.blue}`,
+          }}
+        >
+          صنف {toArabicNumeral(index)}
+        </div>
 
-          {/* Arabic name */}
+        {dish.badge ? (
           <div
             style={{
-              fontFamily: elMessiri,
-              color: THEME.cream,
-              fontSize: 96,
+              fontFamily: FONT_FAMILY.cairo,
               fontWeight: 700,
-              lineHeight: 1.05,
-              direction: 'rtl',
-              opacity: dishOpacityAr,
-              transform: `translateY(${dishYAr}px)`,
-              textShadow: `0 4px 24px rgba(0,0,0,0.55)`,
-            }}
-          >
-            {dish.nameAr}
-          </div>
-
-          {/* Latin name */}
-          <div
-            style={{
-              fontFamily: cormorant,
-              fontStyle: 'italic',
-              color: THEME.goldHi,
-              fontSize: 32,
-              letterSpacing: 6,
-              textTransform: 'uppercase',
-              marginTop: 8,
-              opacity: dishOpacityEn,
-            }}
-          >
-            {dish.nameEn}
-          </div>
-
-          {/* Divider */}
-          <div style={{margin: '28px 0'}}>
-            <AnimatedDivider width={420} delay={42} />
-          </div>
-
-          {/* Description (Arabic) */}
-          <div
-            style={{
-              fontFamily: elMessiri,
-              color: THEME.creamDim,
               fontSize: 28,
-              lineHeight: 1.55,
+              color: badgeTextColor,
+              padding: '6px 22px',
+              border: `3px dashed ${badgeTextColor}`,
+              borderRadius: 14,
+            }}
+          >
+            {dish.badge}
+          </div>
+        ) : null}
+      </div>
+
+      {/* TITLE BLOCK */}
+      <div
+        style={{
+          height: TITLE_H,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 80px',
+          opacity: titleOpacity,
+          transform: `translateY(${titleY}px)`,
+          zIndex: 4,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: FONT_FAMILY.cairo,
+            fontWeight: 900,
+            fontSize: 110,
+            color: titleColor,
+            lineHeight: 1,
+            letterSpacing: -2,
+            textAlign: 'center',
+            textShadow: onYellow ? 'none' : `0 6px 18px ${THEME.shadowBlue}`,
+          }}
+        >
+          {dish.nameAr}
+        </div>
+        <div
+          style={{
+            marginTop: 12,
+            fontFamily: FONT_FAMILY.reemKufi,
+            fontWeight: 400,
+            fontSize: 26,
+            color: subColor,
+            letterSpacing: 6,
+            textTransform: 'uppercase',
+            opacity: subOpacity,
+            direction: 'ltr',
+          }}
+        >
+          {dish.nameEn}
+        </div>
+      </div>
+
+      {/* HERO IMAGE */}
+      <div
+        style={{
+          height: HERO_H,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 3,
+        }}
+      >
+        <ProductCard
+          src={staticFile(dish.image)}
+          delay={4}
+          width={Math.min(width - 240, 1280)}
+          height={HERO_H - 30}
+        />
+      </div>
+
+      {/* FOOTER — price (left in RTL) + description (right in RTL) */}
+      <div
+        style={{
+          height: FOOTER_H,
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 100px',
+          gap: 60,
+          zIndex: 4,
+        }}
+      >
+        <PriceBadge price={dish.price} delay={36} size={200} />
+
+        <div
+          style={{
+            flex: 1,
+            maxWidth: 1100,
+            opacity: descOpacity,
+            transform: `translateY(${descY}px)`,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: FONT_FAMILY.cairo,
+              fontWeight: 700,
+              fontSize: 38,
+              lineHeight: 1.45,
+              color: descColor,
               direction: 'rtl',
-              maxWidth: 620,
-              opacity: descOpacity,
+              textAlign: 'right',
             }}
           >
             {dish.descriptionAr}
           </div>
-
-          {/* Price */}
-          <div
-            style={{
-              marginTop: 40,
-              display: 'inline-flex',
-              alignItems: 'baseline',
-              gap: 12,
-              padding: '14px 28px',
-              border: `1px solid ${THEME.gold}`,
-              background: 'rgba(212, 168, 90, 0.08)',
-              boxShadow: `0 8px 32px ${THEME.goldShadow}`,
-              transform: `scale(${priceScale})`,
-              transformOrigin: 'left center',
-              opacity: priceSpring,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: playfair,
-                fontStyle: 'italic',
-                color: THEME.creamDim,
-                fontSize: 18,
-                letterSpacing: 4,
-                textTransform: 'uppercase',
-              }}
-            >
-              Price
-            </span>
-            <span
-              style={{
-                fontFamily: cormorant,
-                color: THEME.goldHi,
-                fontSize: 48,
-                fontWeight: 600,
-                letterSpacing: 1,
-              }}
-            >
-              {dish.price}
-            </span>
-          </div>
         </div>
-      </AbsoluteFill>
-
-      <GoldFrame inset={50} delay={6} />
-      <Vignette strength={0.5} />
-      <FilmGrain opacity={THEME.filmGrain} />
+      </div>
     </AbsoluteFill>
   );
 };
+
+const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+function toArabicNumeral(n: number): string {
+  return String(n)
+    .split('')
+    .map((d) => arabicDigits[Number(d)] ?? d)
+    .join('');
+}

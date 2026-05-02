@@ -1,37 +1,26 @@
 /**
- * Visual identity for "عَريكة البلدة" — royal blue + warm yellow.
- * Tweak these tokens to rebrand the entire video instantly.
+ * Brand identity for "عَريكة البلدة".
+ * The brand uses two anchor colours — royal blue and warm honey-yellow —
+ * lifted directly off the logo.
  */
 export const THEME = {
-  // Brand background: deep royal blue with a touch of midnight at the edges
-  bgTop: '#0a1638',
-  bgMid: '#15295e',
-  bgBottom: '#050a1f',
+  // Royal brand blue (matches the logo background)
+  blue: '#1e3fa3',
+  blueHi: '#2f55c4',
+  blueLo: '#0c1f5a',
+  blueDeep: '#091236',
 
-  // Brand royal blue (primary)
-  brandBlue: '#1e3fa3',
-  brandBlueHi: '#2f55c4',
-  brandBlueLo: '#0c1f5a',
+  // Warm honey-yellow (matches the logo oval)
+  yellow: '#f5c233',
+  yellowHi: '#ffd76b',
+  yellowLo: '#a87b14',
 
-  // Signature yellow / honey palette - matches the logo + warm-bread feel
-  goldHi: '#ffd76b',
-  gold: '#f5c233',
-  goldLo: '#a87b14',
-  goldShadow: 'rgba(245, 194, 51, 0.42)',
-
-  // Text
+  // Neutrals
   cream: '#fff8e3',
-  creamDim: 'rgba(255, 248, 227, 0.74)',
   ink: '#0a1638',
+  white: '#ffffff',
 
-  // Effects
-  vignette: 'rgba(0, 0, 0, 0.65)',
-  filmGrain: 0.06,
-} as const;
-
-export const FONT = {
-  display: 'Cormorant Garamond',
-  serif: 'Playfair Display',
-  arabic: 'El Messiri',
-  ui: 'Inter',
+  // Soft shadows
+  shadowBlue: 'rgba(9, 18, 54, 0.45)',
+  shadowYellow: 'rgba(245, 194, 51, 0.45)',
 } as const;

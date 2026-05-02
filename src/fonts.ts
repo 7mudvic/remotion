@@ -1,49 +1,36 @@
-import {loadFont as loadCormorant} from '@remotion/google-fonts/CormorantGaramond';
-import {loadFont as loadElMessiri} from '@remotion/google-fonts/ElMessiri';
-import {loadFont as loadPlayfair} from '@remotion/google-fonts/PlayfairDisplay';
+import {loadFont as loadCairo} from '@remotion/google-fonts/Cairo';
+import {loadFont as loadTajawal} from '@remotion/google-fonts/Tajawal';
+import {loadFont as loadReemKufi} from '@remotion/google-fonts/ReemKufi';
 
 /**
- * Centralised font loading. We restrict subsets and weights aggressively so
- * the bundle stays fast and Google Fonts fires fewer than the warning
- * threshold of network requests per family.
+ * Arabic-first font stack tuned for big-screen / TV display.
+ *
+ *   cairo         → large display titles (very heavy, modern Arabic)
+ *   tajawal       → body / description text (clean, rounded, readable)
+ *   reemKufi      → accent / English-feel headers in Arabic
+ *
+ * Subsets are restricted to keep bundle + network footprint small.
  */
-const cormorantHandle = loadCormorant('normal', {
-  subsets: ['latin'],
-  weights: ['400', '500', '600'],
-  ignoreTooManyRequestsWarning: true,
-});
-
-const cormorantItalicHandle = loadCormorant('italic', {
-  subsets: ['latin'],
-  weights: ['400', '500'],
-  ignoreTooManyRequestsWarning: true,
-});
-
-const playfairHandle = loadPlayfair('normal', {
-  subsets: ['latin'],
-  weights: ['400', '600'],
-  ignoreTooManyRequestsWarning: true,
-});
-
-const playfairItalicHandle = loadPlayfair('italic', {
-  subsets: ['latin'],
-  weights: ['400'],
-  ignoreTooManyRequestsWarning: true,
-});
-
-const elMessiriHandle = loadElMessiri('normal', {
+const cairoHandle = loadCairo('normal', {
   subsets: ['arabic', 'latin'],
-  weights: ['400', '600', '700'],
+  weights: ['400', '700', '900'],
   ignoreTooManyRequestsWarning: true,
 });
 
-// Force the italic variants to load (handle.waitUntilDone is implicit when a
-// component renders text in that style).
-void cormorantItalicHandle;
-void playfairItalicHandle;
+const tajawalHandle = loadTajawal('normal', {
+  subsets: ['arabic', 'latin'],
+  weights: ['400', '500', '700'],
+  ignoreTooManyRequestsWarning: true,
+});
+
+const reemKufiHandle = loadReemKufi('normal', {
+  subsets: ['arabic', 'latin'],
+  weights: ['400', '700'],
+  ignoreTooManyRequestsWarning: true,
+});
 
 export const FONT_FAMILY = {
-  cormorant: cormorantHandle.fontFamily,
-  playfair: playfairHandle.fontFamily,
-  elMessiri: elMessiriHandle.fontFamily,
+  cairo: cairoHandle.fontFamily,
+  tajawal: tajawalHandle.fontFamily,
+  reemKufi: reemKufiHandle.fontFamily,
 } as const;
