@@ -191,29 +191,45 @@ export const DishShowcase: React.FC<{
         </div>
       </div>
 
-      {/* HERO ZONE — dish + price text side-by-side. Padding is biased
-          toward the bottom so the dish sits a little higher in the frame. */}
+      {/* HERO ZONE — dish is absolutely centred on the screen; the price
+          text is pinned to the left edge so the dish moving doesn't drag
+          it along. Bottom padding lifts both away from the screen edge. */}
       <div
         style={{
           height: HERO_H,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 40,
-          padding: '0 80px 100px 80px',
+          position: 'relative',
           zIndex: 3,
         }}
       >
-        <div style={{flex: '0 0 auto'}}>
+        {/* Dish — geometric centre of the screen */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: '0 0 60px 0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <ProductCard
             src={staticFile(dish.image)}
             delay={4}
-            width={1280}
-            height={HERO_H - 100}
+            width={1500}
+            height={HERO_H - 60}
           />
         </div>
-        <div style={{flex: '0 0 auto'}}>
+
+        {/* Price — pinned to the left, vertically centred with the dish */}
+        <div
+          style={{
+            position: 'absolute',
+            left: 100,
+            top: 0,
+            bottom: 60,
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <PriceBadge price={dish.price} delay={28} size={230} tone={bannerTone} />
         </div>
       </div>
