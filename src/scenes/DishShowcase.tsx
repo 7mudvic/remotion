@@ -191,9 +191,8 @@ export const DishShowcase: React.FC<{
         </div>
       </div>
 
-      {/* HERO ZONE — dish + price banner side-by-side. The row is nudged
-          slightly downward (paddingTop > paddingBottom) so the hero feels
-          anchored to the screen rather than floating against the title. */}
+      {/* HERO ZONE — dish + price text side-by-side. Padding is biased
+          toward the bottom so the dish sits a little higher in the frame. */}
       <div
         style={{
           height: HERO_H,
@@ -201,8 +200,8 @@ export const DishShowcase: React.FC<{
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 70,
-          padding: '60px 80px 30px 80px',
+          gap: 100,
+          padding: '0 80px 100px 80px',
           zIndex: 3,
         }}
       >
@@ -211,11 +210,11 @@ export const DishShowcase: React.FC<{
             src={staticFile(dish.image)}
             delay={4}
             width={1280}
-            height={HERO_H - 90}
+            height={HERO_H - 100}
           />
         </div>
         <div style={{flex: '0 0 auto'}}>
-          <PriceBadge price={dish.price} delay={28} size={340} tone={bannerTone} />
+          <PriceBadge price={dish.price} delay={28} size={360} tone={bannerTone} />
         </div>
       </div>
     </AbsoluteFill>
