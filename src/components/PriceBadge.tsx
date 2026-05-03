@@ -3,28 +3,34 @@ import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {THEME} from '../theme';
 import {FONT_FAMILY} from '../fonts';
 
+type Tone = 'blue' | 'yellow';
+
 /**
  * Luxury vertical price banner — a "pennant" / ribbon stamped against the
  * brand backdrop. Designed to read instantly from across a restaurant.
  *
  * Anatomy (top → bottom):
  *   ┌──────────────┐  rounded top
- *   │   ◆◆ ◆◆      │  small gold filigree
- *   │   السعر       │  small label, gold
- *   │     ٢٠       │  HUGE number in cream
- *   │    ر.س       │  unit, gold
- *   │   ◆◆ ◆◆      │  small gold filigree
+ *   │   ◆◆ ◆◆      │  small filigree
+ *   │   السعر       │  small label
+ *   │     ٢٠       │  HUGE number
+ *   │    ر.س       │  unit
+ *   │   ◆◆ ◆◆      │  small filigree
  *   └──────╲╱──────┘  chevron tail at the bottom (ribbon end)
  *
- * Colours: royal-blue gradient with a thick gold inner border.
- * Animations: spring scale-in + subtle float ±3 px so it feels alive.
+ * The `tone` prop flips the entire palette so the banner can sit on
+ * either a blue or a yellow scene with maximum contrast:
+ *   tone="blue"   → blue body + gold border (use on yellow scenes)
+ *   tone="yellow" → yellow body + blue border (use on blue scenes)
  */
 export const PriceBadge: React.FC<{
   price: string;
   delay?: number;
   /** outer width in px — height auto-derives at 1.42:1 ratio */
   size?: number;
-}> = ({price, delay = 0, size = 280}) => {
+  /** banner palette — pass the *opposite* of the scene background */
+  tone?: Tone;
+}> = ({price, delay = 0, size = 280, tone = 'blue'}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const local = Math.max(0, frame - delay);
@@ -35,7 +41,7 @@ export const PriceBadge: React.FC<{
     fps,
     config: {damping: 12, stiffness: 110, mass: 0.7, overshootClamping: false},
   });
-  const float = Math.sin(local / 32) * 3; // ±3 px continuous float
+  const float = Math.sin(local / 32) * 3;
   const introTilt = interpolate(pop, [0, 1], [-6, 0]);
 
   // Number / unit split
@@ -44,11 +50,10 @@ export const PriceBadge: React.FC<{
   const unit = m?.[2] || 'ر.س';
 
   const W = size;
-  const H = Math.round(W * 1.42); // 280 → 398
-  const tail = Math.round(H * 0.13); // chevron tail height
+  const H = Math.round(W * 1.42);
+  const tail = Math.round(H * 0.13);
   const radius = 18;
 
-  // Outer banner shape: rounded top corners + chevron bottom point
   const path = [
     `M ${radius} 0`,
     `L ${W - radius} 0`,
@@ -61,7 +66,6 @@ export const PriceBadge: React.FC<{
     'Z',
   ].join(' ');
 
-  // Inner hairline that follows the banner shape, inset 10 px
   const inset = 10;
   const innerPath = [
     `M ${radius} ${inset}`,
@@ -79,6 +83,37 @@ export const PriceBadge: React.FC<{
   const numOpacity = interpolate(local, [10, 24], [0, 1], {extrapolateRight: 'clamp'});
   const unitOpacity = interpolate(local, [16, 28], [0, 1], {extrapolateRight: 'clamp'});
 
+  // Per-tone palette. Each tone keeps the same component contract so the
+  // banner reads identically — only the colours flip.
+  const palette =
+    tone === 'yellow'
+      ? {
+          fillTop: THEME.yellowHi,
+          fillMid: THEME.yellow,
+          fillBottom: THEME.yellowLo,
+          strokeTop: THEME.blueHi,
+          strokeBottom: THEME.blueLo,
+          innerHairline: THEME.blue,
+          filigree: THEME.blue,
+          labelColor: THEME.blue,
+          numberColor: THEME.blueDeep,
+          unitColor: THEME.blue,
+          numShadow: 'rgba(255, 255, 255, 0.45)',
+        }
+      : {
+          fillTop: THEME.blueHi,
+          fillMid: THEME.blue,
+          fillBottom: THEME.blueDeep,
+          strokeTop: THEME.yellowHi,
+          strokeBottom: THEME.yellowLo,
+          innerHairline: THEME.yellow,
+          filigree: THEME.yellow,
+          labelColor: THEME.yellow,
+          numberColor: THEME.cream,
+          unitColor: THEME.yellowHi,
+          numShadow: 'rgba(0, 0, 0, 0.35)',
+        };
+
   return (
     <div
       style={{
@@ -90,30 +125,43 @@ export const PriceBadge: React.FC<{
         filter: `drop-shadow(0 22px 36px ${THEME.shadowBlue})`,
       }}
     >
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
+      <svg
+        width={W}
+        height={H}
+        viewBox={`0 0 ${W} ${H}`}
+        style={{position: 'absolute', inset: 0}}
+      >
         <defs>
-          <linearGradient id="banner-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={THEME.blueHi} />
-            <stop offset="55%" stopColor={THEME.blue} />
-            <stop offset="100%" stopColor={THEME.blueDeep} />
+          <linearGradient id={`banner-fill-${tone}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={palette.fillTop} />
+            <stop offset="55%" stopColor={palette.fillMid} />
+            <stop offset="100%" stopColor={palette.fillBottom} />
           </linearGradient>
-          <linearGradient id="banner-stroke" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={THEME.yellowHi} />
-            <stop offset="100%" stopColor={THEME.yellowLo} />
+          <linearGradient id={`banner-stroke-${tone}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={palette.strokeTop} />
+            <stop offset="100%" stopColor={palette.strokeBottom} />
           </linearGradient>
         </defs>
 
-        {/* Body */}
-        <path d={path} fill="url(#banner-fill)" stroke="url(#banner-stroke)" strokeWidth={4} strokeLinejoin="round" />
-        {/* Inner hairline */}
-        <path d={innerPath} fill="none" stroke={THEME.yellow} strokeWidth={1.2} opacity={0.6} />
+        <path
+          d={path}
+          fill={`url(#banner-fill-${tone})`}
+          stroke={`url(#banner-stroke-${tone})`}
+          strokeWidth={4}
+          strokeLinejoin="round"
+        />
+        <path
+          d={innerPath}
+          fill="none"
+          stroke={palette.innerHairline}
+          strokeWidth={1.2}
+          opacity={0.6}
+        />
 
-        {/* Filigree ornaments */}
-        <Filigree x={W / 2} y={36} color={THEME.yellow} />
-        <Filigree x={W / 2} y={H - tail - 18} color={THEME.yellow} flip />
+        <Filigree x={W / 2} y={36} color={palette.filigree} />
+        <Filigree x={W / 2} y={H - tail - 18} color={palette.filigree} flip />
       </svg>
 
-      {/* Centered text content */}
       <div
         style={{
           position: 'absolute',
@@ -131,7 +179,7 @@ export const PriceBadge: React.FC<{
             fontFamily: FONT_FAMILY.tajawal,
             fontWeight: 700,
             fontSize: W * 0.10,
-            color: THEME.yellow,
+            color: palette.labelColor,
             letterSpacing: 2,
             opacity: labelOpacity,
             textTransform: 'uppercase',
@@ -145,10 +193,10 @@ export const PriceBadge: React.FC<{
             fontFamily: FONT_FAMILY.cairo,
             fontWeight: 900,
             fontSize: W * 0.55,
-            color: THEME.cream,
+            color: palette.numberColor,
             lineHeight: 0.9,
             letterSpacing: -2,
-            textShadow: `0 2px 0 rgba(0,0,0,0.35)`,
+            textShadow: `0 2px 0 ${palette.numShadow}`,
             opacity: numOpacity,
           }}
         >
@@ -160,7 +208,7 @@ export const PriceBadge: React.FC<{
             fontFamily: FONT_FAMILY.cairo,
             fontWeight: 900,
             fontSize: W * 0.16,
-            color: THEME.yellowHi,
+            color: palette.unitColor,
             lineHeight: 1,
             letterSpacing: 1,
             direction: 'rtl',
@@ -174,18 +222,17 @@ export const PriceBadge: React.FC<{
   );
 };
 
-/**
- * Tiny SVG filigree — 3 diamonds in a row with a gold flourish.
- * Used at top and bottom of the banner for a "menu card" feel.
- */
-const Filigree: React.FC<{x: number; y: number; color: string; flip?: boolean}> = ({x, y, color, flip}) => {
+const Filigree: React.FC<{x: number; y: number; color: string; flip?: boolean}> = ({
+  x,
+  y,
+  color,
+  flip,
+}) => {
   const transform = flip ? `translate(${x}, ${y}) rotate(180)` : `translate(${x}, ${y})`;
   return (
     <g transform={transform}>
-      {/* line */}
       <line x1={-30} y1={0} x2={-12} y2={0} stroke={color} strokeWidth={1.2} opacity={0.7} />
       <line x1={12} y1={0} x2={30} y2={0} stroke={color} strokeWidth={1.2} opacity={0.7} />
-      {/* 3 diamonds */}
       <g fill={color}>
         <polygon points="-9,0 -5,-4 -1,0 -5,4" />
         <polygon points="-3,0 0,-5 3,0 0,5" opacity={0.9} />

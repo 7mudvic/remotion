@@ -19,6 +19,7 @@ export type Dish = {
   image: string;
   nameAr: string;
   nameEn: string;
+  /** kept in the data model for future use, no longer rendered */
   descriptionAr: string;
   /** e.g. "20 ر.س" */
   price: string;
@@ -26,18 +27,21 @@ export type Dish = {
 };
 
 /**
- * RTL dish hero scene laid out as a strict vertical column so nothing
- * overlaps:
+ * RTL dish hero scene. Three vertical zones, no overlap:
  *
  *   ┌───────────────────────────────┐
  *   │ TOP STRIP (index + badge)     │  10%
  *   ├───────────────────────────────┤
  *   │ TITLE (Arabic + EN subtitle)  │  18%
  *   ├───────────────────────────────┤
- *   │ HERO IMAGE                    │  50%
- *   ├───────────────────────────────┤
- *   │ FOOTER (price + description)  │  22%
+ *   │                               │
+ *   │ HERO (dish + price banner)    │  72%
+ *   │                               │
  *   └───────────────────────────────┘
+ *
+ * The HERO row holds the product photo and the price banner side-by-side
+ * (RTL: dish on the right, banner on the left). A small top padding lifts
+ * the row away from the title without losing vertical centring.
  */
 export const DishShowcase: React.FC<{
   dish: Dish;
@@ -56,19 +60,7 @@ export const DishShowcase: React.FC<{
   const titleOpacity = interpolate(frame, [6, 22], [0, 1], {
     extrapolateRight: 'clamp',
   });
-
   const subOpacity = interpolate(frame, [18, 36], [0, 1], {
-    extrapolateRight: 'clamp',
-  });
-
-  // Description slides up from bottom
-  const descSpring = spring({
-    frame: frame - 30,
-    fps,
-    config: {damping: 18, stiffness: 110, mass: 0.7},
-  });
-  const descY = interpolate(descSpring, [0, 1], [30, 0]);
-  const descOpacity = interpolate(frame, [30, 50], [0, 1], {
     extrapolateRight: 'clamp',
   });
 
@@ -87,15 +79,14 @@ export const DishShowcase: React.FC<{
   const onYellow = variant === 'yellowTop';
   const titleColor = onYellow ? THEME.blue : THEME.cream;
   const subColor = onYellow ? THEME.blueLo : THEME.yellowHi;
-  const descColor = onYellow ? THEME.blueLo : THEME.cream;
   const badgeTextColor = onYellow ? THEME.blue : THEME.yellow;
+  // Banner takes the *opposite* tone of the scene background for max contrast.
+  const bannerTone: 'blue' | 'yellow' = onYellow ? 'blue' : 'yellow';
 
-  // Zone heights (px @ 1080) — hero gets the most room, title and footer
-  // are tightened so the dish photo can render larger.
-  const TOP_H = Math.round(height * 0.09);
-  const TITLE_H = Math.round(height * 0.16);
-  const HERO_H = Math.round(height * 0.58);
-  const FOOTER_H = height - TOP_H - TITLE_H - HERO_H;
+  // Three zones now (description removed). Hero gets the bulk of the screen.
+  const TOP_H = Math.round(height * 0.10);
+  const TITLE_H = Math.round(height * 0.18);
+  const HERO_H = height - TOP_H - TITLE_H;
 
   return (
     <AbsoluteFill
@@ -109,7 +100,7 @@ export const DishShowcase: React.FC<{
       <SunburstBackground variant={variant} />
       <DecorPattern color={onYellow ? THEME.blue : THEME.ink} opacity={0.40} delay={2} />
 
-      {/* TOP STRIP — index pill (right in RTL) + badge label (left in RTL) */}
+      {/* TOP STRIP */}
       <div
         style={{
           height: TOP_H,
@@ -200,10 +191,9 @@ export const DishShowcase: React.FC<{
         </div>
       </div>
 
-      {/* HERO ZONE — price banner sits on the LEFT (visually) of the dish.
-          In an RTL container, flex children render right-to-left, so the
-          ProductCard JSX-first child appears on the right and the
-          PriceBadge JSX-second child appears on the left. */}
+      {/* HERO ZONE — dish + price banner side-by-side. The row is nudged
+          slightly downward (paddingTop > paddingBottom) so the hero feels
+          anchored to the screen rather than floating against the title. */}
       <div
         style={{
           height: HERO_H,
@@ -211,8 +201,8 @@ export const DishShowcase: React.FC<{
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 60,
-          padding: '0 80px',
+          gap: 70,
+          padding: '60px 80px 30px 80px',
           zIndex: 3,
         }}
       >
@@ -220,41 +210,12 @@ export const DishShowcase: React.FC<{
           <ProductCard
             src={staticFile(dish.image)}
             delay={4}
-            width={1180}
-            height={HERO_H - 10}
+            width={1280}
+            height={HERO_H - 90}
           />
         </div>
         <div style={{flex: '0 0 auto'}}>
-          <PriceBadge price={dish.price} delay={28} size={300} />
-        </div>
-      </div>
-
-      {/* FOOTER — Arabic description spans the full width, centred. */}
-      <div
-        style={{
-          height: FOOTER_H,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0 120px',
-          opacity: descOpacity,
-          transform: `translateY(${descY}px)`,
-          zIndex: 4,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: FONT_FAMILY.cairo,
-            fontWeight: 700,
-            fontSize: 44,
-            lineHeight: 1.4,
-            color: descColor,
-            direction: 'rtl',
-            textAlign: 'center',
-            maxWidth: 1500,
-          }}
-        >
-          {dish.descriptionAr}
+          <PriceBadge price={dish.price} delay={28} size={340} tone={bannerTone} />
         </div>
       </div>
     </AbsoluteFill>
