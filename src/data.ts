@@ -167,37 +167,12 @@ export const DISHES: Dish[] = [
     descriptionAr: '',
     price: '9 ر.س',
   },
-
-  // —— الصنف الموقّع (يظهر مرّتين متتاليتين عشان نقيّم الانتقال) ——
-  // First instance: index 22 → variant 'yellowTop' (yellow scene)
-  {
-    image: 'dishes/dish-22-areekat-al-balad.png',
-    nameAr: 'عَريكة البلدة',
-    // No nameEn — Arabic only for the signature dish.
-    prices: [
-      {label: 'صغير', value: '16 ر.س'},
-      {label: 'وسط', value: '21 ر.س'},
-      {label: 'كبير', value: '37 ر.س'},
-    ],
-  },
-  // Second instance: index 23 → variant 'blueTop' (blue scene)
-  // — same dish on the alternate background so we can preview the
-  //   transition between two consecutive scenes of the same content.
-  {
-    image: 'dishes/dish-22-areekat-al-balad.png',
-    nameAr: 'عَريكة البلدة',
-    prices: [
-      {label: 'صغير', value: '16 ر.س'},
-      {label: 'وسط', value: '21 ر.س'},
-      {label: 'كبير', value: '37 ر.س'},
-    ],
-  },
 ];
 
 // Timing (frames @ 30 fps)
 export const FPS = 30;
-export const DISH_FRAMES = 135; // 4.5s each (option B)
+export const DISH_FRAMES = 195; // 6.5s each — comfortable reading pace
 export const TRANSITION_FRAMES = 18; // 0.6s overlap (fade)
 //
 // Total = DISH_FRAMES × N − TRANSITION_FRAMES × (N − 1)
-//       = 135 × 21 − 18 × 20  =  2835 − 360  =  2475 frames  ≈  82.5 s
+//       = 195 × 21 − 18 × 20  =  4095 − 360  =  3735 frames  ≈  124.5 s (2:04)
