@@ -164,11 +164,13 @@ export const DishShowcase: React.FC<{
           style={{
             fontFamily: FONT_FAMILY.cairo,
             fontWeight: 900,
-            fontSize: 110,
+            // Long Arabic names auto-shrink so they always fit on one line.
+            fontSize: dish.nameAr.length > 22 ? 88 : dish.nameAr.length > 16 ? 100 : 110,
             color: titleColor,
             lineHeight: 1,
             letterSpacing: -2,
             textAlign: 'center',
+            whiteSpace: 'nowrap',
             textShadow: onYellow ? 'none' : `0 6px 18px ${THEME.shadowBlue}`,
           }}
         >
