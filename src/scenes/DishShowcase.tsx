@@ -44,7 +44,7 @@ export const DishShowcase: React.FC<{
   index: number;
 }> = ({dish, index}) => {
   const frame = useCurrentFrame();
-  const {fps, durationInFrames, width, height} = useVideoConfig();
+  const {fps, durationInFrames, height} = useVideoConfig();
 
   // Title slides down from top
   const titleSpring = spring({
@@ -200,60 +200,61 @@ export const DishShowcase: React.FC<{
         </div>
       </div>
 
-      {/* HERO IMAGE */}
+      {/* HERO ZONE — price banner sits on the LEFT (visually) of the dish.
+          In an RTL container, flex children render right-to-left, so the
+          ProductCard JSX-first child appears on the right and the
+          PriceBadge JSX-second child appears on the left. */}
       <div
         style={{
           height: HERO_H,
           display: 'flex',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: 60,
+          padding: '0 80px',
           zIndex: 3,
         }}
       >
-        <ProductCard
-          src={staticFile(dish.image)}
-          delay={4}
-          width={Math.min(width - 120, 1500)}
-          height={HERO_H - 10}
-        />
+        <div style={{flex: '0 0 auto'}}>
+          <ProductCard
+            src={staticFile(dish.image)}
+            delay={4}
+            width={1180}
+            height={HERO_H - 10}
+          />
+        </div>
+        <div style={{flex: '0 0 auto'}}>
+          <PriceBadge price={dish.price} delay={28} size={300} />
+        </div>
       </div>
 
-      {/* FOOTER — price (left in RTL) + description (right in RTL) */}
+      {/* FOOTER — Arabic description spans the full width, centred. */}
       <div
         style={{
           height: FOOTER_H,
           display: 'flex',
-          flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 100px',
-          gap: 60,
+          justifyContent: 'center',
+          padding: '0 120px',
+          opacity: descOpacity,
+          transform: `translateY(${descY}px)`,
           zIndex: 4,
         }}
       >
-        <PriceBadge price={dish.price} delay={36} size={200} />
-
         <div
           style={{
-            flex: 1,
-            maxWidth: 1100,
-            opacity: descOpacity,
-            transform: `translateY(${descY}px)`,
+            fontFamily: FONT_FAMILY.cairo,
+            fontWeight: 700,
+            fontSize: 44,
+            lineHeight: 1.4,
+            color: descColor,
+            direction: 'rtl',
+            textAlign: 'center',
+            maxWidth: 1500,
           }}
         >
-          <div
-            style={{
-              fontFamily: FONT_FAMILY.cairo,
-              fontWeight: 700,
-              fontSize: 38,
-              lineHeight: 1.45,
-              color: descColor,
-              direction: 'rtl',
-              textAlign: 'right',
-            }}
-          >
-            {dish.descriptionAr}
-          </div>
+          {dish.descriptionAr}
         </div>
       </div>
     </AbsoluteFill>
