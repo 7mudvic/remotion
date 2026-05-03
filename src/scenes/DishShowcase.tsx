@@ -12,17 +12,21 @@ import {SunburstBackground} from '../components/SunburstBackground';
 import {DecorPattern} from '../components/DecorPattern';
 import {ProductCard} from '../components/ProductCard';
 import {PriceBadge} from '../components/PriceBadge';
+import {PriceList, type PriceItem} from '../components/PriceList';
 import {THEME} from '../theme';
 
 export type Dish = {
-  /** path inside public/, e.g. "dishes/dish-1.jpg" */
+  /** path inside public/, e.g. "dishes/dish-1.png" */
   image: string;
   nameAr: string;
-  nameEn: string;
+  /** optional — leave empty/undefined to hide the English subtitle line */
+  nameEn?: string;
   /** kept in the data model for future use, no longer rendered */
-  descriptionAr: string;
-  /** e.g. "20 ر.س" */
-  price: string;
+  descriptionAr?: string;
+  /** single price, e.g. "20 ر.س" — used when `prices` is undefined */
+  price?: string;
+  /** multi-size price list — overrides `price` when provided */
+  prices?: PriceItem[];
   badge?: string;
 };
 
@@ -176,21 +180,23 @@ export const DishShowcase: React.FC<{
         >
           {dish.nameAr}
         </div>
-        <div
-          style={{
-            marginTop: 12,
-            fontFamily: FONT_FAMILY.reemKufi,
-            fontWeight: 400,
-            fontSize: 26,
-            color: subColor,
-            letterSpacing: 6,
-            textTransform: 'uppercase',
-            opacity: subOpacity,
-            direction: 'ltr',
-          }}
-        >
-          {dish.nameEn}
-        </div>
+        {dish.nameEn ? (
+          <div
+            style={{
+              marginTop: 12,
+              fontFamily: FONT_FAMILY.reemKufi,
+              fontWeight: 400,
+              fontSize: 26,
+              color: subColor,
+              letterSpacing: 6,
+              textTransform: 'uppercase',
+              opacity: subOpacity,
+              direction: 'ltr',
+            }}
+          >
+            {dish.nameEn}
+          </div>
+        ) : null}
       </div>
 
       {/* HERO ZONE — dish is absolutely centred on the screen; the price
@@ -221,7 +227,9 @@ export const DishShowcase: React.FC<{
           />
         </div>
 
-        {/* Price — pinned to the left, vertically centred with the dish */}
+        {/* Price — pinned to the left, vertically centred with the dish.
+            Multi-size dishes render a stack of chips; single-price dishes
+            render the plain text PriceBadge. */}
         <div
           style={{
             position: 'absolute',
@@ -232,7 +240,11 @@ export const DishShowcase: React.FC<{
             alignItems: 'center',
           }}
         >
-          <PriceBadge price={dish.price} delay={28} size={230} tone={bannerTone} />
+          {dish.prices && dish.prices.length > 0 ? (
+            <PriceList prices={dish.prices} delay={28} tone={bannerTone} />
+          ) : dish.price ? (
+            <PriceBadge price={dish.price} delay={28} size={230} tone={bannerTone} />
+          ) : null}
         </div>
       </div>
     </AbsoluteFill>

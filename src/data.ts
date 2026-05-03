@@ -167,6 +167,31 @@ export const DISHES: Dish[] = [
     descriptionAr: '',
     price: '9 ر.س',
   },
+
+  // —— الصنف الموقّع (يظهر مرّتين متتاليتين عشان نقيّم الانتقال) ——
+  // First instance: index 22 → variant 'yellowTop' (yellow scene)
+  {
+    image: 'dishes/dish-22-areekat-al-balad.png',
+    nameAr: 'عَريكة البلدة',
+    // No nameEn — Arabic only for the signature dish.
+    prices: [
+      {label: 'صغير', value: '16 ر.س'},
+      {label: 'وسط', value: '21 ر.س'},
+      {label: 'كبير', value: '37 ر.س'},
+    ],
+  },
+  // Second instance: index 23 → variant 'blueTop' (blue scene)
+  // — same dish on the alternate background so we can preview the
+  //   transition between two consecutive scenes of the same content.
+  {
+    image: 'dishes/dish-22-areekat-al-balad.png',
+    nameAr: 'عَريكة البلدة',
+    prices: [
+      {label: 'صغير', value: '16 ر.س'},
+      {label: 'وسط', value: '21 ر.س'},
+      {label: 'كبير', value: '37 ر.س'},
+    ],
+  },
 ];
 
 // Timing (frames @ 30 fps)
