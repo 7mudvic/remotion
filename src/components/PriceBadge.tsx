@@ -52,7 +52,9 @@ export const PriceBadge: React.FC<{
         }
       : {
           label: THEME.blue,
-          number: THEME.blueDeep,
+          // Match the brand blue exactly (same hue as the blue scene
+          // background) so the colour reads as a single unified token.
+          number: THEME.blue,
           unit: THEME.blue,
           numberShadow: 'rgba(255, 255, 255, 0.45)',
         };

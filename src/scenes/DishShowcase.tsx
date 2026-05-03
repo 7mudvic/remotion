@@ -200,7 +200,7 @@ export const DishShowcase: React.FC<{
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 100,
+          gap: 40,
           padding: '0 80px 100px 80px',
           zIndex: 3,
         }}
@@ -214,7 +214,7 @@ export const DishShowcase: React.FC<{
           />
         </div>
         <div style={{flex: '0 0 auto'}}>
-          <PriceBadge price={dish.price} delay={28} size={360} tone={bannerTone} />
+          <PriceBadge price={dish.price} delay={28} size={230} tone={bannerTone} />
         </div>
       </div>
     </AbsoluteFill>
