@@ -35,7 +35,8 @@ export const Design4Editorial: React.FC<Props> = ({prices, tone, delay = 0}) => 
   const inverted = tone === 'blue';
   const labelColor = inverted ? THEME.blue : THEME.yellow;
   const numColor = inverted ? THEME.blue : THEME.yellow;
-  const unitColor = inverted ? THEME.blueLo : THEME.yellowLo;
+  // Unit text matches the number colour exactly for visual unity.
+  const unitColor = numColor;
   const accent = inverted ? THEME.blue : THEME.yellow;
 
   return (
