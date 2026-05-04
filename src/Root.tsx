@@ -2,6 +2,7 @@ import React from 'react';
 import {Composition} from 'remotion';
 import {MenuShow, TOTAL_FRAMES} from './MenuShow';
 import {AreekaShow, AREEKA_TOTAL_FRAMES} from './AreekaShow';
+import {AreekaMenu, AREEKA_MENU_TOTAL_FRAMES} from './AreekaMenu';
 import {MockupScene} from './scenes/MockupScene';
 import {FPS} from './data';
 
@@ -40,6 +41,16 @@ export const RemotionRoot: React.FC = () => {
         id="AreekaShow"
         component={AreekaShow}
         durationInFrames={AREEKA_TOTAL_FRAMES}
+        fps={FPS}
+        width={1920}
+        height={1080}
+      />
+
+      {/* —— Full Areeka / Masoub menu (15 dishes, 3 sizes each) —— */}
+      <Composition
+        id="AreekaMenu"
+        component={AreekaMenu}
+        durationInFrames={AREEKA_MENU_TOTAL_FRAMES}
         fps={FPS}
         width={1920}
         height={1080}

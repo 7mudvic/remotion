@@ -176,3 +176,152 @@ export const TRANSITION_FRAMES = 18; // 0.6s overlap (fade)
 //
 // Total = DISH_FRAMES × N − TRANSITION_FRAMES × (N − 1)
 //       = 195 × 21 − 18 × 20  =  4095 − 360  =  3735 frames  ≈  124.5 s (2:04)
+
+
+// ──────────────────────────────────────────────────────────────────
+// AREEKA / MASOUB MENU (15 signature dishes, 3 sizes each)
+//
+// Filename convention: `dishes/areeka-NN-slug.png`
+// Every dish here ships with three sizes (صغير / وسط / كبير) and is
+// rendered with the editorial-typography price layout (Design 4).
+// nameEn is intentionally omitted — Arabic only on these scenes.
+// ──────────────────────────────────────────────────────────────────
+
+export const AREEKA_DISHES: Dish[] = [
+  {
+    image: 'dishes/areeka-01-balad.png',
+    nameAr: 'عَريكة البلدة',
+    prices: [
+      {label: 'صغير', value: '16 ر.س'},
+      {label: 'وسط', value: '21 ر.س'},
+      {label: 'كبير', value: '37 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-02-masoub-cream-honey-cheese.png',
+    nameAr: 'معصوب قشطة عسل جبن',
+    prices: [
+      {label: 'صغير', value: '15 ر.س'},
+      {label: 'وسط', value: '20 ر.س'},
+      {label: 'كبير', value: '32 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-03-banana.png',
+    nameAr: 'عَريكة شرايح موز',
+    prices: [
+      {label: 'صغير', value: '17 ر.س'},
+      {label: 'وسط', value: '22 ر.س'},
+      {label: 'كبير', value: '34 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-04-balad-dukhn.png',
+    nameAr: 'عَريكة البلدة دخن',
+    prices: [
+      {label: 'صغير', value: '17 ر.س'},
+      {label: 'وسط', value: '22 ر.س'},
+      {label: 'كبير', value: '37 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-05-balad-vip.png',
+    nameAr: 'عَريكة البلدة VIP',
+    prices: [
+      {label: 'صغير', value: '21 ر.س'},
+      {label: 'وسط', value: '26 ر.س'},
+      {label: 'كبير', value: '42 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-06-masoub-balad.png',
+    nameAr: 'معصوب البلدة',
+    prices: [
+      {label: 'صغير', value: '16 ر.س'},
+      {label: 'وسط', value: '21 ر.س'},
+      {label: 'كبير', value: '37 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-07-southern.png',
+    nameAr: 'عَريكة جنوبية',
+    prices: [
+      {label: 'صغير', value: '25 ر.س'},
+      {label: 'وسط', value: '40 ر.س'},
+      {label: 'كبير', value: '65 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-08-masoub-jeddah.png',
+    nameAr: 'معصوب جداوي',
+    prices: [
+      {label: 'صغير', value: '16 ر.س'},
+      {label: 'وسط', value: '21 ر.س'},
+      {label: 'كبير', value: '34 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-09-cream-honey-nuts.png',
+    nameAr: 'عَريكة قشطة عسل ومكسرات',
+    prices: [
+      {label: 'صغير', value: '17 ر.س'},
+      {label: 'وسط', value: '22 ر.س'},
+      {label: 'كبير', value: '34 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-10-masoub-balad-vip.png',
+    nameAr: 'معصوب البلدة VIP',
+    prices: [
+      {label: 'صغير', value: '21 ر.س'},
+      {label: 'وسط', value: '26 ر.س'},
+      {label: 'كبير', value: '42 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-11-cream-honey.png',
+    nameAr: 'عَريكة قشطة وعسل',
+    prices: [
+      {label: 'صغير', value: '15 ر.س'},
+      {label: 'وسط', value: '20 ر.س'},
+      {label: 'كبير', value: '32 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-12-marsa.png',
+    nameAr: 'مرسى',
+    prices: [
+      {label: 'صغير', value: '12 ر.س'},
+      {label: 'وسط', value: '16 ر.س'},
+      {label: 'كبير', value: '32 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-13-masoub-plain.png',
+    nameAr: 'معصوب عادي',
+    prices: [
+      {label: 'صغير', value: '6 ر.س'},
+      {label: 'وسط', value: '10 ر.س'},
+      {label: 'كبير', value: '22 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-14-masoub-royal.png',
+    nameAr: 'معصوب ملكي',
+    prices: [
+      {label: 'صغير', value: '17 ر.س'},
+      {label: 'وسط', value: '20 ر.س'},
+      {label: 'كبير', value: '39 ر.س'},
+    ],
+  },
+  {
+    image: 'dishes/areeka-15-royal.png',
+    nameAr: 'عَريكة ملكي',
+    prices: [
+      {label: 'صغير', value: '17 ر.س'},
+      {label: 'وسط', value: '22 ر.س'},
+      {label: 'كبير', value: '39 ر.س'},
+    ],
+  },
+];
+
