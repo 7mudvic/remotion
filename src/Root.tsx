@@ -1,6 +1,7 @@
 import React from 'react';
 import {Composition} from 'remotion';
 import {MenuShow, TOTAL_FRAMES} from './MenuShow';
+import {MockupScene} from './scenes/MockupScene';
 import {FPS} from './data';
 
 export const RemotionRoot: React.FC = () => {
@@ -32,6 +33,20 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
       />
+
+      {/* —— Static mockups for picking the price design (yellow scene) —— */}
+      {([1, 2, 3, 4, 5] as const).map((d) => (
+        <Composition
+          key={`mock-y-${d}`}
+          id={`PriceMockup${d}`}
+          component={MockupScene}
+          durationInFrames={1}
+          fps={FPS}
+          width={1920}
+          height={1080}
+          defaultProps={{design: d, variant: 'yellowTop' as const}}
+        />
+      ))}
     </>
   );
 };
