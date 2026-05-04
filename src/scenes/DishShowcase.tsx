@@ -12,7 +12,8 @@ import {SunburstBackground} from '../components/SunburstBackground';
 import {DecorPattern} from '../components/DecorPattern';
 import {ProductCard} from '../components/ProductCard';
 import {PriceBadge} from '../components/PriceBadge';
-import {PriceList, type PriceItem} from '../components/PriceList';
+import {Design4Editorial} from '../components/designs/Design4Editorial';
+import type {PriceItem} from '../components/PriceList';
 import {THEME} from '../theme';
 
 export type Dish = {
@@ -241,7 +242,7 @@ export const DishShowcase: React.FC<{
           }}
         >
           {dish.prices && dish.prices.length > 0 ? (
-            <PriceList prices={dish.prices} delay={28} tone={bannerTone} />
+            <Design4Editorial prices={dish.prices} delay={28} tone={bannerTone} />
           ) : dish.price ? (
             <PriceBadge price={dish.price} delay={28} size={230} tone={bannerTone} />
           ) : null}
