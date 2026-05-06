@@ -20,9 +20,8 @@ export type Dish = {
 };
 
 export const CATEGORIES = [
-  {id: 'all', labelAr: 'الكل'},
-  {id: 'mutabbaq', labelAr: 'مطبّق'},
-  {id: 'areeka', labelAr: 'عَريكة و معصوب'},
+  {id: 'mutabbaq', labelAr: 'قسم المطبّق'},
+  {id: 'areeka', labelAr: 'قسم العَريكة والمعصوب'},
 ] as const;
 
 export type CategoryId = (typeof CATEGORIES)[number]['id'];
@@ -81,6 +80,20 @@ export const AREEKA: Dish[] = [
 ];
 
 export const ALL_DISHES: Dish[] = [...MUTABBAQ, ...AREEKA];
+
+/**
+ * "أصناف مميزة" — three signature dishes pinned to the top of the
+ * tablet menu so they're the first thing a customer sees.
+ */
+export const FEATURED_IMAGES = [
+  'dishes/dish-03-tuna-veggie-2cheese.png',
+  'dishes/areeka-01-balad.png',
+  'dishes/areeka-07-southern.png',
+] as const;
+
+export const FEATURED_DISHES: Dish[] = FEATURED_IMAGES.map(
+  (img) => ALL_DISHES.find((d) => d.image === img)!,
+);
 
 /** Smallest price as a number, used for "starts at" labels on cards. */
 export const startingPrice = (d: Dish): number => {

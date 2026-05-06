@@ -1,6 +1,5 @@
 /**
- * Capture iPad-sized screenshots of the Glass Grid prototype
- * (first prototype's structure, Bento's dark glass aesthetic).
+ * Capture iPad-sized screenshots of the trimmed Glass Grid prototype.
  */
 import {chromium} from 'playwright';
 import fs from 'node:fs/promises';
@@ -21,50 +20,38 @@ const page = await ctx.newPage();
 await page.goto(URL, {waitUntil: 'networkidle'});
 await page.waitForTimeout(2000);
 
-// 1) Default — all dishes
-await page.screenshot({path: `${OUT}/01-home.png`});
+// 1) Default — Mutabbaq tab visible, Featured row at top
+await page.screenshot({path: `${OUT}/01-home.png`, fullPage: true});
 console.log('✓ 01-home.png');
 
-// 2) Mutabbaq tab
-await page.locator('button[role="tab"]', {hasText: /^مطبّق$/}).click();
-await page.waitForTimeout(700);
-await page.screenshot({path: `${OUT}/02-mutabbaq.png`});
-console.log('✓ 02-mutabbaq.png');
+// 2) Visible viewport (no scroll) of the home
+await page.screenshot({path: `${OUT}/02-home-viewport.png`});
+console.log('✓ 02-home-viewport.png');
 
-// 3) Areeka tab — multi-price dishes
-await page.locator('button[role="tab"]', {hasText: 'عَريكة و معصوب'}).click();
+// 3) Switch to Areeka tab
+await page.locator('button[role="tab"]', {hasText: 'العَريكة والمعصوب'}).click();
 await page.waitForTimeout(700);
-await page.screenshot({path: `${OUT}/03-areeka.png`});
-console.log('✓ 03-areeka.png');
+await page.screenshot({path: `${OUT}/03-areeka-tab.png`});
+console.log('✓ 03-areeka-tab.png');
 
-// 4) Tap a card → detail modal (multi-price)
-await page.locator('button:has(img)').first().click();
+// 4) Tap a Featured card (scroll back to top first)
+await page.evaluate(() => window.scrollTo({top: 0}));
+await page.locator('button', {hasText: 'مميّز'}).first().click();
 await page.waitForTimeout(900);
-await page.screenshot({path: `${OUT}/04-detail-multiprice.png`});
-console.log('✓ 04-detail-multiprice.png');
+await page.screenshot({path: `${OUT}/04-featured-detail.png`});
+console.log('✓ 04-featured-detail.png');
 
-// 5) Close modal, switch to mutabbaq, open a single-price dish
+// 5) Close + Mutabbaq tab full grid
 await page.locator('[aria-label="إغلاق"]').click();
 await page.waitForTimeout(400);
-await page.locator('button[role="tab"]', {hasText: /^مطبّق$/}).click();
-await page.waitForTimeout(500);
-// Find Nutella
-await page.locator('button:has(img)').filter({hasText: 'مطبّق نوتيلا'}).first().click();
-await page.waitForTimeout(900);
-await page.screenshot({path: `${OUT}/05-detail-single.png`});
-console.log('✓ 05-detail-single.png');
-
-// 6) Close + search
-await page.locator('[aria-label="إغلاق"]').click();
-await page.waitForTimeout(300);
-await page.locator('button[role="tab"]', {hasText: 'الكل'}).click();
-await page.waitForTimeout(400);
-const search = page.locator('input[placeholder="ابحث عن صنف…"]');
-await search.click();
-await search.type('تونة');
+await page.locator('button[role="tab"]', {hasText: 'المطبّق'}).click();
 await page.waitForTimeout(700);
-await page.screenshot({path: `${OUT}/06-search.png`});
-console.log('✓ 06-search.png');
+await page.screenshot({path: `${OUT}/05-mutabbaq-grid.png`});
+console.log('✓ 05-mutabbaq-grid.png');
+
+// 6) Full page scroll capture so user sees everything stacks
+await page.screenshot({path: `${OUT}/06-full-page.png`, fullPage: true});
+console.log('✓ 06-full-page.png');
 
 await browser.close();
 console.log('\nAll screenshots saved to', OUT);
