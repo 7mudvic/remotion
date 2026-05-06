@@ -1,57 +1,60 @@
 /**
- * Capture iPad-sized screenshots of the trimmed Glass Grid prototype.
+ * Capture both iPad and iPhone screenshots so we can verify the
+ * featured row reads well on a phone (where the user spotted issues).
  */
 import {chromium} from 'playwright';
 import fs from 'node:fs/promises';
 
 const URL = 'http://127.0.0.1:4173/';
 const OUT = './screenshots';
-
 await fs.mkdir(OUT, {recursive: true});
 
 const browser = await chromium.launch({headless: true});
-const ctx = await browser.newContext({
-  viewport: {width: 1366, height: 1024},
-  deviceScaleFactor: 2,
-  hasTouch: true,
-});
-const page = await ctx.newPage();
 
-await page.goto(URL, {waitUntil: 'networkidle'});
-await page.waitForTimeout(2000);
+// ── iPhone 14 Pro portrait — what the user is testing on ──
+{
+  const ctx = await browser.newContext({
+    viewport: {width: 393, height: 852},
+    deviceScaleFactor: 3,
+    hasTouch: true,
+  });
+  const page = await ctx.newPage();
+  await page.goto(URL, {waitUntil: 'networkidle'});
+  await page.waitForTimeout(2000);
+  await page.screenshot({path: `${OUT}/phone-01-home.png`, fullPage: false});
+  console.log('✓ phone-01-home.png');
+  await page.screenshot({path: `${OUT}/phone-02-full.png`, fullPage: true});
+  console.log('✓ phone-02-full.png');
+  await ctx.close();
+}
 
-// 1) Default — Mutabbaq tab visible, Featured row at top
-await page.screenshot({path: `${OUT}/01-home.png`, fullPage: true});
-console.log('✓ 01-home.png');
+// ── iPad Pro 11" landscape ──
+{
+  const ctx = await browser.newContext({
+    viewport: {width: 1366, height: 1024},
+    deviceScaleFactor: 2,
+    hasTouch: true,
+  });
+  const page = await ctx.newPage();
+  await page.goto(URL, {waitUntil: 'networkidle'});
+  await page.waitForTimeout(2000);
+  await page.screenshot({path: `${OUT}/ipad-01-home.png`});
+  console.log('✓ ipad-01-home.png');
 
-// 2) Visible viewport (no scroll) of the home
-await page.screenshot({path: `${OUT}/02-home-viewport.png`});
-console.log('✓ 02-home-viewport.png');
+  await page.locator('button[role="tab"]', {hasText: 'العَريكة والمعصوب'}).click();
+  await page.waitForTimeout(700);
+  await page.screenshot({path: `${OUT}/ipad-02-areeka.png`});
+  console.log('✓ ipad-02-areeka.png');
 
-// 3) Switch to Areeka tab
-await page.locator('button[role="tab"]', {hasText: 'العَريكة والمعصوب'}).click();
-await page.waitForTimeout(700);
-await page.screenshot({path: `${OUT}/03-areeka-tab.png`});
-console.log('✓ 03-areeka-tab.png');
+  // Click the first featured card (it's the first <button> inside the
+  // "أصناف مميّزة" section on the page).
+  await page.locator('section button').first().click().catch(() => {});
+  await page.waitForTimeout(900);
+  await page.screenshot({path: `${OUT}/ipad-03-detail.png`});
+  console.log('✓ ipad-03-detail.png');
 
-// 4) Tap a Featured card (scroll back to top first)
-await page.evaluate(() => window.scrollTo({top: 0}));
-await page.locator('button', {hasText: 'مميّز'}).first().click();
-await page.waitForTimeout(900);
-await page.screenshot({path: `${OUT}/04-featured-detail.png`});
-console.log('✓ 04-featured-detail.png');
-
-// 5) Close + Mutabbaq tab full grid
-await page.locator('[aria-label="إغلاق"]').click();
-await page.waitForTimeout(400);
-await page.locator('button[role="tab"]', {hasText: 'المطبّق'}).click();
-await page.waitForTimeout(700);
-await page.screenshot({path: `${OUT}/05-mutabbaq-grid.png`});
-console.log('✓ 05-mutabbaq-grid.png');
-
-// 6) Full page scroll capture so user sees everything stacks
-await page.screenshot({path: `${OUT}/06-full-page.png`, fullPage: true});
-console.log('✓ 06-full-page.png');
+  await ctx.close();
+}
 
 await browser.close();
 console.log('\nAll screenshots saved to', OUT);
