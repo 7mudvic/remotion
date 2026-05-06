@@ -3,11 +3,10 @@ import {X} from 'lucide-react';
 import type {Dish, PriceItem} from '../data';
 
 /**
- * Bottom-sheet detail card — slides up from the bottom edge when the
- * customer taps the featured tile. Shows the full image, name, and
- * every available size + price.
+ * Glass detail modal — opens when a customer taps a card. Image right
+ * (RTL leading), name + sizes on the left.
  */
-export const DishSheet = ({
+export const DishDetail = ({
   dish,
   onClose,
 }: {
@@ -21,18 +20,20 @@ export const DishSheet = ({
       exit={{opacity: 0}}
       transition={{duration: 0.25}}
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-end bg-black/60 backdrop-blur-md md:items-center md:justify-center"
+      className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-5 backdrop-blur-md"
     >
       <motion.div
-        initial={{y: 80, opacity: 0}}
-        animate={{y: 0, opacity: 1}}
-        exit={{y: 80, opacity: 0}}
-        transition={{type: 'spring', damping: 26, stiffness: 280}}
+        initial={{y: 60, scale: 0.95, opacity: 0}}
+        animate={{y: 0, scale: 1, opacity: 1}}
+        exit={{y: 40, scale: 0.95, opacity: 0}}
+        transition={{type: 'spring', damping: 24, stiffness: 240}}
         onClick={(e) => e.stopPropagation()}
-        className="relative grid w-full max-w-5xl grid-cols-1 gap-6 overflow-hidden rounded-t-[36px] border-2 border-white/15 bg-gradient-to-b from-white/15 to-white/5 p-8 backdrop-blur-3xl md:rounded-[36px] md:grid-cols-2 md:p-12"
+        className="relative grid h-full max-h-[88vh] w-full max-w-6xl grid-cols-1 gap-6 overflow-hidden rounded-[36px] p-8 backdrop-blur-3xl md:grid-cols-2 md:p-10"
         style={{
           background:
-            'linear-gradient(180deg, rgba(47,85,196,0.30) 0%, rgba(9,18,54,0.55) 100%)',
+            'linear-gradient(135deg, rgba(47,85,196,0.30) 0%, rgba(9,18,54,0.55) 100%)',
+          boxShadow: '0 36px 80px rgba(0, 0, 0, 0.55)',
+          border: '1px solid rgba(255, 255, 255, 0.18)',
         }}
       >
         <button
@@ -51,7 +52,7 @@ export const DishSheet = ({
             transition={{delay: 0.1, type: 'spring', damping: 18, stiffness: 110}}
             src={dish.image}
             alt={dish.nameAr}
-            className="max-h-[40vh] w-auto object-contain drop-shadow-[0_36px_60px_rgba(0,0,0,0.55)] md:max-h-[55vh]"
+            className="max-h-[55vh] w-auto object-contain drop-shadow-[0_36px_60px_rgba(0,0,0,0.55)]"
           />
         </div>
 
