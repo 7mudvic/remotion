@@ -1,8 +1,10 @@
 import {Search, X} from 'lucide-react';
 
 /**
- * Glass search bar — semi-transparent pill with backdrop blur, yellow
- * search icon. Centred in the available width.
+ * Glass search bar — dark blue tinted (no white tint), no backdrop
+ * filter. The pill itself is solid enough that the background mesh
+ * doesn't need to bleed through, which removes a costly per-frame
+ * blur pass.
  */
 export const SearchBar = ({
   value,
@@ -11,7 +13,13 @@ export const SearchBar = ({
   value: string;
   onChange: (v: string) => void;
 }) => (
-  <div className="mx-auto mt-2 flex w-full max-w-2xl items-center gap-3 rounded-full bg-white/10 px-5 py-3 backdrop-blur-2xl ring-1 ring-white/15 transition-shadow focus-within:ring-2 focus-within:ring-brand-yellow/50">
+  <div
+    className="mx-auto mt-2 flex w-full max-w-2xl items-center gap-3 rounded-full px-5 py-3 ring-1 ring-white/15 transition-shadow duration-200 focus-within:ring-2 focus-within:ring-brand-yellow/60"
+    style={{
+      background:
+        'linear-gradient(180deg, rgba(47,85,196,0.20) 0%, rgba(9,18,54,0.55) 100%)',
+    }}
+  >
     <Search className="h-5 w-5 text-brand-yellow" strokeWidth={2.5} />
     <input
       value={value}

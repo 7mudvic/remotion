@@ -1,73 +1,49 @@
 import {motion} from 'motion/react';
 
 /**
- * Slowly drifting gradient mesh — three big colour blobs (royal blue,
- * deep midnight, brand yellow) softly blended into a Vision-Pro-ish
- * dark backdrop. Each blob animates independently so the canvas always
- * feels alive without being distracting.
+ * Background mesh — two slowly drifting colour blobs over a dark navy
+ * base. Tuned for iPad Safari: only 2 blobs (was 3), smaller blur
+ * radius, slower animation, no infinite mix-blend layers — every
+ * setting picked to keep the GPU mostly idle.
  */
 export const GradientMesh = () => {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#070d24]">
-      {/* Blob 1 — royal blue */}
+      {/* Royal-blue blob — drifts top-left → bottom-right */}
       <motion.div
-        className="absolute h-[60vh] w-[60vw] rounded-full"
+        className="absolute h-[55vh] w-[55vw] rounded-full will-change-transform"
         style={{
           background:
-            'radial-gradient(circle, rgba(47, 85, 196, 0.55), transparent 60%)',
-          filter: 'blur(60px)',
+            'radial-gradient(circle, rgba(47, 85, 196, 0.45), transparent 65%)',
+          filter: 'blur(45px)',
+          transform: 'translate3d(0,0,0)',
         }}
-        initial={{x: '10%', y: '5%'}}
-        animate={{
-          x: ['10%', '40%', '10%'],
-          y: ['5%', '20%', '5%'],
-        }}
-        transition={{duration: 22, ease: 'easeInOut', repeat: Infinity}}
+        initial={{x: '15%', y: '5%'}}
+        animate={{x: ['15%', '35%', '15%'], y: ['5%', '15%', '5%']}}
+        transition={{duration: 50, ease: 'easeInOut', repeat: Infinity}}
       />
 
-      {/* Blob 2 — yellow accent */}
+      {/* Brand-yellow accent — drifts bottom-right → centre */}
       <motion.div
-        className="absolute h-[45vh] w-[45vw] rounded-full"
+        className="absolute h-[45vh] w-[45vw] rounded-full will-change-transform"
         style={{
           background:
-            'radial-gradient(circle, rgba(245, 194, 51, 0.30), transparent 65%)',
-          filter: 'blur(70px)',
-        }}
-        initial={{x: '60%', y: '50%'}}
-        animate={{
-          x: ['60%', '30%', '60%'],
-          y: ['50%', '70%', '50%'],
-        }}
-        transition={{duration: 28, ease: 'easeInOut', repeat: Infinity}}
-      />
-
-      {/* Blob 3 — deep midnight */}
-      <motion.div
-        className="absolute h-[50vh] w-[50vw] rounded-full"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(9, 18, 54, 0.95), transparent 55%)',
+            'radial-gradient(circle, rgba(245, 194, 51, 0.22), transparent 70%)',
           filter: 'blur(50px)',
+          transform: 'translate3d(0,0,0)',
         }}
-        initial={{x: '70%', y: '0%'}}
-        animate={{
-          x: ['70%', '40%', '70%'],
-          y: ['0%', '40%', '0%'],
-        }}
-        transition={{duration: 32, ease: 'easeInOut', repeat: Infinity}}
+        initial={{x: '60%', y: '55%'}}
+        animate={{x: ['60%', '40%', '60%'], y: ['55%', '65%', '55%']}}
+        transition={{duration: 60, ease: 'easeInOut', repeat: Infinity}}
       />
 
-      {/* Grain — subtle texture for premium feel */}
+      {/* Static deep-midnight vignette in the bottom-right — purely a
+          static box-shadow-style overlay so it costs nothing to paint */}
       <div
-        className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
+        className="absolute inset-0"
         style={{
-          backgroundImage:
-            'url("data:image/svg+xml;utf8,' +
-            "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>" +
-            "<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter>" +
-            "<rect width='100%' height='100%' filter='url(%23n)'/></svg>" +
-            '")',
-          backgroundSize: '200px',
+          background:
+            'radial-gradient(ellipse at bottom right, rgba(9,18,54,0.6), transparent 60%)',
         }}
       />
     </div>

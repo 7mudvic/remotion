@@ -1,58 +1,60 @@
-import {motion} from 'motion/react';
 import type {Dish} from '../data';
 
 /**
- * Glass card — frosted surface, brand-yellow chip on the price. Same
- * Bento aesthetic at a smaller scale.
+ * Glass card — DARK-tinted glass (royal-blue) so empty / loading
+ * cards never flash white when filters change. backdrop-filter is
+ * deliberately removed: 36 simultaneously-blurred surfaces are too
+ * much for iPad Safari, and the gradient mesh underneath is already
+ * blurred at the source.
+ *
+ * Hover / press use CSS transitions instead of Motion springs to keep
+ * scroll buttery smooth.
  */
 export const DishCard = ({
   dish,
-  index,
   startingPrice,
   onClick,
 }: {
   dish: Dish;
-  index: number;
+  index: number; // kept for API compatibility but no longer used
   startingPrice: number;
   onClick: () => void;
 }) => {
   const isMulti = dish.prices && dish.prices.length > 1;
 
   return (
-    <motion.button
+    <button
       onClick={onClick}
-      initial={{opacity: 0, y: 16}}
-      animate={{opacity: 1, y: 0}}
-      transition={{delay: index * 0.02, type: 'spring', damping: 22, stiffness: 200}}
-      whileHover={{y: -4, scale: 1.01}}
-      whileTap={{scale: 0.97}}
-      className="group relative flex flex-col overflow-hidden rounded-3xl text-right"
+      className="group relative flex flex-col overflow-hidden rounded-3xl text-right outline-none transition-transform duration-200 ease-out will-change-transform hover:-translate-y-1 active:scale-[0.98]"
       style={{
+        // Royal-blue tinted glass — avoids the white flash you get with
+        // a white-tinted surface when images are still loading.
         background:
-          'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%)',
+          'linear-gradient(135deg, rgba(47, 85, 196, 0.18) 0%, rgba(9, 18, 54, 0.55) 100%)',
         boxShadow:
-          '0 16px 36px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)',
+          '0 14px 30px rgba(0, 0, 0, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.10)',
       }}
     >
-      {/* Glass border + frosted veil */}
-      <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/15" />
-      <div
-        className="absolute inset-0 rounded-3xl"
-        style={{backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)'}}
-      />
+      <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10" />
 
-      {/* Image */}
+      {/* Image — eager load on first 12, lazy after */}
       <div className="relative grid aspect-square w-full place-items-center p-3">
         <img
           src={dish.image}
           alt={dish.nameAr}
-          loading="lazy"
-          className="h-full w-full scale-105 object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.55)]"
+          decoding="async"
+          className="h-full w-full scale-[1.04] object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.55)]"
         />
       </div>
 
-      {/* Bottom info strip */}
-      <div className="relative mx-3 mb-3 flex items-end justify-between gap-2 rounded-2xl bg-white/10 p-3 backdrop-blur-xl ring-1 ring-white/15">
+      {/* Bottom info strip — also tinted with royal blue */}
+      <div
+        className="relative mx-3 mb-3 flex items-end justify-between gap-2 rounded-2xl px-3 py-2.5 ring-1 ring-white/10"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(47, 85, 196, 0.32) 0%, rgba(9, 18, 54, 0.65) 100%)',
+        }}
+      >
         <div className="min-w-0 flex-1">
           <h3 className="line-clamp-2 font-cairo text-sm font-black leading-tight md:text-base">
             {dish.nameAr}
@@ -69,8 +71,8 @@ export const DishCard = ({
         </div>
       </div>
 
-      {/* Yellow ring on hover */}
-      <div className="pointer-events-none absolute inset-0 rounded-3xl ring-2 ring-brand-yellow/0 transition-all group-hover:ring-brand-yellow/40" />
-    </motion.button>
+      {/* Yellow ring on hover (CSS transition, cheap) */}
+      <div className="pointer-events-none absolute inset-0 rounded-3xl ring-2 ring-brand-yellow/0 transition-[box-shadow] duration-200 group-hover:ring-brand-yellow/40" />
+    </button>
   );
 };
