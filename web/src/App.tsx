@@ -1,5 +1,5 @@
-import {useMemo, useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {AnimatePresence, motion, useMotionValue, useTransform} from 'motion/react';
 import {Search, X} from 'lucide-react';
 import {
   ALL_DISHES,
@@ -8,17 +8,24 @@ import {
   MUTABBAQ,
   type CategoryId,
   type Dish,
-  startingPrice,
 } from './data';
-import {DishCard} from './components/DishCard';
-import {DishDetail} from './components/DishDetail';
-import {TopBar} from './components/TopBar';
 import {SunburstBackground} from './components/SunburstBackground';
+import {CinematicHero} from './components/CinematicHero';
+import {ThumbStrip} from './components/ThumbStrip';
+import {ProgressBar} from './components/ProgressBar';
+import {BrandHeader} from './components/BrandHeader';
+
+const AUTO_ADVANCE_MS = 6000;
+const PAUSE_AFTER_INTERACT_MS = 12000;
 
 export const App = () => {
   const [active, setActive] = useState<CategoryId>('all');
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [paused, setPaused] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<Dish | null>(null);
+  const lastInteractRef = useRef(0);
 
   const dishes = useMemo(() => {
     const base =
@@ -32,124 +39,218 @@ export const App = () => {
     return base.filter((d) => d.nameAr.includes(q));
   }, [active, query]);
 
+  // Wrap index inside the current list
+  const safeIndex = dishes.length === 0 ? 0 : index % dishes.length;
+  const dish: Dish | undefined = dishes[safeIndex];
+
+  // Auto-advance — pauses for PAUSE_AFTER_INTERACT_MS after any interaction
+  useEffect(() => {
+    if (paused || dishes.length === 0) return;
+    const id = setInterval(() => {
+      setDirection(1);
+      setIndex((i) => (i + 1) % dishes.length);
+    }, AUTO_ADVANCE_MS);
+    return () => clearInterval(id);
+  }, [paused, dishes.length]);
+
+  // Reset index when filter changes
+  useEffect(() => {
+    setIndex(0);
+  }, [active, query]);
+
+  const interact = () => {
+    lastInteractRef.current = Date.now();
+    setPaused(true);
+    // Resume after a quiet period
+    const handle = lastInteractRef.current;
+    setTimeout(() => {
+      if (lastInteractRef.current === handle) setPaused(false);
+    }, PAUSE_AFTER_INTERACT_MS);
+  };
+
+  const goNext = () => {
+    interact();
+    setDirection(1);
+    setIndex((i) => (i + 1) % Math.max(dishes.length, 1));
+  };
+
+  const goPrev = () => {
+    interact();
+    setDirection(-1);
+    setIndex((i) => (i - 1 + dishes.length) % Math.max(dishes.length, 1));
+  };
+
+  const goTo = (i: number) => {
+    interact();
+    setDirection(i > safeIndex ? 1 : -1);
+    setIndex(i);
+  };
+
   return (
     <div className="relative h-full w-full overflow-hidden text-brand-cream">
-      {/* Background — subtle animated sunburst, brand-blue dominant */}
       <SunburstBackground />
 
-      {/* Foreground content */}
       <div className="relative z-10 flex h-full flex-col">
-        <TopBar />
+        {/* Top progress + brand header + filters */}
+        <ProgressBar
+          active={!paused && dishes.length > 0}
+          durationMs={AUTO_ADVANCE_MS}
+          // Forces re-mount on every step so the bar resets cleanly
+          stepKey={`${active}-${safeIndex}`}
+        />
 
-        {/* Search + tabs */}
-        <div className="px-8 pt-2">
-          <SearchBar value={query} onChange={setQuery} />
-          <Tabs active={active} onChange={setActive} />
-        </div>
+        <BrandHeader
+          active={active}
+          categories={CATEGORIES}
+          dishCount={dishes.length}
+          currentIndex={safeIndex}
+          onCategory={(id) => {
+            interact();
+            setActive(id);
+          }}
+          onSearchToggle={() => {
+            interact();
+            setSearchOpen((s) => !s);
+          }}
+        />
 
-        {/* Dish grid */}
-        <main className="flex-1 overflow-y-auto px-8 pb-10">
-          <DishGrid dishes={dishes} onSelect={setSelected} />
+        {/* Hero zone — fills the middle */}
+        <main
+          className="relative flex-1 select-none"
+          onPointerDown={interact}
+        >
+          {dish ? (
+            <CinematicHero
+              dish={dish}
+              direction={direction}
+              onSwipeLeft={goNext}
+              onSwipeRight={goPrev}
+            />
+          ) : (
+            <EmptyState />
+          )}
+
+          {/* Side arrows (also tap targets) */}
+          {dishes.length > 1 ? (
+            <>
+              <NavArrow side="right" onClick={goNext} />
+              <NavArrow side="left" onClick={goPrev} />
+            </>
+          ) : null}
         </main>
+
+        {/* Bottom thumbnail strip */}
+        <ThumbStrip
+          dishes={dishes}
+          activeIndex={safeIndex}
+          onSelect={goTo}
+        />
       </div>
 
-      {/* Detail modal */}
+      {/* Full-screen search overlay */}
       <AnimatePresence>
-        {selected ? (
-          <DishDetail dish={selected} onClose={() => setSelected(null)} />
+        {searchOpen ? (
+          <SearchOverlay
+            value={query}
+            onChange={(v) => {
+              interact();
+              setQuery(v);
+            }}
+            onClose={() => {
+              setSearchOpen(false);
+              interact();
+            }}
+          />
         ) : null}
       </AnimatePresence>
     </div>
   );
 };
 
-const SearchBar = ({
+const NavArrow = ({
+  side,
+  onClick,
+}: {
+  side: 'left' | 'right';
+  onClick: () => void;
+}) => {
+  const x = useMotionValue(0);
+  const opacity = useTransform(x, [-30, 0, 30], [0.3, 0.6, 0.3]);
+
+  return (
+    <motion.button
+      onClick={onClick}
+      style={{opacity, [side]: 36, x}}
+      className="absolute top-1/2 z-20 grid h-16 w-16 -translate-y-1/2 place-items-center rounded-full border-2 border-brand-yellow/50 bg-white/10 backdrop-blur-md transition-colors hover:border-brand-yellow hover:bg-white/20 active:scale-95"
+      aria-label={side === 'left' ? 'السابق' : 'التالي'}
+    >
+      <svg
+        width={28}
+        height={28}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-brand-yellow"
+        style={{transform: side === 'left' ? 'rotate(180deg)' : 'none'}}
+      >
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </motion.button>
+  );
+};
+
+const EmptyState = () => (
+  <div className="grid h-full place-items-center">
+    <div className="text-center">
+      <p className="font-cairo text-3xl font-black text-brand-cream">
+        لا توجد نتائج
+      </p>
+      <p className="mt-3 font-tajawal text-lg opacity-70">جرّب تصنيفاً آخر أو بحثاً مختلفاً</p>
+    </div>
+  </div>
+);
+
+const SearchOverlay = ({
   value,
   onChange,
+  onClose,
 }: {
   value: string;
   onChange: (v: string) => void;
+  onClose: () => void;
 }) => (
-  <div className="mx-auto mt-4 flex w-full max-w-2xl items-center gap-3 rounded-full border-2 border-brand-yellow/60 bg-white/10 px-5 py-3 backdrop-blur">
-    <Search className="h-5 w-5 text-brand-yellow" strokeWidth={2.5} />
-    <input
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder="ابحث عن صنف…"
-      className="w-full bg-transparent font-cairo text-lg text-brand-cream placeholder:text-brand-cream/50 focus:outline-none"
-    />
-    {value ? (
-      <button
-        onClick={() => onChange('')}
-        className="rounded-full p-1 text-brand-cream/70 hover:bg-white/10"
-      >
-        <X className="h-4 w-4" />
-      </button>
-    ) : null}
-  </div>
-);
-
-const Tabs = ({
-  active,
-  onChange,
-}: {
-  active: CategoryId;
-  onChange: (id: CategoryId) => void;
-}) => (
-  <div
-    className="mx-auto mt-5 flex w-full max-w-2xl items-center justify-center gap-2"
-    role="tablist"
+  <motion.div
+    initial={{opacity: 0}}
+    animate={{opacity: 1}}
+    exit={{opacity: 0}}
+    transition={{duration: 0.2}}
+    className="fixed inset-0 z-40 grid place-items-start bg-brand-blueDeep/85 px-8 pt-32 backdrop-blur-md"
+    onClick={onClose}
   >
-    {CATEGORIES.map((c) => {
-      const on = c.id === active;
-      return (
-        <button
-          key={c.id}
-          role="tab"
-          aria-selected={on}
-          onClick={() => onChange(c.id)}
-          className={`relative rounded-full px-6 py-2.5 font-cairo text-base font-bold transition-all ${
-            on
-              ? 'bg-brand-yellow text-brand-blue shadow-chip'
-              : 'bg-white/10 text-brand-cream hover:bg-white/20'
-          }`}
-        >
-          {c.labelAr}
-        </button>
-      );
-    })}
-  </div>
+    <motion.div
+      initial={{y: -20, opacity: 0}}
+      animate={{y: 0, opacity: 1}}
+      transition={{type: 'spring', damping: 22, stiffness: 220}}
+      onClick={(e) => e.stopPropagation()}
+      className="mx-auto flex w-full max-w-2xl items-center gap-3 rounded-full border-2 border-brand-yellow bg-white/10 px-6 py-4 backdrop-blur"
+    >
+      <Search className="h-6 w-6 text-brand-yellow" strokeWidth={2.5} />
+      <input
+        autoFocus
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="ابحث عن صنف…"
+        className="w-full bg-transparent font-cairo text-2xl text-brand-cream placeholder:text-brand-cream/50 focus:outline-none"
+      />
+      <button
+        onClick={onClose}
+        className="rounded-full p-2 text-brand-cream hover:bg-white/15"
+      >
+        <X className="h-6 w-6" />
+      </button>
+    </motion.div>
+  </motion.div>
 );
-
-const DishGrid = ({
-  dishes,
-  onSelect,
-}: {
-  dishes: Dish[];
-  onSelect: (d: Dish) => void;
-}) => {
-  if (dishes.length === 0) {
-    return (
-      <div className="grid h-full place-items-center text-brand-cream/60">
-        <div className="text-center">
-          <p className="font-cairo text-2xl font-bold">لا توجد نتائج</p>
-          <p className="mt-2 font-tajawal opacity-80">جرّب كلمة بحث أخرى</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto mt-6 grid w-full max-w-7xl grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
-      {dishes.map((d, i) => (
-        <DishCard
-          key={d.image}
-          dish={d}
-          index={i}
-          startingPrice={startingPrice(d)}
-          onClick={() => onSelect(d)}
-        />
-      ))}
-    </div>
-  );
-};
