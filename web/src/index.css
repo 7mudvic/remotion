@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #1e3fa3;
+    color: #fff8e3;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  /* Sunburst conic gradient — same brand background as the videos */
+  .bg-sunburst-blue {
+    background:
+      conic-gradient(
+        from 0deg at 50% 50%,
+        rgba(255, 255, 255, 0.05) 0deg 5deg,
+        rgba(255, 255, 255, 0) 5deg 10deg
+      ),
+      linear-gradient(180deg, #1e3fa3 0%, #1e3fa3 50%, #f5c233 50%, #f5c233 100%);
+  }
+  .bg-sunburst-yellow {
+    background:
+      conic-gradient(
+        from 0deg at 50% 50%,
+        rgba(9, 18, 54, 0.05) 0deg 5deg,
+        rgba(9, 18, 54, 0) 5deg 10deg
+      ),
+      linear-gradient(180deg, #f5c233 0%, #f5c233 50%, #1e3fa3 50%, #1e3fa3 100%);
+  }
+}
