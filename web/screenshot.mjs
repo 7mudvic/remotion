@@ -1,5 +1,5 @@
 /**
- * Capture iPad-sized screenshots of the cinematic carousel prototype.
+ * Capture iPad-sized screenshots of the editorial magazine prototype.
  */
 import {chromium} from 'playwright';
 import fs from 'node:fs/promises';
@@ -17,51 +17,55 @@ const ctx = await browser.newContext({
 });
 const page = await ctx.newPage();
 
-console.log('→', URL);
 await page.goto(URL, {waitUntil: 'networkidle'});
 await page.waitForTimeout(1500);
 
-// 1) First dish — single-price (مطبّق)
-await page.screenshot({path: `${OUT}/01-hero-single.png`});
-console.log('✓ 01-hero-single.png');
+const scrollToSpread = async (i) => {
+  await page.evaluate((idx) => {
+    const sections = document.querySelectorAll('[data-spread]');
+    sections[idx]?.scrollIntoView({behavior: 'instant', block: 'start'});
+  }, i);
+  await page.waitForTimeout(900);
+};
 
-// 2) Click forward arrow a couple of times to reach a different dish
-await page.locator('[aria-label="التالي"]').click();
-await page.waitForTimeout(800);
-await page.locator('[aria-label="التالي"]').click();
-await page.waitForTimeout(900);
-await page.screenshot({path: `${OUT}/02-hero-after-swipe.png`});
-console.log('✓ 02-hero-after-swipe.png');
+// Spread 0 — Layout 1 (image right, big title left)
+await page.screenshot({path: `${OUT}/01-layout1.png`});
+console.log('✓ 01-layout1.png');
 
-// 3) Switch to Areeka tab — multi-price dishes
+// Spread 1 — Layout 2 (yellow page)
+await scrollToSpread(1);
+await page.screenshot({path: `${OUT}/02-layout2-yellow.png`});
+console.log('✓ 02-layout2-yellow.png');
+
+// Spread 2 — Layout 3 (blue poster)
+await scrollToSpread(2);
+await page.screenshot({path: `${OUT}/03-layout3-poster.png`});
+console.log('✓ 03-layout3-poster.png');
+
+// Spread 3 — Layout 4 (split column)
+await scrollToSpread(3);
+await page.screenshot({path: `${OUT}/04-layout4-split.png`});
+console.log('✓ 04-layout4-split.png');
+
+// Areeka multiprice on layout 1
+await page.evaluate(() => {
+  document
+    .querySelectorAll('[data-spread]')[0]
+    ?.scrollIntoView({behavior: 'instant', block: 'start'});
+});
+await page.waitForTimeout(400);
+await page.locator('button', {hasText: 'جميع الأصناف'}).click();
+await page.waitForTimeout(500);
 await page.locator('button', {hasText: 'عَريكة و معصوب'}).click();
 await page.waitForTimeout(900);
-await page.screenshot({path: `${OUT}/03-areeka-multiprice.png`});
-console.log('✓ 03-areeka-multiprice.png');
+await page.screenshot({path: `${OUT}/05-areeka-multiprice.png`});
+console.log('✓ 05-areeka-multiprice.png');
 
-// 4) Advance once more inside Areeka category
-await page.locator('[aria-label="التالي"]').click();
-await page.waitForTimeout(900);
-await page.screenshot({path: `${OUT}/04-areeka-second.png`});
-console.log('✓ 04-areeka-second.png');
-
-// 5) Open the search overlay
-await page.locator('[aria-label="بحث"]').click();
+// Filter drawer open
+await page.locator('button', {hasText: 'عَريكة و معصوب'}).first().click();
 await page.waitForTimeout(500);
-await page.locator('input[placeholder="ابحث عن صنف…"]').type('عَريكة');
-await page.waitForTimeout(700);
-await page.screenshot({path: `${OUT}/05-search-overlay.png`});
-console.log('✓ 05-search-overlay.png');
-
-// 6) Mutabbaq tab to show the third filter state
-await page.keyboard.press('Escape').catch(() => {});
-// Close the overlay by clicking outside
-await page.mouse.click(50, 50);
-await page.waitForTimeout(400);
-await page.locator('button', {hasText: 'مطبّق', hasNotText: 'و معصوب'}).first().click();
-await page.waitForTimeout(900);
-await page.screenshot({path: `${OUT}/06-mutabbaq-only.png`});
-console.log('✓ 06-mutabbaq-only.png');
+await page.screenshot({path: `${OUT}/06-filter-drawer.png`});
+console.log('✓ 06-filter-drawer.png');
 
 await browser.close();
 console.log('\nAll screenshots saved to', OUT);

@@ -1,165 +1,98 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {AnimatePresence, motion, useMotionValue, useTransform} from 'motion/react';
-import {Search, X} from 'lucide-react';
-import {
-  ALL_DISHES,
-  AREEKA,
-  CATEGORIES,
-  MUTABBAQ,
-  type CategoryId,
-  type Dish,
-} from './data';
-import {SunburstBackground} from './components/SunburstBackground';
-import {CinematicHero} from './components/CinematicHero';
-import {ThumbStrip} from './components/ThumbStrip';
-import {ProgressBar} from './components/ProgressBar';
-import {BrandHeader} from './components/BrandHeader';
-
-const AUTO_ADVANCE_MS = 6000;
-const PAUSE_AFTER_INTERACT_MS = 12000;
+import {AnimatePresence, motion} from 'motion/react';
+import {Filter, X} from 'lucide-react';
+import {ALL_DISHES, AREEKA, MUTABBAQ, type CategoryId, type Dish} from './data';
+import {MagazineSpread} from './components/MagazineSpread';
+import {OrnamentalCorners} from './components/OrnamentalCorners';
+import {SideNavigator} from './components/SideNavigator';
 
 export const App = () => {
   const [active, setActive] = useState<CategoryId>('all');
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
-  const [paused, setPaused] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const lastInteractRef = useRef(0);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   const dishes = useMemo(() => {
-    const base =
-      active === 'all'
-        ? ALL_DISHES
-        : active === 'mutabbaq'
-          ? MUTABBAQ
-          : AREEKA;
-    if (!query.trim()) return base;
-    const q = query.trim();
-    return base.filter((d) => d.nameAr.includes(q));
-  }, [active, query]);
+    if (active === 'all') return ALL_DISHES;
+    if (active === 'mutabbaq') return MUTABBAQ;
+    return AREEKA;
+  }, [active]);
 
-  // Wrap index inside the current list
-  const safeIndex = dishes.length === 0 ? 0 : index % dishes.length;
-  const dish: Dish | undefined = dishes[safeIndex];
-
-  // Auto-advance — pauses for PAUSE_AFTER_INTERACT_MS after any interaction
+  // Track which dish is currently centred so the side dots highlight
+  // correctly during a vertical scroll-snap.
   useEffect(() => {
-    if (paused || dishes.length === 0) return;
-    const id = setInterval(() => {
-      setDirection(1);
-      setIndex((i) => (i + 1) % dishes.length);
-    }, AUTO_ADVANCE_MS);
-    return () => clearInterval(id);
-  }, [paused, dishes.length]);
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const sections = Array.from(
+      scroller.querySelectorAll('[data-spread]'),
+    ) as HTMLElement[];
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting && e.intersectionRatio > 0.6) {
+            const i = sections.indexOf(e.target as HTMLElement);
+            if (i >= 0) setCurrentIndex(i);
+          }
+        });
+      },
+      {root: scroller, threshold: [0.6]},
+    );
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, [dishes]);
 
-  // Reset index when filter changes
+  // Reset to top whenever the category changes
   useEffect(() => {
-    setIndex(0);
-  }, [active, query]);
-
-  const interact = () => {
-    lastInteractRef.current = Date.now();
-    setPaused(true);
-    // Resume after a quiet period
-    const handle = lastInteractRef.current;
-    setTimeout(() => {
-      if (lastInteractRef.current === handle) setPaused(false);
-    }, PAUSE_AFTER_INTERACT_MS);
-  };
-
-  const goNext = () => {
-    interact();
-    setDirection(1);
-    setIndex((i) => (i + 1) % Math.max(dishes.length, 1));
-  };
-
-  const goPrev = () => {
-    interact();
-    setDirection(-1);
-    setIndex((i) => (i - 1 + dishes.length) % Math.max(dishes.length, 1));
-  };
+    scrollerRef.current?.scrollTo({top: 0, behavior: 'smooth'});
+    setCurrentIndex(0);
+  }, [active]);
 
   const goTo = (i: number) => {
-    interact();
-    setDirection(i > safeIndex ? 1 : -1);
-    setIndex(i);
+    const target = scrollerRef.current?.querySelectorAll('[data-spread]')[i] as
+      | HTMLElement
+      | undefined;
+    target?.scrollIntoView({behavior: 'smooth', block: 'start'});
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden text-brand-cream">
-      <SunburstBackground />
+    <div className="relative h-full w-full overflow-hidden bg-[#fbf3df] text-brand-blueDeep">
+      {/* Subtle paper grain — Editorial cream backdrop */}
+      <Paper />
 
-      <div className="relative z-10 flex h-full flex-col">
-        {/* Top progress + brand header + filters */}
-        <ProgressBar
-          active={!paused && dishes.length > 0}
-          durationMs={AUTO_ADVANCE_MS}
-          // Forces re-mount on every step so the bar resets cleanly
-          stepKey={`${active}-${safeIndex}`}
-        />
+      {/* Floating top-right brand pill (RTL: shows on the visual right) */}
+      <FloatingBrand />
 
-        <BrandHeader
-          active={active}
-          categories={CATEGORIES}
-          dishCount={dishes.length}
-          currentIndex={safeIndex}
-          onCategory={(id) => {
-            interact();
-            setActive(id);
-          }}
-          onSearchToggle={() => {
-            interact();
-            setSearchOpen((s) => !s);
-          }}
-        />
+      {/* Filter button (top-left in screen coords) */}
+      <FilterButton onClick={() => setFilterOpen(true)} active={active} />
 
-        {/* Hero zone — fills the middle */}
-        <main
-          className="relative flex-1 select-none"
-          onPointerDown={interact}
-        >
-          {dish ? (
-            <CinematicHero
-              dish={dish}
-              direction={direction}
-              onSwipeLeft={goNext}
-              onSwipeRight={goPrev}
-            />
-          ) : (
-            <EmptyState />
-          )}
+      {/* Side navigator — round dots, one per dish */}
+      <SideNavigator
+        count={dishes.length}
+        currentIndex={currentIndex}
+        onSelect={goTo}
+      />
 
-          {/* Side arrows (also tap targets) */}
-          {dishes.length > 1 ? (
-            <>
-              <NavArrow side="right" onClick={goNext} />
-              <NavArrow side="left" onClick={goPrev} />
-            </>
-          ) : null}
-        </main>
-
-        {/* Bottom thumbnail strip */}
-        <ThumbStrip
-          dishes={dishes}
-          activeIndex={safeIndex}
-          onSelect={goTo}
-        />
+      {/* Vertical scroll-snap container */}
+      <div
+        ref={scrollerRef}
+        className="h-full w-full snap-y snap-mandatory overflow-y-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {dishes.map((d, i) => (
+          <Section key={d.image} dish={d} index={i} total={dishes.length} />
+        ))}
+        <FooterCard />
       </div>
 
-      {/* Full-screen search overlay */}
+      {/* Filter drawer */}
       <AnimatePresence>
-        {searchOpen ? (
-          <SearchOverlay
-            value={query}
-            onChange={(v) => {
-              interact();
-              setQuery(v);
+        {filterOpen ? (
+          <FilterDrawer
+            active={active}
+            onChange={(id) => {
+              setActive(id);
+              setFilterOpen(false);
             }}
-            onClose={() => {
-              setSearchOpen(false);
-              interact();
-            }}
+            onClose={() => setFilterOpen(false)}
           />
         ) : null}
       </AnimatePresence>
@@ -167,90 +100,188 @@ export const App = () => {
   );
 };
 
-const NavArrow = ({
-  side,
-  onClick,
+const Section = ({
+  dish,
+  index,
+  total,
 }: {
-  side: 'left' | 'right';
-  onClick: () => void;
+  dish: Dish;
+  index: number;
+  total: number;
 }) => {
-  const x = useMotionValue(0);
-  const opacity = useTransform(x, [-30, 0, 30], [0.3, 0.6, 0.3]);
-
+  // Cycle through 4 layout templates so the magazine feels editorial,
+  // not algorithmic.
+  const layout = (index % 4) + 1;
   return (
-    <motion.button
-      onClick={onClick}
-      style={{opacity, [side]: 36, x}}
-      className="absolute top-1/2 z-20 grid h-16 w-16 -translate-y-1/2 place-items-center rounded-full border-2 border-brand-yellow/50 bg-white/10 backdrop-blur-md transition-colors hover:border-brand-yellow hover:bg-white/20 active:scale-95"
-      aria-label={side === 'left' ? 'السابق' : 'التالي'}
+    <section
+      data-spread
+      className="relative flex h-full w-full snap-start items-stretch justify-stretch"
     >
-      <svg
-        width={28}
-        height={28}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-brand-yellow"
-        style={{transform: side === 'left' ? 'rotate(180deg)' : 'none'}}
-      >
-        <path d="M9 18l6-6-6-6" />
-      </svg>
-    </motion.button>
+      <OrnamentalCorners variant={index % 2 === 0 ? 'blue' : 'yellow'} />
+      <MagazineSpread dish={dish} index={index} total={total} layout={layout as 1 | 2 | 3 | 4} />
+    </section>
   );
 };
 
-const EmptyState = () => (
-  <div className="grid h-full place-items-center">
-    <div className="text-center">
-      <p className="font-cairo text-3xl font-black text-brand-cream">
-        لا توجد نتائج
-      </p>
-      <p className="mt-3 font-tajawal text-lg opacity-70">جرّب تصنيفاً آخر أو بحثاً مختلفاً</p>
+const Paper = () => (
+  <div
+    className="pointer-events-none absolute inset-0"
+    style={{
+      backgroundImage:
+        // Soft warm vignette + low-contrast noise for a "thick paper" look
+        'radial-gradient(circle at 30% 20%, rgba(245,194,51,0.10) 0%, transparent 55%),' +
+        'radial-gradient(circle at 80% 90%, rgba(30,63,163,0.07) 0%, transparent 55%)',
+    }}
+  />
+);
+
+const FloatingBrand = () => (
+  <div className="pointer-events-none fixed right-7 top-7 z-40 flex items-center gap-3">
+    <img
+      src="logo.png"
+      alt=""
+      className="h-12 w-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.20)]"
+    />
+    <div className="flex flex-col leading-tight">
+      <span className="font-cairo text-base font-black text-brand-blueDeep">
+        عَريكة البلدة
+      </span>
+      <span className="font-tajawal text-[11px] uppercase tracking-[0.3em] text-brand-blueLo/70">
+        AREEKAT AL-BALAD
+      </span>
     </div>
   </div>
 );
 
-const SearchOverlay = ({
-  value,
+const FilterButton = ({
+  onClick,
+  active,
+}: {
+  onClick: () => void;
+  active: CategoryId;
+}) => {
+  const label =
+    active === 'all'
+      ? 'جميع الأصناف'
+      : active === 'mutabbaq'
+        ? 'مطبّق'
+        : 'عَريكة و معصوب';
+
+  return (
+    <button
+      onClick={onClick}
+      className="fixed left-7 top-7 z-40 flex items-center gap-2 rounded-full border-2 border-brand-blue/40 bg-white px-4 py-2.5 font-cairo text-sm font-bold text-brand-blueDeep shadow-[0_8px_22px_rgba(9,18,54,0.15)] transition-all hover:border-brand-blue active:scale-95"
+    >
+      <Filter className="h-4 w-4" strokeWidth={2.5} />
+      <span>{label}</span>
+    </button>
+  );
+};
+
+const FilterDrawer = ({
+  active,
   onChange,
   onClose,
 }: {
-  value: string;
-  onChange: (v: string) => void;
+  active: CategoryId;
+  onChange: (id: CategoryId) => void;
   onClose: () => void;
-}) => (
-  <motion.div
-    initial={{opacity: 0}}
-    animate={{opacity: 1}}
-    exit={{opacity: 0}}
-    transition={{duration: 0.2}}
-    className="fixed inset-0 z-40 grid place-items-start bg-brand-blueDeep/85 px-8 pt-32 backdrop-blur-md"
-    onClick={onClose}
-  >
+}) => {
+  const items: Array<{id: CategoryId; labelAr: string; sub: string}> = [
+    {id: 'all', labelAr: 'جميع الأصناف', sub: 'كامل المنيو'},
+    {id: 'mutabbaq', labelAr: 'مطبّق', sub: '21 صنف'},
+    {id: 'areeka', labelAr: 'عَريكة و معصوب', sub: '15 صنف'},
+  ];
+
+  return (
     <motion.div
-      initial={{y: -20, opacity: 0}}
-      animate={{y: 0, opacity: 1}}
-      transition={{type: 'spring', damping: 22, stiffness: 220}}
-      onClick={(e) => e.stopPropagation()}
-      className="mx-auto flex w-full max-w-2xl items-center gap-3 rounded-full border-2 border-brand-yellow bg-white/10 px-6 py-4 backdrop-blur"
+      initial={{opacity: 0}}
+      animate={{opacity: 1}}
+      exit={{opacity: 0}}
+      transition={{duration: 0.18}}
+      onClick={onClose}
+      className="fixed inset-0 z-50 grid place-items-start bg-brand-blueDeep/40 px-7 pt-24 backdrop-blur-sm"
     >
-      <Search className="h-6 w-6 text-brand-yellow" strokeWidth={2.5} />
-      <input
-        autoFocus
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="ابحث عن صنف…"
-        className="w-full bg-transparent font-cairo text-2xl text-brand-cream placeholder:text-brand-cream/50 focus:outline-none"
-      />
-      <button
-        onClick={onClose}
-        className="rounded-full p-2 text-brand-cream hover:bg-white/15"
+      <motion.div
+        initial={{y: -20, opacity: 0}}
+        animate={{y: 0, opacity: 1}}
+        exit={{y: -10, opacity: 0}}
+        transition={{type: 'spring', damping: 24, stiffness: 240}}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-3xl border-2 border-brand-yellow bg-white p-3 shadow-[0_24px_60px_rgba(9,18,54,0.35)]"
       >
-        <X className="h-6 w-6" />
-      </button>
+        <div className="mb-2 flex items-center justify-between px-3 pt-2">
+          <h3 className="font-cairo text-lg font-black text-brand-blueDeep">
+            اختر التصنيف
+          </h3>
+          <button
+            onClick={onClose}
+            className="rounded-full p-1.5 text-brand-blueDeep/70 hover:bg-brand-blue/10"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        {items.map((it) => {
+          const on = it.id === active;
+          return (
+            <button
+              key={it.id}
+              onClick={() => onChange(it.id)}
+              className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-right transition-colors ${
+                on
+                  ? 'bg-brand-blue text-white'
+                  : 'text-brand-blueDeep hover:bg-brand-yellow/20'
+              }`}
+            >
+              <div>
+                <div className="font-cairo text-base font-black">{it.labelAr}</div>
+                <div
+                  className={`font-tajawal text-xs ${
+                    on ? 'text-white/80' : 'text-brand-blueDeep/60'
+                  }`}
+                >
+                  {it.sub}
+                </div>
+              </div>
+              {on ? (
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-brand-yellow text-brand-blueDeep">
+                  ✓
+                </span>
+              ) : null}
+            </button>
+          );
+        })}
+      </motion.div>
     </motion.div>
-  </motion.div>
+  );
+};
+
+const FooterCard = () => (
+  <section
+    data-spread
+    className="relative flex h-full w-full snap-start items-center justify-center"
+  >
+    <div className="text-center">
+      <p className="font-tajawal text-sm uppercase tracking-[0.4em] text-brand-blue/70">
+        End of menu
+      </p>
+      <h2 className="mt-3 font-cairo text-5xl font-black text-brand-blueDeep md:text-6xl">
+        تفضّلوا بزيارتنا
+      </h2>
+      <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-brand-yellow" />
+      <p className="mt-3 font-tajawal text-base text-brand-blueDeep/80">
+        عَريكة البلدة · نكهة أصيلة من قلب البلد
+      </p>
+      <button
+        onClick={() =>
+          document
+            .querySelector('[data-spread]')
+            ?.scrollIntoView({behavior: 'smooth', block: 'start'})
+        }
+        className="mt-7 rounded-full border-2 border-brand-blue bg-brand-blue px-6 py-3 font-cairo text-sm font-black text-brand-yellow transition-transform active:scale-95"
+      >
+        ↑ ارجع للأعلى
+      </button>
+    </div>
+  </section>
 );
