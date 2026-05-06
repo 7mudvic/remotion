@@ -4,12 +4,8 @@ import {startingPrice} from '../data';
 
 /**
  * "أصناف مميّزة" — three signature dishes pinned at the top.
- * Re-tuned for phone widths: the image now dominates the card
- * (~65 % of height) and the bottom info strip is compact so the
- * dish name + yellow price chip never bleed into the image area.
- *
- * Each card uses a portrait aspect ratio, so the image gets a tall,
- * generous frame on every viewport from phone to desktop.
+ * Image dominates each card; the bottom info strip reserves a fixed
+ * height so all three cards line up regardless of name length.
  */
 export const FeaturedSection = ({
   dishes,
@@ -37,7 +33,6 @@ export const FeaturedSection = ({
         <span className="h-px w-8 bg-gradient-to-r from-brand-yellow to-transparent sm:w-16" />
       </div>
 
-      {/* 3-card row */}
       <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4">
         {dishes.map((d) => (
           <FeaturedCard key={d.image} dish={d} onClick={() => onSelect(d)} />
@@ -65,13 +60,7 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
       {/* Gold ring */}
       <div className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-inset ring-brand-yellow/40 sm:rounded-3xl" />
 
-      {/* Star-only "مميّز" badge — small and tucked in the corner so it
-          doesn't eat into the image area on phones */}
-      <div className="absolute right-2 top-2 z-10 grid h-7 w-7 place-items-center rounded-full bg-brand-yellow text-brand-blueDeep shadow-sm ring-1 ring-brand-yellowLo/50 sm:h-8 sm:w-8">
-        <Star className="h-3.5 w-3.5 fill-current sm:h-4 sm:w-4" strokeWidth={2.5} />
-      </div>
-
-      {/* Image — the dominant element of the card (~65 % of height) */}
+      {/* Image — dominant element of the card */}
       <div className="relative flex flex-1 items-center justify-center px-2 pb-1 pt-3 sm:pt-4">
         <img
           src={dish.image}
@@ -82,10 +71,7 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
         />
       </div>
 
-      {/* Compact bottom strip
-          • Phone: stacked — full-width name on top, price chip below
-            (so long names like "عَريكة جنوبية" don't get truncated)
-          • Tablet+: side-by-side, single row */}
+      {/* Bottom strip — fixed minimum height so all 3 cards align */}
       <div
         className="relative mx-2 mb-2 flex flex-shrink-0 flex-col items-stretch gap-1 rounded-xl px-2 py-1.5 ring-1 ring-white/10 sm:mx-3 sm:mb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2"
         style={{
@@ -93,7 +79,9 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
             'linear-gradient(180deg, rgba(47,85,196,0.32) 0%, rgba(9,18,54,0.70) 100%)',
         }}
       >
-        <h3 className="line-clamp-2 min-w-0 flex-1 font-cairo text-[11px] font-black leading-tight sm:line-clamp-1 sm:text-sm md:text-base">
+        {/* Name — reserves 2-line height even when the name fits on one
+            line, so the strip is identical across cards */}
+        <h3 className="line-clamp-2 min-h-[2.4em] min-w-0 flex-1 font-cairo text-[11px] font-black leading-[1.2] sm:min-h-0 sm:line-clamp-1 sm:text-sm md:text-base">
           {dish.nameAr}
         </h3>
         <div className="flex shrink-0 items-baseline gap-0.5 self-end rounded-md bg-brand-yellow px-1.5 py-0.5 text-brand-blueDeep sm:gap-1 sm:self-auto sm:rounded-lg sm:px-2 sm:py-1">

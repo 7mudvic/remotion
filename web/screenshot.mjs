@@ -21,10 +21,22 @@ const browser = await chromium.launch({headless: true});
   const page = await ctx.newPage();
   await page.goto(URL, {waitUntil: 'networkidle'});
   await page.waitForTimeout(2000);
-  await page.screenshot({path: `${OUT}/phone-01-home.png`, fullPage: false});
-  console.log('✓ phone-01-home.png');
-  await page.screenshot({path: `${OUT}/phone-02-full.png`, fullPage: true});
-  console.log('✓ phone-02-full.png');
+  // Default — مطبّق tab active
+  await page.screenshot({path: `${OUT}/phone-01-mutabbaq.png`, fullPage: false});
+  console.log('✓ phone-01-mutabbaq.png');
+
+  // Switch to العَريكة and capture
+  await page.locator('button[role="tab"]', {hasText: 'العَريكة والمعصوب'}).click();
+  await page.waitForTimeout(500);
+  await page.screenshot({path: `${OUT}/phone-02-areeka.png`, fullPage: false});
+  console.log('✓ phone-02-areeka.png');
+
+  // Full page
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator('button[role="tab"]', {hasText: 'المطبّق'}).click();
+  await page.waitForTimeout(400);
+  await page.screenshot({path: `${OUT}/phone-03-full.png`, fullPage: true});
+  console.log('✓ phone-03-full.png');
   await ctx.close();
 }
 
