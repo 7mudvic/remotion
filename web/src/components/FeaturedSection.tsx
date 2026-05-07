@@ -71,15 +71,14 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
         />
       </div>
 
-      {/* Bottom strip — flush with the card edges (no horizontal /
-          bottom margin) so the dark blue band runs from the left edge
-          of the card to the right edge. The strip's rounded corners
-          mirror the card's outer radius. */}
+      {/* Bottom strip — explicitly w-full + flush against the card's
+          left, right and bottom edges. Rounded-b matches the card's
+          outer radius so the strip looks like the card's foot. */}
       <div
-        className="relative flex flex-shrink-0 flex-col items-stretch gap-1 rounded-b-2xl border-t border-white/10 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:rounded-b-3xl sm:px-3 sm:py-2.5"
+        className="relative flex w-full flex-shrink-0 flex-col items-stretch gap-1 rounded-b-2xl border-t border-white/10 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:rounded-b-3xl sm:px-3 sm:py-2.5"
         style={{
           background:
-            'linear-gradient(180deg, rgba(47,85,196,0.32) 0%, rgba(9,18,54,0.70) 100%)',
+            'linear-gradient(180deg, rgba(9, 18, 54, 0.85) 0%, rgba(9, 18, 54, 0.95) 100%)',
         }}
       >
         <h3 className="line-clamp-2 min-h-[2.4em] min-w-0 flex-1 text-right font-cairo text-[11px] font-black leading-[1.2] sm:min-h-0 sm:line-clamp-1 sm:text-sm md:text-base">
