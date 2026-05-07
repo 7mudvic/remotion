@@ -28,7 +28,7 @@ export const DishDetail = ({
         exit={{y: 40, scale: 0.95, opacity: 0}}
         transition={{type: 'spring', damping: 24, stiffness: 240}}
         onClick={(e) => e.stopPropagation()}
-        className="relative grid h-full max-h-[92vh] w-full max-w-6xl grid-rows-[1fr_auto] gap-3 overflow-hidden rounded-[36px] p-5 backdrop-blur-3xl sm:p-7 md:grid-cols-2 md:grid-rows-1 md:gap-6 md:p-10"
+        className="relative flex w-full max-w-6xl flex-col gap-4 overflow-hidden rounded-[36px] p-5 backdrop-blur-3xl sm:p-7 md:h-full md:max-h-[88vh] md:flex-row md:items-stretch md:gap-8 md:p-10"
         style={{
           background:
             'linear-gradient(135deg, rgba(47,85,196,0.30) 0%, rgba(9,18,54,0.55) 100%)',
@@ -44,20 +44,26 @@ export const DishDetail = ({
           <X className="h-5 w-5" />
         </button>
 
-        {/* Image — fills the entire 1fr row on phone, no fixed cap */}
-        <div className="grid min-h-0 place-items-center pt-12 md:order-2 md:pt-0">
+        {/* Image — sized to its natural rendered footprint so the
+            container doesn't add a 1fr empty band around it. On phone
+            the image fills the modal width (square); on tablet+ it
+            takes its half of the row. */}
+        <div className="flex w-full justify-center pt-10 sm:pt-12 md:order-2 md:flex-1 md:pt-0">
           <motion.img
             initial={{scale: 0.92, opacity: 0}}
             animate={{scale: 1, opacity: 1}}
             transition={{delay: 0.1, type: 'spring', damping: 18, stiffness: 110}}
             src={dish.image}
             alt={dish.nameAr}
-            className="h-full w-auto max-w-full object-contain drop-shadow-[0_36px_60px_rgba(0,0,0,0.55)]"
+            className="aspect-square w-full max-w-md object-contain drop-shadow-[0_36px_60px_rgba(0,0,0,0.55)] md:aspect-auto md:h-full md:max-h-full md:w-auto md:max-w-full"
           />
         </div>
 
         {/* Text */}
-        <div className="flex flex-col justify-center md:order-1" dir="rtl">
+        <div
+          className="flex flex-col justify-center md:order-1 md:flex-1"
+          dir="rtl"
+        >
           <motion.h2
             initial={{x: 24, opacity: 0}}
             animate={{x: 0, opacity: 1}}
