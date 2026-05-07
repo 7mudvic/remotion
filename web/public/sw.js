@@ -12,7 +12,7 @@
  *   • Old caches are deleted on activate so a re-deploy doesn't grow
  *     the device cache forever.
  */
-const VERSION = 'v3';
+const VERSION = 'v4';
 const RUNTIME = `areeka-runtime-${VERSION}`;
 const PRECACHE = `areeka-precache-${VERSION}`;
 

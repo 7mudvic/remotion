@@ -20,8 +20,10 @@ export type Dish = {
 };
 
 export const CATEGORIES = [
-  {id: 'mutabbaq', labelAr: 'قسم المطبّق'},
+  // RTL note: in the array order, the first entry sits on the RIGHT
+  // side of the tab bar. The second sits on the LEFT.
   {id: 'areeka', labelAr: 'قسم العَريكة والمعصوب'},
+  {id: 'mutabbaq', labelAr: 'قسم المطبّق'},
 ] as const;
 
 export type CategoryId = (typeof CATEGORIES)[number]['id'];
