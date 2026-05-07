@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {AnimatePresence, motion} from 'motion/react';
 import {
   ALL_DISHES,
@@ -20,6 +20,8 @@ import {FeaturedSection} from './components/FeaturedSection';
 export const App = () => {
   const [active, setActive] = useState<CategoryId>('mutabbaq');
   const [selected, setSelected] = useState<Dish | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const dishes = useMemo(() => {
     return active === 'mutabbaq' ? MUTABBAQ : AREEKA;
@@ -34,14 +36,33 @@ export const App = () => {
     });
   }, []);
 
+  // Watch the scroller so the top bar can swap to its frosted-glass
+  // state once the user moves past the very top of the page. rAF
+  // keeps the listener cheap on iOS Safari.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        setScrolled(el.scrollTop > 8);
+        queued = false;
+      });
+    };
+    el.addEventListener('scroll', onScroll, {passive: true});
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <div className="relative h-full w-full overflow-hidden text-white">
       <GradientMesh />
 
-      <div className="relative z-10 flex h-full flex-col">
-        <TopBar />
+      <div ref={scrollRef} className="relative z-10 h-full overflow-y-auto">
+        <TopBar scrolled={scrolled} />
 
-        <main className="flex-1 overflow-y-auto px-6 pb-10 pt-4 md:px-10">
+        <main className="px-6 pb-10 pt-4 md:px-10">
           {/* Featured section — always visible at the top */}
           <FeaturedSection dishes={FEATURED_DISHES} onSelect={setSelected} />
 
