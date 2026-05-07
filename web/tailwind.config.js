@@ -1,6 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  // Make `hover:` utilities apply only on devices that actually have
+  // a hover-capable pointer. Without this, iOS Safari fires the
+  // hover state on the first tap and the click on the second — which
+  // is the "tap twice to open the modal" bug customers were hitting.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       colors: {

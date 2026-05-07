@@ -17,4 +17,12 @@
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
   }
+
+  /* Eliminate the legacy 300 ms double-tap delay on every clickable
+     surface so taps feel instant on iPad / iPhone. */
+  button,
+  [role='tab'],
+  [role='button'] {
+    touch-action: manipulation;
+  }
 }
