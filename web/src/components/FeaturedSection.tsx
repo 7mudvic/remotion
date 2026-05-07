@@ -57,9 +57,6 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
           '0 16px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12)',
       }}
     >
-      {/* Gold ring */}
-      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-inset ring-brand-yellow/40 sm:rounded-3xl" />
-
       {/* Image — dominant element of the card */}
       <div className="relative flex flex-1 items-center justify-center px-2 pb-1 pt-3 sm:pt-4">
         <img
@@ -81,10 +78,10 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
             'linear-gradient(180deg, rgba(9, 18, 54, 0.85) 0%, rgba(9, 18, 54, 0.95) 100%)',
         }}
       >
-        <h3 className="line-clamp-2 min-h-[2.4em] min-w-0 flex-1 text-right font-cairo text-[11px] font-black leading-[1.2] sm:min-h-0 sm:line-clamp-1 sm:text-sm md:text-base">
+        <h3 className="line-clamp-2 min-h-[2.4em] min-w-0 flex-1 text-center font-cairo text-[11px] font-black leading-[1.2] sm:min-h-0 sm:line-clamp-1 sm:text-right sm:text-sm md:text-base">
           {dish.nameAr}
         </h3>
-        <div className="flex shrink-0 items-baseline gap-0.5 self-end rounded-md bg-brand-yellow px-1.5 py-0.5 text-brand-blueDeep sm:gap-1 sm:self-auto sm:rounded-lg sm:px-2 sm:py-1">
+        <div className="flex shrink-0 items-baseline gap-0.5 self-center rounded-md bg-brand-yellow px-1.5 py-0.5 text-brand-blueDeep sm:gap-1 sm:self-auto sm:rounded-lg sm:px-2 sm:py-1">
           {isMulti ? (
             <span className="font-tajawal text-[8px] font-bold opacity-80 sm:text-[9px]">
               من
@@ -97,7 +94,14 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-brand-yellow/0 transition-[box-shadow] duration-200 group-hover:ring-brand-yellow/70 sm:rounded-3xl" />
+      {/* Gold ring — rendered LAST so it's the top layer of the
+          card and stays visible on all four edges, including over the
+          opaque bottom strip. pointer-events-none keeps clicks
+          flowing through to the underlying button content. */}
+      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-inset ring-brand-yellow/50 sm:rounded-3xl" />
+
+      {/* Hover ring — even brighter on hover */}
+      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-brand-yellow/0 transition-[box-shadow] duration-200 group-hover:ring-brand-yellow/80 sm:rounded-3xl" />
     </button>
   );
 };
