@@ -58,20 +58,11 @@ export const DishDetail = ({
 
         {/* Text */}
         <div className="flex flex-col justify-center md:order-1" dir="rtl">
-          <motion.p
-            initial={{x: 24, opacity: 0}}
-            animate={{x: 0, opacity: 1}}
-            transition={{delay: 0.15}}
-            className="font-tajawal text-xs uppercase tracking-[0.5em] text-brand-yellow"
-          >
-            {dish.nameEn ?? 'AREEKAT AL-BALAD'}
-          </motion.p>
-
           <motion.h2
             initial={{x: 24, opacity: 0}}
             animate={{x: 0, opacity: 1}}
             transition={{delay: 0.2, type: 'spring', damping: 18, stiffness: 120}}
-            className="mt-2 font-cairo font-black leading-tight text-white"
+            className="font-cairo font-black leading-tight text-white"
             style={{fontSize: 'clamp(2.25rem, 4.5vw, 4rem)'}}
           >
             {dish.nameAr}
@@ -100,7 +91,7 @@ const SizesGrid = ({prices}: {prices: PriceItem[]}) => (
         transition={{delay: 0.25 + i * 0.07, type: 'spring', damping: 20, stiffness: 140}}
         className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/20 backdrop-blur"
       >
-        <div className="font-tajawal text-[11px] uppercase tracking-[0.4em] text-brand-yellow/80">
+        <div className="font-cairo text-sm font-bold text-brand-yellow md:text-base">
           {p.label}
         </div>
         <div className="mt-1 flex items-baseline gap-1 font-cairo">

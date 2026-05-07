@@ -37,6 +37,16 @@ const browser = await chromium.launch({headless: true});
   await page.waitForTimeout(400);
   await page.screenshot({path: `${OUT}/phone-03-full.png`, fullPage: true});
   console.log('✓ phone-03-full.png');
+
+  // Detail modal — open عَريكة البلدة (2nd featured card, has 3 sizes)
+  // so we can verify the size labels (صغير / وسط / كبير) display
+  // cleanly after the typography fix.
+  await page.locator('button[role="tab"]', {hasText: 'العَريكة والمعصوب'}).click();
+  await page.waitForTimeout(400);
+  await page.locator('section button').nth(1).click().catch(() => {});
+  await page.waitForTimeout(900);
+  await page.screenshot({path: `${OUT}/phone-04-detail.png`, fullPage: false});
+  console.log('✓ phone-04-detail.png');
   await ctx.close();
 }
 
