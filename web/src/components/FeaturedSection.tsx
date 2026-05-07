@@ -71,20 +71,24 @@ const FeaturedCard = ({dish, onClick}: {dish: Dish; onClick: () => void}) => {
         />
       </div>
 
-      {/* Bottom strip — fixed minimum height so all 3 cards align */}
+      {/* Bottom strip — name on top, full-width yellow price bar
+          beneath. Both rows fill the strip horizontally so cards 1
+          and 2 don't look "empty" on the left like they did when the
+          chip was tucked into a corner. */}
       <div
-        className="relative mx-2 mb-2 flex flex-shrink-0 flex-col items-stretch gap-1 rounded-xl px-2 py-1.5 ring-1 ring-white/10 sm:mx-3 sm:mb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2"
+        className="relative mx-2 mb-2 flex flex-shrink-0 flex-col items-stretch gap-1.5 rounded-xl px-2 py-1.5 ring-1 ring-white/10 sm:mx-3 sm:mb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2"
         style={{
           background:
             'linear-gradient(180deg, rgba(47,85,196,0.32) 0%, rgba(9,18,54,0.70) 100%)',
         }}
       >
-        {/* Name — reserves 2-line height even when the name fits on one
-            line, so the strip is identical across cards */}
-        <h3 className="line-clamp-2 min-h-[2.4em] min-w-0 flex-1 font-cairo text-[11px] font-black leading-[1.2] sm:min-h-0 sm:line-clamp-1 sm:text-sm md:text-base">
+        <h3 className="line-clamp-2 min-h-[2.4em] min-w-0 flex-1 text-right font-cairo text-[11px] font-black leading-[1.2] sm:min-h-0 sm:line-clamp-1 sm:text-sm md:text-base">
           {dish.nameAr}
         </h3>
-        <div className="flex shrink-0 items-baseline gap-0.5 self-end rounded-md bg-brand-yellow px-1.5 py-0.5 text-brand-blueDeep sm:gap-1 sm:self-auto sm:rounded-lg sm:px-2 sm:py-1">
+
+        {/* Phone: full-width yellow bar with the price right-aligned.
+            Tablet+: shrinks back to a compact pill. */}
+        <div className="flex w-full shrink-0 items-baseline justify-end gap-0.5 rounded-md bg-brand-yellow px-2 py-1 text-brand-blueDeep sm:w-auto sm:gap-1 sm:self-auto sm:rounded-lg sm:px-2 sm:py-1">
           {isMulti ? (
             <span className="font-tajawal text-[8px] font-bold opacity-80 sm:text-[9px]">
               من
